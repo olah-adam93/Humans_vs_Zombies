@@ -1,0 +1,60 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.2'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.example.hvz'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot Starters
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // Spring Boot DevTools for development-only
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // PostgreSQL JDBC Driver
+    implementation 'org.postgresql:postgresql:42.5.1'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // Lombok for compile-time code generation
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Spring Boot Test Dependencies
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    // Swagger for API documentation
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.8'
+
+    // MapStruct for object mapping
+    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+
+    // OAuth2 Resource Server for securing APIs
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:2.7.4'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
