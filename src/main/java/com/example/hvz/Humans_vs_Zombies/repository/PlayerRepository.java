@@ -19,5 +19,5 @@ public interface PlayerRepository extends JpaRepository<Player, Integer> {
 
   Optional<Player> findByGameIdAndBiteCode(int gameId, String biteCode);
 
-  Player findByBiteCode(String biteCode);
+  Optional<Player> findByBiteCode(String biteCode);
 }
