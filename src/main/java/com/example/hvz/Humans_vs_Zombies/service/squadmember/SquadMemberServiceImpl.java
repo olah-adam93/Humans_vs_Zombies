@@ -83,8 +83,7 @@ public class SquadMemberServiceImpl implements SquadMemberService {
   public Collection<SquadMember> findAllBySquad_Id(int squadId) {
     Collection<SquadMember> squadMembers = squadMemberRepository.findAllBySquad_Id(squadId);
     if (squadMembers.isEmpty()) {
-      throw new NotFoundException(
-          String.format("No squad members found for squadID: %d", squadId));
+      throw new NotFoundException(String.format("No squad members found for squadID: %d", squadId));
     }
     return squadMembers;
   }
@@ -106,6 +105,11 @@ public class SquadMemberServiceImpl implements SquadMemberService {
             () ->
                 new NotFoundException(
                     String.format("Squad member with playerID: %d not found.", playerId)));
+  }
+
+  @Override
+  public Collection<SquadMember> findAllByGameId(int gameId) {
+    return squadMemberRepository.findAllBySquad_Game_Id(gameId);
   }
 
   @Override

@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring")
 public interface PlayerMapper {
 
   PlayerMapper INSTANCE = Mappers.getMapper(PlayerMapper.class);

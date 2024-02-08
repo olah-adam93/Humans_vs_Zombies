@@ -14,5 +14,7 @@ public interface SquadMemberService extends CrudService<SquadMember, Integer> {
 
   SquadMember findByPlayer_Id(int playerId);
 
+  Collection<SquadMember> findAllByGameId(int gameId);
+
   SquadMember findByGameIdAndId(int gameId, int squadMemberId);
 }

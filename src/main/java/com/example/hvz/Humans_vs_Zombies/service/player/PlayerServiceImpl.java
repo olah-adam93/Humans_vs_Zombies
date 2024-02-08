@@ -77,6 +77,11 @@ public class PlayerServiceImpl implements PlayerService {
   }
 
   @Override
+  public Collection<Player> findAllByGameId(int gameId) {
+    return playerRepository.findAllByGameId(gameId);
+  }
+
+  @Override
   public Player findByGameIdAndId(int gameId, int playerId) {
     return playerRepository
         .findByGameIdAndId(gameId, playerId)
@@ -128,6 +133,25 @@ public class PlayerServiceImpl implements PlayerService {
                 new NotFoundException(
                     String.format(
                         "Player with gameID: %d and biteCode: %s not found.", gameId, biteCode)));
+  }
+
+  public String createRandomBiteCode(int length) {
+    if (length <= 0 || length > 1000) {
+      throw new BadRequestException(
+          "Length of bite code is invalid, it must be between 0 and 1000.");
+    }
+
+    StringBuilder name;
+    do {
+      name = new StringBuilder();
+      for (int i = 0; i < length; i++) {
+        int v = 1 + (int) (Math.random() * 26);
+        char c = (char) (v + 'a' - 1);
+        name.append(c);
+      }
+    } while (playerRepository.findByBiteCode(name.toString()).isPresent());
+
+    return name.toString();
   }
 
   @Override

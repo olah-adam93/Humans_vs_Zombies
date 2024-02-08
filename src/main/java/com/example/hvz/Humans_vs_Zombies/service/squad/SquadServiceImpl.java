@@ -5,6 +5,7 @@ import com.example.hvz.Humans_vs_Zombies.exception.NotFoundException;
 import com.example.hvz.Humans_vs_Zombies.model.Squad;
 import com.example.hvz.Humans_vs_Zombies.repository.SquadRepository;
 import java.util.Collection;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -73,6 +74,11 @@ public class SquadServiceImpl implements SquadService {
   @Override
   public void delete(Squad squad) {
     squadRepository.delete(squad);
+  }
+
+  @Override
+  public Set<Squad> findAllByGameId(int gameId) {
+    return squadRepository.findAllByGameId(gameId);
   }
 
   @Override

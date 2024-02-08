@@ -15,6 +15,8 @@ public interface SquadMemberRepository extends JpaRepository<SquadMember, Intege
 
   Optional<SquadMember> findByPlayer_Id(int playerId);
 
+  Collection<SquadMember> findAllBySquad_Game_Id(int gameId);
+
   @Query(
       "SELECT s FROM SquadMember s JOIN s.squad sq WHERE sq.game.id = :gameId AND s.id = :squadMemberId")
   Optional<SquadMember> findByGameIdAndId(int gameId, int squadMemberId);

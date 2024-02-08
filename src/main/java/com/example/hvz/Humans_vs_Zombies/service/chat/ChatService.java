@@ -6,5 +6,6 @@ import java.util.Collection;
 
 public interface ChatService extends CrudService<Chat, Integer> {
 
+  Collection<Chat> findAllByGameId(int gameId);
   Collection<Chat> findAllByGameIdAndFaction(int gameId, String faction);
 }

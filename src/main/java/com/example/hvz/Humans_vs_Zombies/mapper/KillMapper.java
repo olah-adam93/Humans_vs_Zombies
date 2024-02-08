@@ -10,7 +10,7 @@ import java.util.Optional;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring")
 public interface KillMapper {
 
   KillMapper INSTANCE = Mappers.getMapper(KillMapper.class);
@@ -30,7 +30,7 @@ public interface KillMapper {
   Kill createKillDtoToKill(CreateKillDTO createKillDTO);
 
   @Named("gameIdToGame")
-  default Game mapIdToGame(Integer gameId, @Context GameService gameService) {
+  default Game gameIdToGame(Integer gameId, @Context GameService gameService) {
     return Optional.ofNullable(gameId).map(gameService::findById).orElse(null);
   }
 }

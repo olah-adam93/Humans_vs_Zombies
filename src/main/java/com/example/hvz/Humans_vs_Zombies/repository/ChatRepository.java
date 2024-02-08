@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface ChatRepository extends JpaRepository<Chat, Integer> {
 
   Optional<Collection<Chat>> findAllByGameIdAndFaction(int gameId, String faction);
+
+  Collection<Chat> findAllByGameId(int gameId);
 }

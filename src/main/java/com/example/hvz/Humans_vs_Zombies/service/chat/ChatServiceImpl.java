@@ -77,6 +77,11 @@ public class ChatServiceImpl implements ChatService {
   }
 
   @Override
+  public Collection<Chat> findAllByGameId(int gameId) {
+    return chatRepository.findAllByGameId(gameId);
+  }
+
+  @Override
   public Collection<Chat> findAllByGameIdAndFaction(int gameId, String faction) {
     return chatRepository
         .findAllByGameIdAndFaction(gameId, faction)

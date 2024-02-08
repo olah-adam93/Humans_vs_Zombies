@@ -15,6 +15,8 @@ public interface ChatMapper {
 
   ChatMapper INSTANCE = Mappers.getMapper(ChatMapper.class);
 
+  @Mapping(target = "game", source = "game.id")
+  @Mapping(target = "player", source = "player.id")
   ChatDTO chatToChatDto(Chat chat);
 
   Collection<ChatDTO> chatToChatDto(Collection<Chat> chats);
