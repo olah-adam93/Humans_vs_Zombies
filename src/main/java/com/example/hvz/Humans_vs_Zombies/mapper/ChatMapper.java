@@ -8,30 +8,30 @@ import com.example.hvz.Humans_vs_Zombies.service.game.GameService;
 import com.example.hvz.Humans_vs_Zombies.service.player.PlayerService;
 import java.util.*;
 import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface ChatMapper {
+public abstract class ChatMapper {
 
-  ChatMapper INSTANCE = Mappers.getMapper(ChatMapper.class);
+  protected PlayerService playerService;
+  protected GameService gameService;
 
   @Mapping(target = "game", source = "game.id")
   @Mapping(target = "player", source = "player.id")
-  ChatDTO chatToChatDto(Chat chat);
+  public abstract ChatDTO chatToChatDto(Chat chat);
 
-  Collection<ChatDTO> chatToChatDto(Collection<Chat> chats);
+  public abstract Collection<ChatDTO> chatToChatDto(Collection<Chat> chats);
 
   @Mapping(target = "game", source = "game", qualifiedByName = "gameIdToGame")
   @Mapping(target = "player", source = "player", qualifiedByName = "playerIdToPlayer")
-  Chat chatDtoToChat(ChatDTO chatDTO);
+  public abstract Chat chatDtoToChat(ChatDTO chatDTO);
 
   @Named("gameIdToGame")
-  default Game mapIdToGame(Integer gameId, @Context GameService gameService) {
+  Game mapIdToGame(Integer gameId) {
     return Optional.ofNullable(gameId).map(gameService::findById).orElse(null);
   }
 
   @Named("playerIdToPlayer")
-  default Player mapIdToPlayer(Integer playerId, @Context PlayerService playerService) {
+  Player mapIdToPlayer(Integer playerId) {
     return Optional.ofNullable(playerId).map(playerService::findById).orElse(null);
   }
 }

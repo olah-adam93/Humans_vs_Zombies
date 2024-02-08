@@ -72,9 +72,4 @@ public class GameServiceImpl implements GameService {
   public void delete(Game game) {
     gameRepository.delete(game);
   }
-
-  @Override
-  public Collection<Game> findAllByOrderByid() {
-    return gameRepository.findAllByOrderByid();
-  }
 }

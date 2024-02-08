@@ -8,29 +8,28 @@ import com.example.hvz.Humans_vs_Zombies.service.game.GameService;
 import java.util.Collection;
 import java.util.Optional;
 import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
-public interface KillMapper {
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public abstract class KillMapper {
 
-  KillMapper INSTANCE = Mappers.getMapper(KillMapper.class);
-
-  @Mapping(target = "game", source = "game.id")
-  KillDTO killToKillDto(Kill kill);
-
-  Collection<KillDTO> killToKillDto(Collection<Kill> kills);
-
-  @Mapping(target = "game", source = "game", qualifiedByName = "gameIdToGame")
-  Kill killDTOToKill(KillDTO killDTO);
+  protected GameService gameService;
 
   @Mapping(target = "game", source = "game.id")
-  CreateKillDTO killToCreateKillDto(Kill kill);
+  public abstract KillDTO killToKillDto(Kill kill);
+
+  public abstract Collection<KillDTO> killToKillDto(Collection<Kill> kills);
 
   @Mapping(target = "game", source = "game", qualifiedByName = "gameIdToGame")
-  Kill createKillDtoToKill(CreateKillDTO createKillDTO);
+  public abstract Kill killDTOToKill(KillDTO killDTO);
+
+  @Mapping(target = "game", source = "game.id")
+  public abstract CreateKillDTO killToCreateKillDto(Kill kill);
+
+  @Mapping(target = "game", source = "game", qualifiedByName = "gameIdToGame")
+  public abstract Kill createKillDtoToKill(CreateKillDTO createKillDTO);
 
   @Named("gameIdToGame")
-  default Game gameIdToGame(Integer gameId, @Context GameService gameService) {
+  Game gameIdToGame(Integer gameId) {
     return Optional.ofNullable(gameId).map(gameService::findById).orElse(null);
   }
 }

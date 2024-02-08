@@ -8,30 +8,31 @@ import com.example.hvz.Humans_vs_Zombies.service.player.PlayerService;
 import com.example.hvz.Humans_vs_Zombies.service.squad.SquadService;
 import java.util.*;
 import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface SquadMemberMapper {
+public abstract class SquadMemberMapper {
 
-  SquadMemberMapper INSTANCE = Mappers.getMapper(SquadMemberMapper.class);
+  protected SquadService squadService;
+  protected PlayerService playerService;
 
   @Mapping(target = "squad", source = "squad.id")
   @Mapping(target = "player", source = "player.id")
-  SquadMemberDTO squadMemberToSquadMemberDto(SquadMember squadMember);
+  public abstract SquadMemberDTO squadMemberToSquadMemberDto(SquadMember squadMember);
 
-  Collection<SquadMemberDTO> squadMemberToSquadMemberDto(Collection<SquadMember> squadMembers);
+  public abstract Collection<SquadMemberDTO> squadMemberToSquadMemberDto(
+      Collection<SquadMember> squadMembers);
 
   @Mapping(target = "squad", source = "squad", qualifiedByName = "squadIdToProject")
   @Mapping(target = "player", source = "player", qualifiedByName = "playerIdToProject")
-  SquadMember squadMemberDtoToSquadMember(SquadMemberDTO squadMemberDTO);
+  public abstract SquadMember squadMemberDtoToSquadMember(SquadMemberDTO squadMemberDTO);
 
   @Named("squadIdToProject")
-  default Squad mapIdToSquad(Integer squadId, @Context SquadService squadService) {
+  Squad mapIdToSquad(Integer squadId) {
     return Optional.ofNullable(squadId).map(squadService::findById).orElse(null);
   }
 
   @Named("playerIdToProject")
-  default Player mapIdToPlayer(Integer playerId, @Context PlayerService playerService) {
+  Player mapIdToPlayer(Integer playerId) {
     return Optional.ofNullable(playerId).map(playerService::findById).orElse(null);
   }
 }

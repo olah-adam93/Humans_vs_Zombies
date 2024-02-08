@@ -11,32 +11,34 @@ import com.example.hvz.Humans_vs_Zombies.service.squadmember.SquadMemberService;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface PlayerMapper {
+public abstract class PlayerMapper {
 
-  PlayerMapper INSTANCE = Mappers.getMapper(PlayerMapper.class);
+  protected LoginUserService loginUserService;
+  protected GameService gameService;
+  protected SquadMemberService squadMemberService;
+  protected ChatService chatService;
 
   @Mapping(target = "loginUser", source = "loginUser.id")
   @Mapping(target = "game", source = "game.id")
   @Mapping(target = "squadMember", source = "squadMember.id")
   @Mapping(target = "chats", source = "chats", qualifiedByName = "chatsToIds")
-  PlayerDTO playerToPlayerDto(Player player);
+  public abstract PlayerDTO playerToPlayerDto(Player player);
 
-  Collection<PlayerDTO> playerToPlayerDto(Collection<Player> players);
+  public abstract Collection<PlayerDTO> playerToPlayerDto(Collection<Player> players);
 
   @Mapping(target = "loginUser", source = "loginUser.id")
   @Mapping(target = "game", source = "game.id")
   @Mapping(target = "squadMember", source = "squadMember.id")
   @Mapping(target = "chats", source = "chats", qualifiedByName = "chatsToIds")
   @Mapping(target = "username", source = "loginUser", qualifiedByName = "userIdToUsername")
-  PlayerAdminDTO playerToPlayerAdminDto(Player player);
+  public abstract PlayerAdminDTO playerToPlayerAdminDto(Player player);
 
-  Collection<PlayerAdminDTO> playerToPlayerAdminDto(Collection<Player> players);
+  public abstract Collection<PlayerAdminDTO> playerToPlayerAdminDto(Collection<Player> players);
 
   @Named("userIdToUsername")
-  default String mapUserIdToUsername(LoginUser loginUser) {
+  String mapUserIdToUsername(LoginUser loginUser) {
     return Optional.ofNullable(loginUser).map(LoginUser::getUserName).orElse(null);
   }
 
@@ -47,7 +49,7 @@ public interface PlayerMapper {
       source = "squadMember",
       qualifiedByName = "squadMemberIdToSquadMember")
   @Mapping(target = "chats", source = "chats", qualifiedByName = "chatIdToChats")
-  Player playerDtoToPlayer(PlayerDTO playerDto);
+  public abstract Player playerDtoToPlayer(PlayerDTO playerDto);
 
   @Mapping(target = "loginUser", source = "loginUser", qualifiedByName = "loginUserIdToLoginUser")
   @Mapping(target = "game", source = "game", qualifiedByName = "gameIdToGame")
@@ -56,32 +58,32 @@ public interface PlayerMapper {
       source = "squadMember",
       qualifiedByName = "squadMemberIdToSquadMember")
   @Mapping(target = "chats", source = "chats", qualifiedByName = "chatIdToChats")
-  Player createPlayerDtoToPlayer(CreatePlayerDTO createPlayerDTO);
+  public abstract Player createPlayerDtoToPlayer(CreatePlayerDTO createPlayerDTO);
 
   @Named("loginUserIdToLoginUser")
-  default LoginUser mapIdToUser(Integer id, @Context LoginUserService loginUserService) {
+  LoginUser mapIdToUser(Integer id) {
     return Optional.ofNullable(id).map(loginUserService::findById).orElse(null);
   }
 
   @Named("gameIdToGame")
-  default Game mapIdToGame(Integer id, @Context GameService gameService) {
+  Game mapIdToGame(Integer id) {
     return Optional.ofNullable(id).map(gameService::findById).orElse(null);
   }
 
   @Named("squadMemberIdToSquadMember")
-  default SquadMember mapIdToSquadMember(Integer id, SquadMemberService squadMemberService) {
+  SquadMember mapIdToSquadMember(Integer id) {
     return Optional.ofNullable(id).map(squadMemberService::findById).orElse(null);
   }
 
   @Named("chatIdToChats")
-  default Set<Chat> mapChatIdsToPlayers(Set<Integer> chatIds, ChatService chatService) {
+  Set<Chat> mapChatIdsToPlayers(Set<Integer> chatIds) {
     return Optional.ofNullable(chatIds)
         .map(ids -> ids.stream().map(chatService::findById).collect(Collectors.toSet()))
         .orElse(new HashSet<>());
   }
 
   @Named("chatsToIds")
-  default Set<Integer> mapChatToIds(Set<Chat> source) {
+  Set<Integer> mapChatToIds(Set<Chat> source) {
     return Optional.ofNullable(source)
         .map(chats -> chats.stream().map(Chat::getId).collect(Collectors.toSet()))
         .orElse(null);

@@ -8,5 +8,4 @@ import java.util.Collection;
 
 @Service
 public interface GameService extends CrudService<Game, Integer> {
-  Collection<Game> findAllByOrderByid();
 }
