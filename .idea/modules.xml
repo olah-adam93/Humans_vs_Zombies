@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Humans_vs_Zombies.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Humans_vs_Zombies.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/hvz-BE.iml" filepath="$PROJECT_DIR$/.idea/hvz-BE.iml" />
+    </modules>
+  </component>
+</project>
