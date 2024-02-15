@@ -16,7 +16,6 @@ export class JwtInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    // Not authenticated. Send request as is.
     if (!keycloak.authenticated || !keycloak.token) {
       return next.handle(request);
     }

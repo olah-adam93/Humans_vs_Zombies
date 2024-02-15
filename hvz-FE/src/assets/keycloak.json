@@ -1,0 +1,10 @@
+{
+  "realm": "myrealm",
+  "auth-server-url": "http://localhost:8080/realms/myrealm/protocol/openid-connect/auth",
+  "ssl-required": "external",
+  "resource": "myrealm",
+  "public-client": true,
+  "verify-token-audience": true,
+  "use-resource-role-mappings": true,
+  "confidential-port": 0
+}
