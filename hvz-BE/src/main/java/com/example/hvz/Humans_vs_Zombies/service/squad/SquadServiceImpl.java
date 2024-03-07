@@ -1,7 +1,6 @@
 package com.example.hvz.Humans_vs_Zombies.service.squad;
 
-import com.example.hvz.Humans_vs_Zombies.exception.BadRequestException;
-import com.example.hvz.Humans_vs_Zombies.exception.NotFoundException;
+import com.example.hvz.Humans_vs_Zombies.exception.SquadNotFoundException;
 import com.example.hvz.Humans_vs_Zombies.model.Squad;
 import com.example.hvz.Humans_vs_Zombies.repository.SquadRepository;
 import java.util.Collection;
@@ -21,11 +20,7 @@ public class SquadServiceImpl implements SquadService {
 
   @Override
   public Squad findById(Integer squadId) {
-    return squadRepository
-        .findById(squadId)
-        .orElseThrow(
-            () ->
-                new NotFoundException(String.format("Squad with ID: %s does not exist.", squadId)));
+    return squadRepository.findById(squadId).orElseThrow(() -> new SquadNotFoundException(squadId));
   }
 
   @Override
@@ -35,14 +30,6 @@ public class SquadServiceImpl implements SquadService {
 
   @Override
   public Squad add(Squad squad) {
-    squadRepository
-        .findById(squad.getId())
-        .ifPresent(
-            existingSquad -> {
-              throw new BadRequestException(
-                  String.format("Squad with ID: %s already exists.", squad.getId()));
-            });
-
     return squadRepository.save(squad);
   }
 
@@ -55,19 +42,12 @@ public class SquadServiceImpl implements SquadService {
               squadRepository.save(squad);
               return squad;
             })
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format("Squad with ID: %s does not exist.", squad.getId())));
+        .orElseThrow(() -> new SquadNotFoundException(squad.getId()));
   }
 
   @Override
   public void deleteById(Integer squadId) {
-    squadRepository
-        .findById(squadId)
-        .orElseThrow(
-            () -> new NotFoundException(String.format("Squad with ID: %s not found.", squadId)));
-
+    squadRepository.findById(squadId).orElseThrow(() -> new SquadNotFoundException(squadId));
     squadRepository.deleteById(squadId);
   }
 
@@ -82,23 +62,16 @@ public class SquadServiceImpl implements SquadService {
   }
 
   @Override
-  public Squad findByGame_IdAndId(int gameId, Integer squadId) {
+  public Squad findByGame_IdAndId(int gameId, int squadId) {
     return squadRepository
         .findByGame_IdAndId(gameId, squadId)
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format("Squad with gameID: %d and ID: %d not found.", gameId, squadId)));
+        .orElseThrow(() -> new SquadNotFoundException(gameId, squadId));
   }
 
   @Override
-  public Squad findByNameAndGame_Id(String squadName, int gameId) {
+  public Squad findBydGame_IdAndName(int gameId, String squadName) {
     return squadRepository
-        .findByNameAndGame_Id(squadName, gameId)
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format(
-                        "Squad with name: %s and gameID: %d not found.", squadName, gameId)));
+        .findByGame_IdAndName(gameId, squadName)
+        .orElseThrow(() -> new SquadNotFoundException(gameId, squadName));
   }
 }

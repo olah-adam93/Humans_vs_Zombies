@@ -1,7 +1,6 @@
 package com.example.hvz.Humans_vs_Zombies.service.chat;
 
-import com.example.hvz.Humans_vs_Zombies.exception.BadRequestException;
-import com.example.hvz.Humans_vs_Zombies.exception.NotFoundException;
+import com.example.hvz.Humans_vs_Zombies.exception.ChatNotFoundException;
 import com.example.hvz.Humans_vs_Zombies.model.Chat;
 import com.example.hvz.Humans_vs_Zombies.repository.ChatRepository;
 import java.util.Collection;
@@ -20,10 +19,7 @@ public class ChatServiceImpl implements ChatService {
 
   @Override
   public Chat findById(Integer chatId) {
-    return chatRepository
-        .findById(chatId)
-        .orElseThrow(
-            () -> new NotFoundException(String.format("Chat with ID: %s not found.", chatId)));
+    return chatRepository.findById(chatId).orElseThrow(() -> new ChatNotFoundException(chatId));
   }
 
   @Override
@@ -33,15 +29,6 @@ public class ChatServiceImpl implements ChatService {
 
   @Override
   public Chat add(Chat chat) {
-
-    chatRepository
-        .findById(chat.getId())
-        .ifPresent(
-            existingChat -> {
-              throw new BadRequestException(
-                  String.format("Chat with ID: %s already exists.", chat.getId()));
-            });
-
     return chatRepository.save(chat);
   }
 
@@ -55,19 +42,12 @@ public class ChatServiceImpl implements ChatService {
               chatRepository.save(chat);
               return chat;
             })
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format("Chat with ID: %s does not exist.", chat.getId())));
+        .orElseThrow(() -> new ChatNotFoundException(chat.getId()));
   }
 
   @Override
   public void deleteById(Integer chatId) {
-    chatRepository
-        .findById(chatId)
-        .orElseThrow(
-            () -> new NotFoundException(String.format("Chat with ID: %s not found.", chatId)));
-
+    chatRepository.findById(chatId).orElseThrow(() -> new ChatNotFoundException(chatId));
     chatRepository.deleteById(chatId);
   }
 
@@ -85,10 +65,6 @@ public class ChatServiceImpl implements ChatService {
   public Collection<Chat> findAllByGameIdAndFaction(int gameId, String faction) {
     return chatRepository
         .findAllByGameIdAndFaction(gameId, faction)
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format(
-                        "No chats found for gameID: %d and Faction: %s", gameId, faction)));
+        .orElseThrow(() -> new ChatNotFoundException(gameId, faction));
   }
 }

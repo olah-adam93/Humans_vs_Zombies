@@ -1,7 +1,6 @@
 package com.example.hvz.Humans_vs_Zombies.service.player;
 
-import com.example.hvz.Humans_vs_Zombies.exception.BadRequestException;
-import com.example.hvz.Humans_vs_Zombies.exception.NotFoundException;
+import com.example.hvz.Humans_vs_Zombies.exception.*;
 import com.example.hvz.Humans_vs_Zombies.model.Player;
 import com.example.hvz.Humans_vs_Zombies.repository.PlayerRepository;
 import java.util.Collection;
@@ -22,10 +21,7 @@ public class PlayerServiceImpl implements PlayerService {
   public Player findById(Integer playerId) {
     return playerRepository
         .findById(playerId)
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format("Player with ID: %s does not exist.", playerId)));
+        .orElseThrow(() -> new PlayerNotFoundException(playerId));
   }
 
   @Override
@@ -35,13 +31,6 @@ public class PlayerServiceImpl implements PlayerService {
 
   @Override
   public Player add(Player player) {
-    playerRepository
-        .findById(player.getId())
-        .ifPresent(
-            existingPlayer -> {
-              throw new BadRequestException(
-                  String.format("Player with ID: %s already exists.", player.getId()));
-            });
 
     return playerRepository.save(player);
   }
@@ -55,19 +44,12 @@ public class PlayerServiceImpl implements PlayerService {
               playerRepository.save(player);
               return player;
             })
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format("Player with ID: %s does not exist.", player.getId())));
+        .orElseThrow(() -> new PlayerNotFoundException(player.getId()));
   }
 
   @Override
   public void deleteById(Integer playerId) {
-    playerRepository
-        .findById(playerId)
-        .orElseThrow(
-            () -> new NotFoundException(String.format("Player with ID: %s not found.", playerId)));
-
+    playerRepository.findById(playerId).orElseThrow(() -> new PlayerNotFoundException(playerId));
     playerRepository.deleteById(playerId);
   }
 
@@ -85,31 +67,21 @@ public class PlayerServiceImpl implements PlayerService {
   public Player findByGameIdAndId(int gameId, int playerId) {
     return playerRepository
         .findByGameIdAndId(gameId, playerId)
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format(
-                        "Player with ID: %s and gameID: %s not found.", playerId, gameId)));
+        .orElseThrow(() -> new PlayerNotFoundException(playerId, gameId));
   }
 
   @Override
   public Player findPlayerByGameIdAndLoginUser_Id(int gameId, int loginUserId) {
     return playerRepository
         .findPlayerByGameIdAndLoginUser_Id(gameId, loginUserId)
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format(
-                        "Player with gameID: %d and loginUserID: %d not found.",
-                        gameId, loginUserId)));
+        .orElseThrow(() -> new LoginUserNotFoundException(gameId, loginUserId));
   }
 
   @Override
   public Collection<Player> findAllByLoginUser_Id(int loginUserId) {
     Collection<Player> players = playerRepository.findAllByLoginUser_Id(loginUserId);
     if (players.isEmpty()) {
-      throw new NotFoundException(
-          String.format("No players found for loginUserID: %d", loginUserId));
+      throw new LoginUserNotFoundException(loginUserId);
     }
     return players;
   }
@@ -118,8 +90,7 @@ public class PlayerServiceImpl implements PlayerService {
   public Collection<Player> findAllByLoginUser_KeycloakId(String keycloakId) {
     Collection<Player> players = playerRepository.findAllByLoginUser_KeycloakId(keycloakId);
     if (players.isEmpty()) {
-      throw new NotFoundException(
-          String.format("No players found for loginUser and KeycloakID: %s", keycloakId));
+      throw new LoginUserNotFoundException(keycloakId);
     }
     return players;
   }
@@ -128,16 +99,12 @@ public class PlayerServiceImpl implements PlayerService {
   public Player findByGameIdAndBiteCode(int gameId, String biteCode) {
     return playerRepository
         .findByGameIdAndBiteCode(gameId, biteCode)
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format(
-                        "Player with gameID: %d and biteCode: %s not found.", gameId, biteCode)));
+        .orElseThrow(() -> new PlayerWithBiteCodeNotFoundException(gameId, biteCode));
   }
 
   public String createRandomBiteCode(int length) {
     if (length <= 0 || length > 1000) {
-      throw new BadRequestException(
+      throw new IllegalArgumentException(
           "Length of bite code is invalid, it must be between 0 and 1000.");
     }
 
@@ -158,9 +125,6 @@ public class PlayerServiceImpl implements PlayerService {
   public Player findByBiteCode(String biteCode) {
     return playerRepository
         .findByBiteCode(biteCode)
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format("Player with biteCode: %s not found.", biteCode)));
+        .orElseThrow(() -> new PlayerWithBiteCodeNotFoundException(biteCode));
   }
 }

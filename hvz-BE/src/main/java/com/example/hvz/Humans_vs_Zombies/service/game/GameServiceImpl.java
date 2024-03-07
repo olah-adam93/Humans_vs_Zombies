@@ -1,7 +1,6 @@
 package com.example.hvz.Humans_vs_Zombies.service.game;
 
-import com.example.hvz.Humans_vs_Zombies.exception.BadRequestException;
-import com.example.hvz.Humans_vs_Zombies.exception.NotFoundException;
+import com.example.hvz.Humans_vs_Zombies.exception.GameNotFoundException;
 import com.example.hvz.Humans_vs_Zombies.model.Game;
 import com.example.hvz.Humans_vs_Zombies.repository.GameRepository;
 import java.util.Collection;
@@ -18,11 +17,7 @@ public class GameServiceImpl implements GameService {
 
   @Override
   public Game findById(Integer gameId) {
-
-    return gameRepository
-        .findById(gameId)
-        .orElseThrow(
-            () -> new NotFoundException(String.format("Game with ID: %s does not exist.", gameId)));
+    return gameRepository.findById(gameId).orElseThrow(() -> new GameNotFoundException(gameId));
   }
 
   @Override
@@ -32,14 +27,6 @@ public class GameServiceImpl implements GameService {
 
   @Override
   public Game add(Game game) {
-    gameRepository
-        .findById(game.getId())
-        .ifPresent(
-            existingGame -> {
-              throw new BadRequestException(
-                  String.format("Game with ID: %s already exists.", game.getId()));
-            });
-
     return gameRepository.save(game);
   }
 
@@ -52,19 +39,12 @@ public class GameServiceImpl implements GameService {
               gameRepository.save(game);
               return game;
             })
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format("Game with ID: %s does not exist.", game.getId())));
+        .orElseThrow(() -> new GameNotFoundException(game.getId()));
   }
 
   @Override
   public void deleteById(Integer gameId) {
-    gameRepository
-        .findById(gameId)
-        .orElseThrow(
-            () -> new NotFoundException(String.format("Game with ID: %s not found.", gameId)));
-
+    gameRepository.findById(gameId).orElseThrow(() -> new GameNotFoundException(gameId));
     gameRepository.deleteById(gameId);
   }
 

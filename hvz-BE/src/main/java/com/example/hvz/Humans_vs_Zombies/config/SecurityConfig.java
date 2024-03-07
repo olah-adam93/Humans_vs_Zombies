@@ -17,9 +17,10 @@ public class SecurityConfig {
     http.authorizeHttpRequests(
             authorize ->
                 authorize
-                    .requestMatchers("/api/game")
-                    .permitAll()
-                    .requestMatchers("/websocket/**")
+                    // .requestMatchers("/api/game")
+                    // .permitAll()
+                    // .requestMatchers("/websocket/**")
+                    .requestMatchers("/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated())

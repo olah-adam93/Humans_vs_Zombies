@@ -1,6 +1,5 @@
 package com.example.hvz.Humans_vs_Zombies.controller;
 
-import com.example.hvz.Humans_vs_Zombies.exception.NotFoundException;
 import com.example.hvz.Humans_vs_Zombies.mapper.PlayerMapper;
 import com.example.hvz.Humans_vs_Zombies.model.DTO.playerDTO.CreatePlayerDTO;
 import com.example.hvz.Humans_vs_Zombies.model.DTO.playerDTO.PlayerAdminDTO;
@@ -14,11 +13,6 @@ import com.example.hvz.Humans_vs_Zombies.service.loginuser.LoginUserService;
 import com.example.hvz.Humans_vs_Zombies.service.player.PlayerService;
 import com.example.hvz.Humans_vs_Zombies.service.squadmember.SquadMemberService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.net.URI;
 import java.util.Collection;
 import org.springframework.http.ResponseEntity;
@@ -54,53 +48,16 @@ public class PlayerController {
   }
 
   @Operation(summary = "Get all players in a game")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Success",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = PlayerDTO.class)))
-            }),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Game does not exist with supplied ID.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = NotFoundException.class)))
-            })
-      })
   @GetMapping("/{gameId}/player")
-  public ResponseEntity findAllByGameId(@PathVariable("gameId") Integer gameId) {
+  public ResponseEntity<Collection<PlayerAdminDTO>> findAllByGameId(
+      @PathVariable("gameId") Integer gameId) {
 
-    Collection<PlayerAdminDTO> playerAdminDTO =
+    Collection<PlayerAdminDTO> playerAdminDTOs =
         playerMapper.playerToPlayerAdminDto(playerService.findAllByGameId(gameId));
-    return ResponseEntity.ok(playerAdminDTO);
+    return ResponseEntity.ok(playerAdminDTOs);
   }
 
   @Operation(summary = "Get a specific player by ID")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Success",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = PlayerDTO.class))
-            }),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Player does not exist with supplied gameId and playerId.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = NotFoundException.class))
-            })
-      })
   @GetMapping("/{gameId}/player/{playerId}")
   public ResponseEntity<PlayerDTO> findByPlayerId(
       @PathVariable("gameId") int gameId, @PathVariable("playerId") int playerId) {
@@ -110,24 +67,9 @@ public class PlayerController {
     return ResponseEntity.ok(playerDTO);
   }
 
-  @Operation(summary = "Add a new Player")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "201",
-            description = "The player is successfully added",
-            content = @Content),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Game does not exist with supplied ID.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = NotFoundException.class)))
-            })
-      })
+  @Operation(summary = "Add new player")
   @PostMapping("{gameId}/player")
-  public ResponseEntity add(
+  public ResponseEntity<Void> add(
       @PathVariable("gameId") int gameId, @RequestBody CreatePlayerDTO createPlayerDTO) {
     Game game = gameService.findById(gameId);
 
@@ -145,21 +87,6 @@ public class PlayerController {
   }
 
   @Operation(summary = "Update a player")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "204",
-            description = "Successfully updated the player",
-            content = @Content),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Player does not exist with supplied gameId and playerId.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = NotFoundException.class))
-            })
-      })
   @PutMapping("/{gameId}/player/{playerId}")
   public ResponseEntity<PlayerDTO> update(
       @RequestBody PlayerDTO playerDTO, @PathVariable("playerId") int playerId) {
@@ -169,27 +96,8 @@ public class PlayerController {
   }
 
   @Operation(summary = "Delete a specific player by ID")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "204",
-            description = "Player deleted.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = PlayerDTO.class))
-            }),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Player does not exist with supplied gameId and playerId.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = NotFoundException.class))
-            })
-      })
   @DeleteMapping(path = "/{gameId}/player/{playerId}")
-  public ResponseEntity delete(
+  public ResponseEntity<Void> delete(
       @PathVariable("gameId") int gameId, @PathVariable("playerId") int playerId) {
     Game game = gameService.findById(gameId);
     Player player = playerService.findByGameIdAndId(gameId, playerId);

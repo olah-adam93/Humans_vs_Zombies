@@ -1,7 +1,6 @@
 package com.example.hvz.Humans_vs_Zombies.service.kill;
 
-import com.example.hvz.Humans_vs_Zombies.exception.BadRequestException;
-import com.example.hvz.Humans_vs_Zombies.exception.NotFoundException;
+import com.example.hvz.Humans_vs_Zombies.exception.KillNotFoundException;
 import com.example.hvz.Humans_vs_Zombies.model.Kill;
 import com.example.hvz.Humans_vs_Zombies.repository.KillRepository;
 import java.util.Collection;
@@ -20,10 +19,7 @@ public class KillServiceImpl implements KillService {
 
   @Override
   public Kill findById(Integer killId) {
-    return killRepository
-        .findById(killId)
-        .orElseThrow(
-            () -> new NotFoundException(String.format("Kill with ID: %s does not exist.", killId)));
+    return killRepository.findById(killId).orElseThrow(() -> new KillNotFoundException(killId));
   }
 
   @Override
@@ -33,14 +29,6 @@ public class KillServiceImpl implements KillService {
 
   @Override
   public Kill add(Kill kill) {
-    killRepository
-        .findById(kill.getId())
-        .ifPresent(
-            existingKill -> {
-              throw new BadRequestException(
-                  String.format("Kill with ID: %s already exists.", kill.getId()));
-            });
-
     return killRepository.save(kill);
   }
 
@@ -53,19 +41,12 @@ public class KillServiceImpl implements KillService {
               killRepository.save(kill);
               return kill;
             })
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format("Kill with ID: %s does not exist.", kill.getId())));
+        .orElseThrow(() -> new KillNotFoundException(kill.getId()));
   }
 
   @Override
   public void deleteById(Integer killId) {
-    killRepository
-        .findById(killId)
-        .orElseThrow(
-            () -> new NotFoundException(String.format("Kill with ID: %s not found.", killId)));
-
+    killRepository.findById(killId).orElseThrow(() -> new KillNotFoundException(killId));
     killRepository.deleteById(killId);
   }
 
@@ -83,9 +64,6 @@ public class KillServiceImpl implements KillService {
   public Kill findByGameIdAndKillId(int gameId, int killId) {
     return killRepository
         .findByGameIdAndId(gameId, killId)
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format("Kill with ID: %s and gameID: %s not found.", killId, gameId)));
+        .orElseThrow(() -> new KillNotFoundException(killId, gameId));
   }
 }

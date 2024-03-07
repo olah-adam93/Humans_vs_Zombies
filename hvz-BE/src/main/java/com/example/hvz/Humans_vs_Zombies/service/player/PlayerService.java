@@ -2,9 +2,8 @@ package com.example.hvz.Humans_vs_Zombies.service.player;
 
 import com.example.hvz.Humans_vs_Zombies.model.Player;
 import com.example.hvz.Humans_vs_Zombies.service.CrudService;
-import org.springframework.stereotype.Service;
-
 import java.util.Collection;
+import org.springframework.stereotype.Service;
 
 @Service
 public interface PlayerService extends CrudService<Player, Integer> {
@@ -20,6 +19,7 @@ public interface PlayerService extends CrudService<Player, Integer> {
   Collection<Player> findAllByLoginUser_KeycloakId(String keycloakId);
 
   Player findByGameIdAndBiteCode(int gameId, String biteCode);
+
   String createRandomBiteCode(int length);
 
   Player findByBiteCode(String biteCode);

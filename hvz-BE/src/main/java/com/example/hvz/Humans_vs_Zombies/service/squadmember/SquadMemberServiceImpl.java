@@ -1,7 +1,7 @@
 package com.example.hvz.Humans_vs_Zombies.service.squadmember;
 
-import com.example.hvz.Humans_vs_Zombies.exception.BadRequestException;
-import com.example.hvz.Humans_vs_Zombies.exception.NotFoundException;
+import com.example.hvz.Humans_vs_Zombies.exception.PlayerNotFoundException;
+import com.example.hvz.Humans_vs_Zombies.exception.SquadMemberNotFoundException;
 import com.example.hvz.Humans_vs_Zombies.model.SquadMember;
 import com.example.hvz.Humans_vs_Zombies.repository.SquadMemberRepository;
 import java.util.Collection;
@@ -22,10 +22,7 @@ public class SquadMemberServiceImpl implements SquadMemberService {
   public SquadMember findById(Integer squadMemberId) {
     return squadMemberRepository
         .findById(squadMemberId)
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format("Squad member with ID: %d not found.", squadMemberId)));
+        .orElseThrow(() -> new SquadMemberNotFoundException(squadMemberId));
   }
 
   @Override
@@ -35,13 +32,6 @@ public class SquadMemberServiceImpl implements SquadMemberService {
 
   @Override
   public SquadMember add(SquadMember squadMember) {
-    squadMemberRepository
-        .findById(squadMember.getId())
-        .ifPresent(
-            existingSquadMember -> {
-              throw new BadRequestException(
-                  String.format("Squad member with ID: %s already exists.", squadMember.getId()));
-            });
 
     return squadMemberRepository.save(squadMember);
   }
@@ -55,21 +45,14 @@ public class SquadMemberServiceImpl implements SquadMemberService {
               squadMemberRepository.save(squadMember);
               return squadMember;
             })
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format(
-                        "Squad member with ID: %s does not exist.", squadMember.getId())));
+        .orElseThrow(() -> new SquadMemberNotFoundException(squadMember.getId()));
   }
 
   @Override
   public void deleteById(Integer squadMemberId) {
     squadMemberRepository
         .findById(squadMemberId)
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format("Squad member with ID: %s not found.", squadMemberId)));
+        .orElseThrow(() -> new SquadMemberNotFoundException(squadMemberId));
 
     squadMemberRepository.deleteById(squadMemberId);
   }
@@ -81,30 +64,19 @@ public class SquadMemberServiceImpl implements SquadMemberService {
 
   @Override
   public Collection<SquadMember> findAllBySquad_Id(int squadId) {
-    Collection<SquadMember> squadMembers = squadMemberRepository.findAllBySquad_Id(squadId);
-    if (squadMembers.isEmpty()) {
-      throw new NotFoundException(String.format("No squad members found for squadID: %d", squadId));
-    }
-    return squadMembers;
+    return squadMemberRepository.findAllBySquad_Id(squadId);
   }
 
   @Override
   public Collection<SquadMember> findAllByRankContaining(String rank) {
-    Collection<SquadMember> squadMembers = squadMemberRepository.findAllByRankContaining(rank);
-    if (squadMembers.isEmpty()) {
-      throw new NotFoundException(String.format("No squad members found with rank: %s", rank));
-    }
-    return squadMembers;
+    return squadMemberRepository.findAllByRankContaining(rank);
   }
 
   @Override
   public SquadMember findByPlayer_Id(int playerId) {
     return squadMemberRepository
         .findByPlayer_Id(playerId)
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format("Squad member with playerID: %d not found.", playerId)));
+        .orElseThrow(() -> new PlayerNotFoundException(playerId));
   }
 
   @Override
@@ -116,11 +88,6 @@ public class SquadMemberServiceImpl implements SquadMemberService {
   public SquadMember findByGameIdAndId(int gameId, int squadMemberId) {
     return squadMemberRepository
         .findByGameIdAndId(gameId, squadMemberId)
-        .orElseThrow(
-            () ->
-                new NotFoundException(
-                    String.format(
-                        "Squad member with gameID: %d and ID: %d not found.",
-                        gameId, squadMemberId)));
+        .orElseThrow(() -> new SquadMemberNotFoundException(gameId, squadMemberId));
   }
 }

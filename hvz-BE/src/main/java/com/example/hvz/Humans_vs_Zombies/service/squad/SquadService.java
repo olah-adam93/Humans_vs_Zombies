@@ -11,7 +11,7 @@ public interface SquadService extends CrudService<Squad, Integer> {
 
   Set<Squad> findAllByGameId(int gameId);
 
-  Squad findByGame_IdAndId(int gameId, Integer squadId);
+  Squad findByGame_IdAndId(int gameId, int squadId);
 
-  Squad findByNameAndGame_Id(String squadName, int gameId);
+  Squad findBydGame_IdAndName(int gameId, String squadName);
 }

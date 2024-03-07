@@ -1,8 +1,8 @@
 package com.example.hvz.Humans_vs_Zombies.controller;
 
-import com.example.hvz.Humans_vs_Zombies.exception.BadRequestException;
+import com.example.hvz.Humans_vs_Zombies.exception.GameNotFoundException;
+import com.example.hvz.Humans_vs_Zombies.exception.MalformedRequestException;
 import com.example.hvz.Humans_vs_Zombies.exception.NotEnoughPlayerException;
-import com.example.hvz.Humans_vs_Zombies.exception.NotFoundException;
 import com.example.hvz.Humans_vs_Zombies.mapper.GameMapper;
 import com.example.hvz.Humans_vs_Zombies.model.DTO.GameDTO;
 import com.example.hvz.Humans_vs_Zombies.model.Game;
@@ -16,15 +16,11 @@ import com.example.hvz.Humans_vs_Zombies.service.squadmember.SquadMemberService;
 import com.example.hvz.Humans_vs_Zombies.validator.CreateGameConstraint;
 import com.example.hvz.Humans_vs_Zombies.validator.UpdateGameConstraint;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.Collection;
 import java.util.Random;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -59,72 +55,23 @@ public class GameController {
     this.chatService = chatService;
   }
 
-  @Operation(summary = "Get all Games")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "All games returned.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = GameDTO.class)))
-            }),
-      })
+  @Operation(summary = "Get all games")
   @GetMapping
-  public ResponseEntity getAll() {
+  public ResponseEntity<Collection<GameDTO>> getAll() {
     Collection<GameDTO> gamesDTOs = gameMapper.gameToGameDto(gameService.findAll());
     return ResponseEntity.ok(gamesDTOs);
   }
 
-  @Operation(summary = "Get a Game by ID.")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Game found with ID.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = GameDTO.class))
-            }),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Game does not exist with supplied ID.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = NotFoundException.class))
-            })
-      })
+  @Operation(summary = "Get a game by ID")
   @GetMapping("/{gameId}")
-  public ResponseEntity getById(@PathVariable("gameId") int gameId) {
+  public ResponseEntity<GameDTO> getById(@PathVariable("gameId") int gameId) {
     GameDTO gameDTO = gameMapper.gameToGameDto(gameService.findById(gameId));
-    return ResponseEntity.ok(gameDTO);
+    return ResponseEntity.status(HttpStatus.OK).body(gameDTO);
   }
 
-  @Operation(summary = "Add new Game.")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "201",
-            description = "Game successfully created.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = GameDTO.class))
-            }),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Malformed request.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = BadRequestException.class))
-            })
-      })
+  @Operation(summary = "Add new game")
   @PostMapping
-  public ResponseEntity add(
+  public ResponseEntity<Void> add(
       @Validated(CreateGameConstraint.class) @Valid @RequestBody GameDTO gameDTO) {
     gameDTO.setHumanCount(0);
     Game game = gameService.add(gameMapper.gameDtoToGame(gameDTO));
@@ -133,45 +80,15 @@ public class GameController {
     return ResponseEntity.created(location).build();
   }
 
-  @Operation(summary = "Update a Game")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "204",
-            description = "Game successfully updated.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = GameDTO.class))
-            }),
-        @ApiResponse(
-            responseCode = "400",
-            description = "Malformed request.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = BadRequestException.class)),
-              @Content(
-                  mediaType = "application/json+player",
-                  schema = @Schema(implementation = NotEnoughPlayerException.class))
-            }),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Game not found with supplied ID.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = NotFoundException.class))
-            })
-      })
+  @Operation(summary = "Update a game")
   @PutMapping("/{gameId}")
-  public ResponseEntity update(
+  public ResponseEntity<Void> update(
       @Validated(UpdateGameConstraint.class) @Valid @RequestBody GameDTO gameDTO,
       @PathVariable("gameId") int gameId) {
     gameDTO.setId(gameId);
     Game game = gameService.findById(gameId);
     if (game == null) {
-      throw new NotFoundException(String.format("Game with given ID: %s does not exist.", gameId));
+      throw new GameNotFoundException(gameId);
     }
     if (gameDTO.getState() != null) {
       switch (gameDTO.getState()) {
@@ -198,7 +115,7 @@ public class GameController {
         case "Registration":
           break;
         default:
-          throw new BadRequestException();
+          throw new MalformedRequestException();
       }
     }
     if (gameDTO.getName() == null) {
@@ -227,27 +144,8 @@ public class GameController {
   }
 
   @Operation(summary = "Delete a specific game by ID")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "204",
-            description = "Game deleted.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = GameDTO.class))
-            }),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Game not found with supplied ID.",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  schema = @Schema(implementation = NotFoundException.class))
-            })
-      })
   @DeleteMapping("/{gameId}")
-  public ResponseEntity delete(@PathVariable("gameId") int gameId) {
+  public ResponseEntity<Void> delete(@PathVariable("gameId") int gameId) {
     squadMemberService.findAllByGameId(gameId).forEach(squadMemberService::delete);
     chatService.findAllByGameId(gameId).forEach(chatService::delete);
     playerService.findAllByGameId(gameId).forEach(playerService::delete);
