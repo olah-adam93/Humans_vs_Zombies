@@ -6,7 +6,7 @@ import {
   HttpInterceptor,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import keycloak from '../keycloak';
+import keycloak from '../../keycloak';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {

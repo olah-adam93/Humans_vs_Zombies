@@ -1,0 +1,57 @@
+{
+  "players": [
+    {
+      "id": "1",
+      "username": "user",
+      "isHuman": true,
+      "isPatientZero": true,
+      "state": "?",
+      "biteCode": "abc"
+    },
+    {
+      "id": "2",
+      "username": "admin",
+      "isHuman": false,
+      "isPatientZero": false,
+      "state": "?",
+      "biteCode": "abc2"
+    }
+  ],
+  "games": [
+    {
+      "id": "1",
+      "name": "Game1",
+      "location": "Prague",
+      "state": "Registration",
+      "players": [1]
+    },
+    {
+      "id": "2",
+      "name": "Game2",
+      "location": "Eger",
+      "state": "Registration",
+      "players": [1, 2]
+    },
+    {
+      "id": "3",
+      "name": "Game3",
+      "location": "Miskolc",
+      "state": "In Progress",
+      "players": [1, 2]
+    },
+    {
+      "id": "4",
+      "name": "Game4",
+      "location": "Budapest",
+      "state": "Complete",
+      "players": [1, 2]
+    },
+    {
+      "id": "5",
+      "name": "Game5",
+      "location": "Szeged",
+      "state": "Registration",
+      "players": [1, 2, 3, 7, 9]
+    }
+  ]
+}
