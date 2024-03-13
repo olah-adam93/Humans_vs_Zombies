@@ -9,14 +9,17 @@ import { StompService } from './services/stomp.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChatComponent } from './components/chat/chat.component';
 import { JwtInterceptor } from './services/jwt-interceptor.service';
+import { GameListComponent } from './components/game-list/game-list.component';
+import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 
 @NgModule({
-  declarations: [AppComponent, ChatComponent],
+  declarations: [AppComponent, ChatComponent, GameListComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    GooglePlaceModule,
   ],
 
   providers: [

@@ -1,0 +1,129 @@
+.delete-game-btn {
+  cursor: pointer;
+}
+
+.delete-game-btn:hover {
+  color: red;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.title-container {
+  min-height: 9rem;
+  background: linear-gradient(
+    0deg,
+    rgba(9, 90, 100, 0) 0%,
+    rgba(9, 90, 100, 0.7483368347338936) 44%,
+    rgba(9, 90, 100, 1) 100%
+  );
+}
+
+.hm-bg-color {
+  background-color: transparent;
+}
+.title-line {
+  color: white;
+  font-family: "Amatic SC", cursive;
+  font-weight: bold;
+  font-size: 11vw;
+}
+
+.hm-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-clip: border-box;
+  text-align: left;
+  padding: 1rem;
+  box-shadow: 0px 0px 32px rgb(0 0 0 / 15%);
+  background-color: #9fea4f;
+  border-radius: 10px;
+}
+.hm-btn {
+  background-color: #30a09c;
+  text-decoration: none;
+  color: white;
+  display: inline-block;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.hm-card-body {
+  flex: 1 1 auto;
+  padding: 1rem 1rem;
+}
+
+.hm-card-title {
+  text-align: left;
+  margin-bottom: 1rem;
+  font-family: "Caveat Brush", cursive;
+}
+
+.game-name {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.hm-card-text:last-child {
+  margin-bottom: 0;
+}
+
+.game-state {
+  border: 2px solid black;
+  border-radius: 5px;
+  width: auto;
+  padding: 1px 3px;
+}
+.game-state-reg {
+  background-color: #339162;
+}
+.game-state-in-prog {
+  background-color: red;
+}
+.game-state-compl {
+  background-color: #464646;
+  color: white;
+}
+
+@media screen and (min-width: 768px) {
+  .hm-btn {
+    background-color: #30a09c;
+    text-decoration: none;
+    color: white;
+    display: inline-block;
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .hm-card {
+    box-shadow: none;
+  }
+  .hm-card:hover {
+    box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.78);
+  }
+
+  .hm-btn:hover {
+    box-shadow: 1px 1px 5px rgb(0 0 0 / 56%);
+  }
+
+  .title-line {
+    font-size: 5rem;
+  }
+
+  .game-name {
+    font-size: 3vw;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .game-name {
+    font-size: 2vw;
+  }
+}

@@ -1,0 +1,89 @@
+<div class="container-fluid px-5 py-4 background">
+  <div *ngIf="isUserAdmin && !gameFormVisible" class="row mb-5">
+    <div class="col">
+      <button class="hm-btn" (click)="openGameForm()">New Game</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div *ngIf="gameFormVisible" class="col-sm-6 col-md-4 col-lg-3">
+      <div class="hm-card mb-3">
+        <div class="card-body">
+          <h5 class="card-title mb-1" [formGroup]="gameForm">
+            <input
+              formControlName="name"
+              type="text"
+              class="form-control form-control-sm"
+              id="game-name-input"
+              placeholder="Enter name..."
+            />
+            <input
+              formControlName="location"
+              type="text"
+              class="form-control form-control-sm"
+              id="game-location-input"
+              placeholder="Enter location..."
+              ngx-google-places-autocomplete
+              [options]="options"
+              #placesRef="ngx-places"
+              (onAddressChange)="handleAddressChange($event)"
+            />
+          </h5>
+          <p class="game-state game-state-reg">Registration</p>
+          <p class="card-text">Number of Players: 0</p>
+          <button
+            class="hm-btn me-2"
+            [disabled]="gameForm.invalid"
+            (click)="createGame()"
+          >
+            Create
+          </button>
+          <a class="btn btn-light text-dark" (click)="closeGameForm()"
+            >Cancel</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let game of games">
+      <div class="hm-card mb-3">
+        <div class=".hm-card-body">
+          <p class="hm-card-title d-flex justify-content-between">
+            <span class="game-name">{{ game.name | uppercase }}</span>
+            <span *ngIf="game.playerIdofCurrentUser"
+              ><i class="fa-solid fa-street-view fa-lg"></i
+            ></span>
+            <span
+              *ngIf="isUserAdmin"
+              (click)="deleteGame(game)"
+              class="delete-game-btn"
+            >
+              <i class="fa-solid fa-xmark"></i>
+            </span>
+          </p>
+
+          <p [ngClass]="setCurrentClasses(game)">{{ game.state }}</p>
+          <p class="hm-card-text">
+            Number of Players: {{ game?.players ? game?.players?.length : "0" }}
+          </p>
+          <a
+            *ngIf="isLoggedIn && !isUserAdmin"
+            class="hm-btn"
+            [routerLink]="decideRoute(game)"
+            >Details
+          </a>
+          <a
+            *ngIf="isUserAdmin"
+            class="hm-btn"
+            [routerLink]="'/admin/' + game.id"
+          >
+            Manage
+          </a>
+          <a *ngIf="!isLoggedIn" class="hm-btn" (click)="handleLogin()"
+            >Details
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
