@@ -8,7 +8,7 @@ import { StompService } from './services/stomp.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  title = 'hvz_sajat_angular';
+  title = 'hvz_fe_angular';
 
   constructor(private stompService: StompService) {}
   ngOnInit(): void {
@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
   }
 
   get name(): string | undefined {
-    return keycloak.tokenParsed?.name; //ha encoded info-t akarunk belőle, tokenParsed
+    return keycloak.tokenParsed?.name;
   }
 
   get email(): string | undefined {
