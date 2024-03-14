@@ -6,21 +6,21 @@ import {
   HttpInterceptor,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import keycloak from '../../keycloak';
+import { KeycloakService } from './keycloak.service';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-  constructor() {}
+  constructor(private keycloakService: KeycloakService) {}
 
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    if (!keycloak.authenticated || !keycloak.token) {
+    if (!this.keycloakService.isAuthenticated || !this.keycloakService.token) {
       return next.handle(request);
     }
 
-    const { token } = keycloak;
+    const token = this.keycloakService.token;
 
     const authRequest = request.clone({
       headers: request.headers.set('Authorization', `Bearer ${token}`),

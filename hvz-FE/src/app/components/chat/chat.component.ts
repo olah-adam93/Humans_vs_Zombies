@@ -4,7 +4,7 @@ import { Player } from '../../models/Player';
 import { CreateChat } from '../../models/CreateChat';
 import { ChatService } from '../../services/chat.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import keycloak from '../../../keycloak';
+import { KeycloakService } from 'src/app/services/keycloak.service';
 import { StompService } from '../../services/stomp.service';
 
 @Component({
@@ -35,6 +35,7 @@ export class ChatComponent implements OnChanges, OnDestroy {
 
   constructor(
     private chatService: ChatService,
+    private keycloakService: KeycloakService,
     private stompService: StompService
   ) {}
 
@@ -110,7 +111,7 @@ export class ChatComponent implements OnChanges, OnDestroy {
       faction: faction,
       player: this.player?.id,
       game: this.game?.id,
-      userName: keycloak.tokenParsed?.preferred_username,
+      userName: this.keycloakService.username,
     };
 
     if (faction === 'global') {

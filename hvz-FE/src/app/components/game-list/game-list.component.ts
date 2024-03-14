@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Game } from '../../models/Game';
 import { GameService } from '../../services/game.service';
 import { Router } from '@angular/router';
-import keycloak from '../../../keycloak';
+import { KeycloakService } from 'src/app/services/keycloak.service';
 import { LoginUserService } from '../../services/login-user.service';
 import { Player } from '../../models/Player';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -26,15 +26,16 @@ export class GameListComponent implements OnInit, OnDestroy {
   });
 
   get isLoggedIn(): Boolean | undefined {
-    return keycloak.authenticated;
+    return this.keycloakService.isAuthenticated;
   }
 
   public get isUserAdmin(): Boolean | undefined {
-    return keycloak.hasResourceRole('admin');
+    return this.keycloakService.isUserAdmin;
   }
   constructor(
     private gameService: GameService,
     private loginUserService: LoginUserService,
+    private keycloakService: KeycloakService,
     private stompService: StompService,
     private router: Router
   ) {}
@@ -45,10 +46,10 @@ export class GameListComponent implements OnInit, OnDestroy {
         this.games = gamesFromServer;
         console.log(this.games);
         //if user is logged in, load their playerId-s to relating Games
-        if (keycloak.authenticated) {
+        if (this.keycloakService.isAuthenticated) {
           //get list of Players belonging to logged in User
           this.loginUserService
-            .getLoginUser(keycloak.tokenParsed?.sub)
+            .getLoginUser(this.keycloakService.keycloakId)
             .subscribe({
               next: (playersFromServer: Player[]) => {
                 console.log(playersFromServer);
@@ -66,10 +67,10 @@ export class GameListComponent implements OnInit, OnDestroy {
                 console.log(e);
                 if (e.status == 404) {
                   const newLoginUser = {
-                    firstName: keycloak.tokenParsed?.given_name,
-                    lastName: keycloak.tokenParsed?.family_name,
-                    keycloakId: keycloak.tokenParsed?.sub,
-                    userName: keycloak.tokenParsed?.preferred_username,
+                    firstName: this.keycloakService.firstName,
+                    lastName: this.keycloakService.lastName,
+                    keycloakId: this.keycloakService.keycloakId,
+                    userName: this.keycloakService.username,
                   };
                   this.loginUserService.saveLoginUser(newLoginUser).subscribe({
                     next: (response) => {
@@ -171,7 +172,7 @@ export class GameListComponent implements OnInit, OnDestroy {
   }
 
   handleLogin(): void {
-    keycloak.login();
+    this.keycloakService.login();
   }
 
   // Handle location setting

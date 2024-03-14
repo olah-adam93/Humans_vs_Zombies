@@ -11,9 +11,11 @@ import { ChatComponent } from './components/chat/chat.component';
 import { JwtInterceptor } from './services/jwt-interceptor.service';
 import { GameListComponent } from './components/game-list/game-list.component';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
+import { MapComponent } from './components/map/map.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @NgModule({
-  declarations: [AppComponent, ChatComponent, GameListComponent],
+  declarations: [AppComponent, ChatComponent, GameListComponent, MapComponent, NavbarComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

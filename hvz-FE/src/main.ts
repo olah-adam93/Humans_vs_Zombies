@@ -3,15 +3,19 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-import { initialize } from './keycloak';
+import { KeycloakService } from './app/services/keycloak.service';
 
 if (environment.production) {
   enableProdMode();
 }
 
-//initialize Keycloak-ból, autentikációhoz kell
-initialize().then(() => {
-  platformBrowserDynamic()
-    .bootstrapModule(AppModule)
-    .catch((err) => console.error(err));
-});
+// Initialize KeycloakService for authentication
+platformBrowserDynamic()
+  .bootstrapModule(AppModule)
+  .then(() => {
+    const keycloakService = new KeycloakService();
+    keycloakService.initialize().catch((err) => {
+      console.error('Error initializing KeycloakService:', err);
+    });
+  })
+  .catch((err) => console.error(err));

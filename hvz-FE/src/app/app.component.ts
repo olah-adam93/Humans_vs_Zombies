@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import keycloak from '../keycloak';
+import { KeycloakService } from './services/keycloak.service';
 import { StompService } from './services/stomp.service';
 
 @Component({
@@ -10,33 +10,36 @@ import { StompService } from './services/stomp.service';
 export class AppComponent implements OnInit {
   title = 'hvz_fe_angular';
 
-  constructor(private stompService: StompService) {}
+  constructor(
+    private keycloakService: KeycloakService,
+    private stompService: StompService
+  ) {}
+
   ngOnInit(): void {
     this.stompService.connectToServer();
   }
 
-  get isLoggedIn(): Boolean | undefined {
-    return keycloak.authenticated;
+  get isLoggedIn(): boolean {
+    return this.keycloakService.isAuthenticated;
   }
 
   get token(): string | undefined {
-    return keycloak.token;
+    return this.keycloakService.token;
   }
 
-  get name(): string | undefined {
-    return keycloak.tokenParsed?.name;
+  get username(): string | undefined {
+    return this.keycloakService.username;
   }
 
   get email(): string | undefined {
-    return keycloak.tokenParsed?.email;
+    return this.keycloakService.email;
   }
 
   handleLogin(): void {
-    keycloak.login();
-    // console.log(keycloak.token)
+    this.keycloakService.login();
   }
 
   handleLogout(): void {
-    keycloak.logout();
+    this.keycloakService.logout();
   }
 }
