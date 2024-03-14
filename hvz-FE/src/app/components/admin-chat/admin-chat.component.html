@@ -1,0 +1,101 @@
+<h5 class="mb-3">Chat</h5>
+
+<div *ngIf="game && game.state == 'Registration'" class="mb-5">
+  <small class="text-muted">
+    Once the Game starts, you'll be able to observe Players' chat.
+  </small>
+</div>
+
+<div *ngIf="game && game.state != 'Registration'" class="chat-container">
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active"
+        id="global-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#global-tab-content"
+        type="button"
+        role="tab"
+        aria-controls="global-tab-content"
+        aria-selected="true"
+      >
+        Global
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="humans-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#humans-tab-content"
+        type="button"
+        role="tab"
+        aria-controls="humans-tab-content"
+        aria-selected="false"
+      >
+        Humans
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link"
+        id="zombies-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#zombies-tab-content"
+        type="button"
+        role="tab"
+        aria-controls="zombies-tab-content"
+        aria-selected="false"
+      >
+        Zombies
+      </button>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="myTabContent">
+    <div
+      class="tab-pane show active"
+      id="global-tab-content"
+      role="tabpanel"
+      aria-labelledby="global-tab"
+    >
+      <div class="show-chat-message p-2 my-2">
+        <ul class="list-unstyled">
+          <li *ngFor="let globalMessage of globalChat">
+            {{ globalMessage.userName }}: {{ globalMessage.message }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="tab-pane"
+      id="humans-tab-content"
+      role="tabpanel"
+      aria-labelledby="humans-tab"
+    >
+      <div class="show-chat-message p-2 my-2 humans-chat-display">
+        <ul class="list-unstyled">
+          <li *ngFor="let humanMessage of humanChat">
+            {{ humanMessage.userName }}: {{ humanMessage.message }}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="tab-pane"
+      id="zombies-tab-content"
+      role="tabpanel"
+      aria-labelledby="zombies-tab"
+    >
+      <div class="show-chat-message p-2 my-2 zombies-chat-display">
+        <ul class="list-unstyled">
+          <li *ngFor="let zombieMessage of zombieChat">
+            {{ zombieMessage.userName }}: {{ zombieMessage.message }}
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
