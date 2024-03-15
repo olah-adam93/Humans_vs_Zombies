@@ -8,8 +8,6 @@ import { StompService } from './services/stomp.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  title = 'hvz_fe_angular';
-
   constructor(
     private keycloakService: KeycloakService,
     private stompService: StompService

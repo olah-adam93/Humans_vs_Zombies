@@ -1,0 +1,121 @@
+<div class="linear-gr-bg"></div>
+<div class="container-fluid pt-5 background">
+  <div class="row d-felx justify-content-center">
+    <div class="col-sm-10 col-md-10 col-xl-8">
+      <div class="hm-card mb-3 mb-md-2">
+        <div class="card-body">
+          <h4 class="hm-card-title">{{game?.name | uppercase}}</h4>
+
+          <!-- Game description segment-->
+          <div class="game-info">
+            <p [ngClass]="setCurrentClasses(game)">{{game?.state}}</p>
+            <p class="card-text">
+              <span class="fw-bold">Number of Players:</span> {{game?.players ?
+              game?.players?.length : "0"}}
+            </p>
+            <p *ngIf="player" class="card-text">
+              <span class="fw-bold">Player:</span> {{username}}
+            </p>
+            <p
+              *ngIf="player && player.isHuman && game && game.state=='In Progress'"
+              class="card-text human-badge"
+            >
+              HUMAN &nbsp;<i class="fa-regular fa-face-smile"></i>
+            </p>
+            <p
+              *ngIf="player && !player.isHuman && game && game.state=='In Progress'"
+              class="card-text zombie-badge"
+            >
+              ZOMBIE &nbsp;<i class="fa-solid fa-skull"></i>
+            </p>
+
+            <p class="card-text">
+              Players can Join or Leave the Game in the Registration period.
+              Once the Game starts, Players will be notified whether they are or
+              they are not the Patient Zero. When a Zombie bites a Human, the
+              Human must show their bite code to the Zombie so they can register
+              the bite. The bitten Human then turns into a Zombie. The Game ends
+              when there is only one Human left, who is the winner of the game.
+              You can chat with other Players during the game. The Global
+              channel is available to all Players, while the Human/Zombie
+              channels can only be accessed by Players with the corresponding
+              state.
+            </p>
+            <a
+              *ngIf="game?.state === 'Registration' && !player"
+              (click)="joinGame()"
+              class="btn btn-success d-block"
+              >Join game</a
+            >
+            <a
+              *ngIf="game?.state === 'Registration' && player"
+              (click)="leaveGame()"
+              class="btn btn-danger d-block"
+              >Leave game</a
+            >
+          </div>
+
+          <!-- Map segment-->
+          <div class="map my-5">
+            <app-map [game]="game"></app-map>
+          </div>
+
+          <!-- Bite code -->
+          <div
+            class="bite-code mb-5"
+            *ngIf="player && player.isHuman && game?.state ==='In Progress'"
+          >
+            <h5 class="mb-0 p-1">Your Bite code: {{player.biteCode}}</h5>
+          </div>
+
+          <!-- Bite code entry form-->
+          <h5
+            *ngIf="player && !player.isHuman && game && game.state=='In Progress' "
+            class="mb-3"
+          >
+            Bite a Human!
+          </h5>
+          <form
+            *ngIf="player && !player.isHuman && game && game.state=='In Progress' "
+            [formGroup]="killForm"
+            (ngSubmit)="onKillSubmit()"
+            class="mb-5"
+          >
+            <div class="mb-3 bite-code-container">
+              <label for="bite-code-input" class="form-label"
+                >Enter bite code</label
+              >
+              <input
+                formControlName="biteCode"
+                type="text"
+                class="form-control"
+                id="bite-code-input"
+                placeholder="1234"
+              />
+            </div>
+            <div class="mb-3 kill-story-container">
+              <label for="kill-story-input" class="form-label"
+                >Add your story</label
+              >
+              <input
+                formControlName="killStory"
+                type="text"
+                class="form-control"
+                id="kill-story-input"
+                placeholder="E.g. CrazyZombie killed LameHuman"
+              />
+            </div>
+            <button class="hm-btn mb-2" [disabled]="killForm.invalid">
+              Register Kill
+            </button>
+          </form>
+
+          <!--  Chat segment          -->
+          <app-chat [game]="game" [player]="player"></app-chat>
+
+          <a class="hm-btn" routerLink="">Back to list</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

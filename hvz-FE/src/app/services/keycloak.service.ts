@@ -51,7 +51,7 @@ export class KeycloakService {
   }
 
   get isUserAdmin(): Boolean | undefined {
-    return this.keycloak.hasResourceRole('admin');
+    return this.keycloak.hasResourceRole('Administrator');
   }
 
   login(): void {
@@ -69,7 +69,6 @@ interface KeycloakInstance extends Keycloak {
 }
 
 interface KeycloakTokenParsedExtended extends KeycloakTokenParsed {
-  // Extend with Additional Properties
   'allowed-origins': string[];
   email?: string;
   email_verified?: boolean;

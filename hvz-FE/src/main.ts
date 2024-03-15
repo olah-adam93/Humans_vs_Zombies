@@ -9,13 +9,10 @@ if (environment.production) {
   enableProdMode();
 }
 
-// Initialize KeycloakService for authentication
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
-  .then(() => {
-    const keycloakService = new KeycloakService();
-    keycloakService.initialize().catch((err) => {
-      console.error('Error initializing KeycloakService:', err);
-    });
+  .then((moduleRef) => {
+    const keycloakService = moduleRef.injector.get(KeycloakService); // Inject KeycloakService
+    return keycloakService.initialize(); // Initialize KeycloakService
   })
-  .catch((err) => console.error(err));
+  .catch((err) => console.error('Error bootstrapping application:', err));

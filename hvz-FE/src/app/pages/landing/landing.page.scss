@@ -1,0 +1,48 @@
+.linear-gr-bg {
+  height: 65px;
+  background: linear-gradient(
+    0deg,
+    rgba(23, 76, 74, 1) 0%,
+    rgba(0, 0, 0, 1) 100%,
+    rgba(0, 212, 255, 1) 100%
+  );
+}
+
+.hero-title {
+  font-size: 16vw;
+  margin: 0;
+  line-height: 0.8;
+  text-shadow: 4px 4px 5px black;
+  letter-spacing: 1vw;
+}
+
+.hero-title-human {
+  color: #9fea4f;
+  font-family: "Chewy", cursive;
+  padding-top: 10px;
+}
+
+.hero-title-zombie {
+  color: red;
+  font-family: "Slackey", cursive;
+}
+
+.hero-title-vs {
+  margin-bottom: 0;
+  font-size: 2rem;
+  font-style: italic;
+}
+
+.logged-in {
+  color: #30a09c;
+}
+
+@media screen and (min-width: 768px) {
+  .hero-title {
+    font-size: 8rem;
+    margin: 0;
+    line-height: 0.8;
+    text-shadow: 4px 4px 5px black;
+    letter-spacing: 14px;
+  }
+}

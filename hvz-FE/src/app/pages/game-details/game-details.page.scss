@@ -1,0 +1,156 @@
+.show-chat-message {
+  min-height: 200px;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+
+.linear-gr-bg {
+  height: 65px;
+  background: linear-gradient(
+    0deg,
+    rgba(23, 76, 74, 1) 0%,
+    rgba(0, 0, 0, 1) 100%,
+    rgba(0, 212, 255, 1) 100%
+  );
+}
+
+.delete-game-btn {
+  cursor: pointer;
+}
+
+.delete-game-btn:hover {
+  color: red;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.title-container {
+  min-height: 9rem;
+  background: linear-gradient(
+    0deg,
+    rgba(9, 90, 100, 0) 0%,
+    rgba(9, 90, 100, 0.7483368347338936) 44%,
+    rgba(9, 90, 100, 1) 100%
+  );
+}
+
+.hm-bg-color {
+  background-color: transparent;
+}
+.title-line {
+  color: white;
+  font-family: "Amatic SC", cursive;
+  font-weight: bold;
+  font-size: 11vw;
+}
+
+.hm-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-clip: border-box;
+  text-align: left;
+  padding: 1rem;
+  box-shadow: 0px 0px 32px rgb(0 0 0 / 15%);
+  background-color: #9fea4f;
+  border-radius: 10px;
+  box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.78);
+}
+.hm-btn {
+  background-color: #30a09c;
+  text-decoration: none;
+  color: white;
+  display: inline-block;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.hm-card-body {
+  flex: 1 1 auto;
+  padding: 1rem 1rem;
+}
+
+.hm-card-title {
+  text-align: left;
+  margin-bottom: 1rem;
+  font-size: 3.4rem;
+  font-family: "Caveat Brush", cursive;
+}
+
+.hm-card-text:last-child {
+  margin-bottom: 0;
+}
+
+.bite-code {
+  border: 2px solid black;
+  border-radius: 5px;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 1px 3px;
+  background-color: #339162;
+  color: white;
+}
+
+.human-badge {
+  border: 2px solid black;
+  border-radius: 5px;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 1px 3px;
+  background-color: #339162;
+  color: white;
+}
+
+.zombie-badge {
+  border: 2px solid black;
+  border-radius: 5px;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 1px 3px;
+  background-color: #464646;
+  color: white;
+}
+
+.game-state {
+  border: 2px solid black;
+  border-radius: 5px;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 1px 3px;
+  font-size: 1.4rem;
+}
+.game-state-reg {
+  background-color: #339162;
+}
+.game-state-in-prog {
+  background-color: red;
+}
+.game-state-compl {
+  background-color: #464646;
+  color: white;
+}
+
+@media screen and (min-width: 768px) {
+  .hm-btn {
+    background-color: #30a09c;
+    text-decoration: none;
+    color: white;
+    display: inline-block;
+    padding: 5px;
+    border-radius: 5px;
+  }
+
+  .hm-btn:hover {
+    box-shadow: 1px 1px 5px rgb(0 0 0 / 56%);
+  }
+
+  .title-line {
+    font-size: 5rem;
+  }
+}

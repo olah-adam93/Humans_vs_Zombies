@@ -1,0 +1,13 @@
+<div class="linear-gr-bg"></div>
+
+<div class="container-fluid p-2 text-center mt-2 mb-3">
+  <h1 class="hero-title hero-title-human">Humans</h1>
+  <h3 class="hero-title-vs">vs</h3>
+  <h1 class="hero-title hero-title-zombie">Zombies</h1>
+</div>
+
+<div *ngIf="isLoggedIn" class="text-center logged-in">
+  <span>Logged in as {{username}}</span>
+</div>
+
+<app-game-list></app-game-list>

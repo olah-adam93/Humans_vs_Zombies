@@ -1,0 +1,78 @@
+<div class="linear-gr-bg"></div>
+<div class="container-fluid pt-5 background">
+  <div class="row d-felx justify-content-center">
+    <div class="col-sm-10 col-md-10 col-xl-8">
+      <div class="hm-card mb-3 mb-md-2">
+        <div class="card-body">
+          <h4 class="hm-card-title">{{ game?.name | uppercase }}</h4>
+
+          <!-- Game description segment-->
+          <div class="game-info">
+            <p [ngClass]="setCurrentClasses(game)">{{ game?.state }}</p>
+            <p class="card-text">
+              <span class="fw-bold">Number of Players:</span>
+              {{ game?.players ? game?.players?.length : "0" }}
+            </p>
+            <p class="card-text">
+              <span class="fw-bold">Admin:</span> {{ username }}
+            </p>
+            <p class="card-text">
+              Game roles, same for all games, can be burnt in. Lorem ipsum dolor
+              sit amet, consectetur adipiscing elit. Maecenas id augue
+              hendrerit, sagittis ex non, euismod nisi. Vivamus malesuada
+              faucibus accumsan. Mauris lacinia semper bibendum. In tristique
+              volutpat egestas. In vitae dui egestas, consectetur nibh id,
+              scelerisque magna. Mauris in magna finibus, accumsan est vitae,
+              vestibulum purus.
+            </p>
+
+            <button
+              *ngIf="game?.state === 'Registration'"
+              (click)="changeGameState('In Progress')"
+              class="btn btn-success d-block"
+            >
+              Start game
+            </button>
+            <button
+              *ngIf="game?.state === 'In Progress'"
+              (click)="changeGameState('Complete')"
+              class="btn btn-danger d-block"
+            >
+              End game
+            </button>
+          </div>
+
+          <!-- Map segment-->
+          <div class="map my-5">
+            <app-map [game]="game"></app-map>
+          </div>
+
+          <!--  Player list segment-->
+          <div class="player-list mb-2">
+            <h5>Players</h5>
+            <small class="text-muted" *ngIf="players?.length == 0"
+              >No Players in this Game</small
+            >
+
+            <div *ngIf="players?.length != 0" class="player-list-container p-2">
+              <p *ngFor="let player of players" class="mb-1">
+                <span class="fw-bold"> {{ player.username }} </span>
+                &nbsp;
+                <span *ngIf="player.isHuman" class="card-text human-badge">
+                  HUMAN &nbsp;<i class="fa-regular fa-face-smile"></i>
+                </span>
+                <span *ngIf="!player.isHuman" class="card-text zombie-badge">
+                  ZOMBIE &nbsp;<i class="fa-solid fa-skull"></i>
+                </span>
+              </p>
+            </div>
+          </div>
+          <!--  Chat segment          -->
+          <app-admin-chat [game]="game"></app-admin-chat>
+
+          <a class="btn btn-light text-dark" routerLink="">Back to list</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

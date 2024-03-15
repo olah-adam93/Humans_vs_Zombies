@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { KeycloakService } from 'src/app/services/keycloak.service';
 
 @Component({
@@ -6,7 +6,7 @@ import { KeycloakService } from 'src/app/services/keycloak.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   constructor(private keycloakService: KeycloakService) {}
 
   get isLoggedIn(): boolean {
@@ -23,9 +23,5 @@ export class NavbarComponent implements OnInit {
 
   handleLogout(): void {
     this.keycloakService.logout();
-  }
-
-  ngOnInit(): void {
-    this.keycloakService.initialize();
   }
 }
