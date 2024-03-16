@@ -44,7 +44,7 @@ export class ChatComponent implements OnChanges, OnDestroy {
       console.log('chat component onchanges');
 
       //load global chat
-      this.chatService.getGlobalChatbyGame(this.game.id).subscribe({
+      this.chatService.getGlobalChatByGame(this.game.id).subscribe({
         next: (globalChat) => {
           this.globalChat = globalChat;
           console.log(this.globalChat);
@@ -55,7 +55,7 @@ export class ChatComponent implements OnChanges, OnDestroy {
       });
 
       if (this.player.isHuman) {
-        this.chatService.getHumanChatbyGame(this.game.id).subscribe({
+        this.chatService.getHumanChatByGame(this.game.id).subscribe({
           next: (humanChat) => {
             this.humanChat = humanChat;
           },
@@ -66,7 +66,7 @@ export class ChatComponent implements OnChanges, OnDestroy {
       }
 
       if (!this.player.isHuman) {
-        this.chatService.getZombieChatbyGame(this.game.id).subscribe({
+        this.chatService.getZombieChatByGame(this.game.id).subscribe({
           next: (zombieChat) => {
             this.zombieChat = zombieChat;
           },
@@ -141,7 +141,7 @@ export class ChatComponent implements OnChanges, OnDestroy {
 
   public refreshGlobalChat() {
     if (this.game) {
-      this.chatService.getGlobalChatbyGame(this.game.id).subscribe({
+      this.chatService.getGlobalChatByGame(this.game.id).subscribe({
         next: (globalChat) => {
           this.globalChat = globalChat;
         },
@@ -154,7 +154,7 @@ export class ChatComponent implements OnChanges, OnDestroy {
 
   public refreshHumanChat() {
     if (this.game) {
-      this.chatService.getHumanChatbyGame(this.game.id).subscribe({
+      this.chatService.getHumanChatByGame(this.game.id).subscribe({
         next: (humanChat) => {
           this.humanChat = humanChat;
         },
@@ -167,7 +167,7 @@ export class ChatComponent implements OnChanges, OnDestroy {
 
   public refreshZombieChat() {
     if (this.game) {
-      this.chatService.getZombieChatbyGame(this.game.id).subscribe({
+      this.chatService.getZombieChatByGame(this.game.id).subscribe({
         next: (zombieChat) => {
           this.zombieChat = zombieChat;
         },

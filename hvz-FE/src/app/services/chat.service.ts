@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { CreateChat } from '../models/CreateChat';
 
 @Injectable({
@@ -12,25 +12,47 @@ export class ChatService {
 
   constructor(private http: HttpClient) {}
 
-  public getGlobalChatbyGame(gameId: number): Observable<CreateChat[]> {
-    return this.http.get<CreateChat[]>(
-      `${this.GAME_URL}/${gameId}/chat?faction=global`
-    );
+  public getGlobalChatByGame(gameId: number): Observable<CreateChat[]> {
+    return this.http
+      .get<CreateChat[]>(`${this.GAME_URL}/${gameId}/chat?faction=global`)
+      .pipe(
+        catchError((error) => {
+          console.error('Failed to fetch global chat.', error);
+          return throwError(() => new Error('Failed to fetch global chat.'));
+        })
+      );
   }
 
-  public getHumanChatbyGame(gameId: number): Observable<CreateChat[]> {
-    return this.http.get<CreateChat[]>(
-      `${this.GAME_URL}/${gameId}/chat?faction=human`
-    );
+  public getHumanChatByGame(gameId: number): Observable<CreateChat[]> {
+    return this.http
+      .get<CreateChat[]>(`${this.GAME_URL}/${gameId}/chat?faction=human`)
+      .pipe(
+        catchError((error) => {
+          console.error('Failed to fetch human chat.', error);
+          return throwError(() => new Error('Failed to fetch human chat.'));
+        })
+      );
   }
 
-  public getZombieChatbyGame(gameId: number): Observable<CreateChat[]> {
-    return this.http.get<CreateChat[]>(
-      `${this.GAME_URL}/${gameId}/chat?faction=zombie`
-    );
+  public getZombieChatByGame(gameId: number): Observable<CreateChat[]> {
+    return this.http
+      .get<CreateChat[]>(`${this.GAME_URL}/${gameId}/chat?faction=zombie`)
+      .pipe(
+        catchError((error) => {
+          console.error('Failed to fetch zombie chat.', error);
+          return throwError(() => new Error('Failed to fetch zombie chat.'));
+        })
+      );
   }
 
   public sendChat(chat: CreateChat): Observable<void> {
-    return this.http.post<void>(`${this.GAME_URL}/${chat.game}/chat`, chat);
+    return this.http
+      .post<void>(`${this.GAME_URL}/${chat.game}/chat`, chat)
+      .pipe(
+        catchError((error) => {
+          console.error('Failed to send chat.', error);
+          return throwError(() => new Error('Failed to send chat.'));
+        })
+      );
   }
 }

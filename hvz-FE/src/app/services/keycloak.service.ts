@@ -63,7 +63,6 @@ export class KeycloakService {
   }
 }
 
-// Extended Interfaces to improve IntelliSense for TypeScript.
 interface KeycloakInstance extends Keycloak {
   tokenParsed?: KeycloakTokenParsedExtended;
 }

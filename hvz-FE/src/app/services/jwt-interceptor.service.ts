@@ -16,16 +16,13 @@ export class JwtInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    if (!this.keycloakService.isAuthenticated || !this.keycloakService.token) {
-      return next.handle(request);
+    if (this.keycloakService.isAuthenticated && this.keycloakService.token) {
+      const token = this.keycloakService.token;
+      const authRequest = request.clone({
+        setHeaders: { Authorization: `Bearer ${token}` },
+      });
+      return next.handle(authRequest);
     }
-
-    const token = this.keycloakService.token;
-
-    const authRequest = request.clone({
-      headers: request.headers.set('Authorization', `Bearer ${token}`),
-    });
-
-    return next.handle(authRequest);
+    return next.handle(request);
   }
 }
