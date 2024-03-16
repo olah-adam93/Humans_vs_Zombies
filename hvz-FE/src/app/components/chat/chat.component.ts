@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { Game } from '../../models/Game';
 import { Player } from '../../models/Player';
 import { CreateChat } from '../../models/CreateChat';
@@ -18,7 +18,7 @@ export class ChatComponent implements OnChanges, OnDestroy {
   public globalChat: CreateChat[] = [];
   public humanChat: CreateChat[] = [];
   public zombieChat: CreateChat[] = [];
-  public firstLoad: boolean = true;
+  public firstLoad = true;
   public wsChatSubscription?: any;
 
   public globalChatForm: FormGroup = new FormGroup({
@@ -41,144 +41,150 @@ export class ChatComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(): void {
     if (this.game && this.player) {
-      console.log('chat component onchanges');
+      console.log('Chat component ngOnChanges');
 
-      //load global chat
-      this.chatService.getGlobalChatByGame(this.game.id).subscribe({
-        next: (globalChat) => {
-          this.globalChat = globalChat;
-          console.log(this.globalChat);
-        },
-        error: (e) => {
-          console.log(e);
-        },
-      });
-
-      if (this.player.isHuman) {
-        this.chatService.getHumanChatByGame(this.game.id).subscribe({
-          next: (humanChat) => {
-            this.humanChat = humanChat;
-          },
-          error: (e) => {
-            console.log(e);
-          },
-        });
-      }
-
-      if (!this.player.isHuman) {
-        this.chatService.getZombieChatByGame(this.game.id).subscribe({
-          next: (zombieChat) => {
-            this.zombieChat = zombieChat;
-          },
-          error: (e) => {
-            console.log(e);
-          },
-        });
-      }
-
-      if (this.firstLoad) {
-        setTimeout(() => {
-          //websocket subscription to Chat updates
-          this.wsChatSubscription = this.stompService.subscribe(
-            `/topic/chat/${this.game?.id}`,
-            (response: any): void => {
-              console.log('notified');
-              console.log(response.body);
-
-              if (response.body == 'global') {
-                this.refreshGlobalChat();
-              }
-
-              if (response.body == 'human') {
-                this.refreshHumanChat();
-              }
-
-              if (response.body == 'zombie') {
-                this.refreshZombieChat();
-              }
-            }
-          );
-        }, 1000);
-      }
+      this.loadChats();
+      this.subscribeToChatUpdates();
 
       this.firstLoad = false;
     }
-  } //end OnChanges
+  }
 
   public sendChat(faction: string): void {
-    let newChat: CreateChat = {
-      message: 'placeholder',
-      faction: faction,
+    const newChat: CreateChat = {
+      message: '',
+      faction,
       player: this.player?.id,
       game: this.game?.id,
-      userName: this.keycloakService.username,
+      userName: this.keycloakService.username || '',
     };
 
-    if (faction === 'global') {
-      newChat.message = this.globalChatForm.get('globalChatMessage')?.value;
-    } else if (faction === 'human') {
-      newChat.message = this.humanChatForm.get('humanChatMessage')?.value;
-    } else if (faction === 'zombie') {
-      newChat.message = this.zombieChatForm.get('zombieChatMessage')?.value;
+    switch (faction) {
+      case 'global':
+        newChat.message = this.globalChatForm.get('globalChatMessage')?.value;
+        break;
+      case 'human':
+        newChat.message = this.humanChatForm.get('humanChatMessage')?.value;
+        break;
+      case 'zombie':
+        newChat.message = this.zombieChatForm.get('zombieChatMessage')?.value;
+        break;
+      default:
+        break;
     }
-
-    console.log(newChat);
 
     this.chatService.sendChat(newChat).subscribe({
       next: () => {
         console.log(
           `Chat sent to ${newChat.faction} faction by ${newChat.userName}`
         );
-        this.globalChatForm.reset();
-        this.humanChatForm.reset();
-        this.zombieChatForm.reset();
+        this.resetChatForms();
       },
       error: (e) => {
-        console.log(e);
+        console.error('Error sending chat:', e);
       },
     });
   }
 
-  public refreshGlobalChat() {
-    if (this.game) {
-      this.chatService.getGlobalChatByGame(this.game.id).subscribe({
-        next: (globalChat) => {
-          this.globalChat = globalChat;
-        },
-        error: (e) => {
-          console.log(e);
-        },
-      });
-    }
-  }
+  private loadChats(): void {
+    this.chatService.getGlobalChatByGame(this.game?.id || 0).subscribe({
+      next: (globalChat) => {
+        this.globalChat = globalChat;
+      },
+      error: (e) => {
+        console.error('Error loading global chat:', e);
+      },
+    });
 
-  public refreshHumanChat() {
-    if (this.game) {
-      this.chatService.getHumanChatByGame(this.game.id).subscribe({
+    if (this.player?.isHuman) {
+      this.chatService.getHumanChatByGame(this.game?.id || 0).subscribe({
         next: (humanChat) => {
           this.humanChat = humanChat;
         },
         error: (e) => {
-          console.log(e);
+          console.error('Error loading human chat:', e);
         },
       });
-    }
-  }
-
-  public refreshZombieChat() {
-    if (this.game) {
-      this.chatService.getZombieChatByGame(this.game.id).subscribe({
+    } else {
+      this.chatService.getZombieChatByGame(this.game?.id || 0).subscribe({
         next: (zombieChat) => {
           this.zombieChat = zombieChat;
         },
         error: (e) => {
-          console.log(e);
+          console.error('Error loading zombie chat:', e);
         },
       });
     }
   }
 
-  ngOnDestroy(): void {
+  private subscribeToChatUpdates(): void {
+    if (this.firstLoad) {
+      setTimeout(() => {
+        this.wsChatSubscription = this.stompService.subscribe(
+          `/topic/chat/${this.game?.id}`,
+          (response: any): void => {
+            console.log('Notification received');
+            console.log(response.body);
+
+            switch (response.body) {
+              case 'global':
+                this.refreshGlobalChat();
+                break;
+              case 'human':
+                this.refreshHumanChat();
+                break;
+              case 'zombie':
+                this.refreshZombieChat();
+                break;
+              default:
+                break;
+            }
+          }
+        );
+      }, 1000);
+    }
+  }
+
+  private resetChatForms(): void {
+    this.globalChatForm.reset();
+    this.humanChatForm.reset();
+    this.zombieChatForm.reset();
+  }
+
+  private refreshGlobalChat(): void {
+    this.chatService.getGlobalChatByGame(this.game?.id || 0).subscribe({
+      next: (globalChat) => {
+        this.globalChat = globalChat;
+      },
+      error: (e) => {
+        console.error('Error refreshing global chat:', e);
+      },
+    });
+  }
+
+  private refreshHumanChat(): void {
+    this.chatService.getHumanChatByGame(this.game?.id || 0).subscribe({
+      next: (humanChat) => {
+        this.humanChat = humanChat;
+      },
+      error: (e) => {
+        console.error('Error refreshing human chat:', e);
+      },
+    });
+  }
+
+  private refreshZombieChat(): void {
+    this.chatService.getZombieChatByGame(this.game?.id || 0).subscribe({
+      next: (zombieChat) => {
+        this.zombieChat = zombieChat;
+      },
+      error: (e) => {
+        console.error('Error refreshing zombie chat:', e);
+      },
+    });
+  }
+
+  public ngOnDestroy(): void {
     if (this.wsChatSubscription) {
       this.stompService.unsubscribeFromTopic(this.wsChatSubscription);
     }

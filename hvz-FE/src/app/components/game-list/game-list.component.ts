@@ -17,7 +17,7 @@ import { StompService } from '../../services/stomp.service';
 })
 export class GameListComponent implements OnInit, OnDestroy {
   public games: Game[] = [];
-  public gameFormVisible: Boolean = false;
+  public gameFormVisible = false;
   public wsGameSubs?: any;
 
   public gameForm: FormGroup = new FormGroup({
@@ -32,6 +32,7 @@ export class GameListComponent implements OnInit, OnDestroy {
   public get isUserAdmin(): Boolean | undefined {
     return this.keycloakService.isUserAdmin;
   }
+
   constructor(
     private gameService: GameService,
     private loginUserService: LoginUserService,
@@ -41,73 +42,70 @@ export class GameListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.loadGames();
+    this.subscribeToGameUpdates();
+  }
+
+  private loadGames(): void {
     this.gameService.getGames().subscribe({
       next: (gamesFromServer: Game[]) => {
         this.games = gamesFromServer;
-        console.log(this.games);
-        //if user is logged in, load their playerId-s to relating Games
+        console.log('Games loaded:', this.games);
         if (this.keycloakService.isAuthenticated) {
-          //get list of Players belonging to logged in User
-          this.loginUserService
-            .getLoginUser(this.keycloakService.keycloakId)
-            .subscribe({
-              next: (playersFromServer: Player[]) => {
-                console.log(playersFromServer);
-                //iterate through Players and Games, if there's a match, set PlayerId to Game
-                playersFromServer.forEach((player) => {
-                  let game = this.games.find((game) => game.id == player.game);
-                  if (game) {
-                    game.playerIdofCurrentUser = player.id;
-                  }
-                });
-                console.log(this.games);
-              },
-              //if User is not in DB yet, error 404, create new User in DB
-              error: (e) => {
-                console.log(e);
-                if (e.status == 404) {
-                  const newLoginUser = {
-                    firstName: this.keycloakService.firstName,
-                    lastName: this.keycloakService.lastName,
-                    keycloakId: this.keycloakService.keycloakId,
-                    userName: this.keycloakService.username,
-                  };
-                  this.loginUserService.saveLoginUser(newLoginUser).subscribe({
-                    next: (response) => {
-                      console.log('LoginUser saved');
-                    },
-                    error: (e) => {
-                      console.log(e);
-                    },
-                  });
-                }
-              },
-            });
+          this.loadPlayerIdsForCurrentUser();
         }
       },
-      error: (e) => console.log(e),
+      error: (e) => console.error('Error loading games:', e),
     });
+  }
 
-    //websocket subscription
+  private loadPlayerIdsForCurrentUser(): void {
+    this.loginUserService
+      .getLoginUser(this.keycloakService.keycloakId)
+      .subscribe({
+        next: (playersFromServer: Player[]) => {
+          playersFromServer.forEach((player) => {
+            const game = this.games.find((game) => game.id === player.game);
+            if (game) {
+              game.playerIdofCurrentUser = player.id;
+            }
+          });
+          console.log('Player IDs loaded for current user:', this.games);
+        },
+        error: (e) => {
+          console.error('Error loading player IDs:', e);
+          if (e.status === 404) {
+            this.createLoginUser();
+          }
+        },
+      });
+  }
+
+  private createLoginUser(): void {
+    const newLoginUser = {
+      firstName: this.keycloakService.firstName,
+      lastName: this.keycloakService.lastName,
+      keycloakId: this.keycloakService.keycloakId,
+      userName: this.keycloakService.username,
+    };
+    this.loginUserService.saveLoginUser(newLoginUser).subscribe({
+      next: () => console.log('Login user created'),
+      error: (e) => console.error('Error creating login user:', e),
+    });
+  }
+
+  private subscribeToGameUpdates(): void {
     setTimeout(() => {
       this.wsGameSubs = this.stompService.subscribe(
         '/topic/game',
         (response: any): void => {
-          console.log('notified');
-          console.log(response.body);
-
-          this.gameService.getGames().subscribe({
-            next: (gamesFromServer: Game[]) => {
-              this.games = gamesFromServer;
-            },
-            error: (e) => console.log(e),
-          });
+          console.log('Game update notification received');
+          this.loadGames();
         }
       );
     }, 1000);
   }
 
-  // ngClass: CSS classes added/removed per current state of game
   setCurrentClasses(game: Game): Record<string, boolean> {
     return {
       'game-state': true,
@@ -117,32 +115,27 @@ export class GameListComponent implements OnInit, OnDestroy {
     };
   }
 
-  //if user is player in game, opens details page with playerId in route
-  public decideRoute(game: Game): string {
-    if (game.playerIdofCurrentUser) {
-      return `/game/${game.id}/${game.playerIdofCurrentUser}`;
-    } else {
-      return `/game/${game.id}`;
-    }
+  decideRoute(game: Game): string {
+    return game.playerIdofCurrentUser
+      ? `/game/${game.id}/${game.playerIdofCurrentUser}`
+      : `/game/${game.id}`;
   }
 
-  public deleteGame(gameToDelete: Game): void {
+  deleteGame(gameToDelete: Game): void {
     this.gameService.deleteGame(gameToDelete.id).subscribe({
       next: () => {
-        console.log('Game deleted');
+        console.log('Game deleted:', gameToDelete.id);
         this.games = this.games.filter((game) => game.id !== gameToDelete.id);
       },
-      error: (e) => {
-        console.log(e);
-      },
+      error: (e) => console.error('Error deleting game:', e),
     });
   }
 
-  public createGame() {
+  createGame() {
     if (this.gameForm.valid) {
       const newGame: CreateGame = {
         name: this.gameForm.get('name')?.value,
-        location: this.formattedAddress,
+        location: this.gameForm.get('location')?.value,
         state: 'Registration',
       };
       this.gameService.saveGame(newGame).subscribe({
@@ -150,23 +143,23 @@ export class GameListComponent implements OnInit, OnDestroy {
           console.log('Game created');
           const locationFromHeaders = response.headers
             .get('Location')
-            .split('/');
-          const gameId = locationFromHeaders[locationFromHeaders.length - 1];
+            ?.split('/');
+          const gameId = locationFromHeaders
+            ? locationFromHeaders[locationFromHeaders.length - 1]
+            : '';
           this.gameForm.reset();
           this.router.navigateByUrl(`/admin/${gameId}`);
         },
-        error: (e) => {
-          console.log(e);
-        },
+        error: (e) => console.error('Error creating game:', e),
       });
     }
   }
 
-  public openGameForm(): void {
+  openGameForm(): void {
     this.gameFormVisible = true;
   }
 
-  public closeGameForm(): void {
+  closeGameForm(): void {
     this.gameFormVisible = false;
     this.gameForm.reset();
   }
@@ -175,17 +168,14 @@ export class GameListComponent implements OnInit, OnDestroy {
     this.keycloakService.login();
   }
 
-  // Handle location setting
-
   formattedAddress = '';
-
   options = {
     types: ['(cities)'],
   } as Options;
 
-  public handleAddressChange(address: any) {
+  handleAddressChange(address: any) {
     this.formattedAddress = address.vicinity ? address.vicinity : address.name;
-    console.log(this.formattedAddress);
+    console.log('Formatted address:', this.formattedAddress);
   }
 
   ngOnDestroy(): void {

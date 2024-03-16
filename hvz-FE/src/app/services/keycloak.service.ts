@@ -50,7 +50,7 @@ export class KeycloakService {
     return this.keycloak.tokenParsed?.email;
   }
 
-  get isUserAdmin(): Boolean | undefined {
+  get isUserAdmin(): boolean {
     return this.keycloak.hasResourceRole('Administrator');
   }
 

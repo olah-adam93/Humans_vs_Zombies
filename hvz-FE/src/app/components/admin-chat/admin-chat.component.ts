@@ -9,12 +9,12 @@ import { StompService } from '../../services/stomp.service';
   templateUrl: './admin-chat.component.html',
   styleUrls: ['./admin-chat.component.scss'],
 })
-export class AdminChatComponent implements OnInit, OnChanges, OnDestroy {
+export class AdminChatComponent implements OnChanges, OnDestroy {
   @Input() public game?: Game;
   public globalChat: CreateChat[] = [];
   public humanChat: CreateChat[] = [];
   public zombieChat: CreateChat[] = [];
-  public firstLoad: boolean = true;
+  public firstLoad = true;
   public wsChatSubscription?: any;
 
   constructor(
@@ -22,34 +22,34 @@ export class AdminChatComponent implements OnInit, OnChanges, OnDestroy {
     private stompService: StompService
   ) {}
 
-  ngOnInit(): void {}
-
   ngOnChanges(): void {
     if (this.game) {
-      //load global chat
+      // Load chats
       this.loadGlobalChat();
       this.loadHumanChat();
       this.loadZombieChat();
 
       if (this.firstLoad) {
         setTimeout(() => {
-          //websocket subscription to Chat updates
+          // Websocket subscription to chat updates
           this.wsChatSubscription = this.stompService.subscribe(
             `/topic/chat/${this.game?.id}`,
             (response: any): void => {
-              console.log('notified');
+              console.log('Notification received');
               console.log(response.body);
 
-              if (response.body == 'global') {
-                this.loadGlobalChat();
-              }
-
-              if (response.body == 'human') {
-                this.loadHumanChat();
-              }
-
-              if (response.body == 'zombie') {
-                this.loadZombieChat();
+              switch (response.body) {
+                case 'global':
+                  this.loadGlobalChat();
+                  break;
+                case 'human':
+                  this.loadHumanChat();
+                  break;
+                case 'zombie':
+                  this.loadZombieChat();
+                  break;
+                default:
+                  break;
               }
             }
           );
@@ -67,7 +67,7 @@ export class AdminChatComponent implements OnInit, OnChanges, OnDestroy {
           this.globalChat = globalChat;
         },
         error: (e) => {
-          console.log(e);
+          console.error('Error loading global chat:', e);
         },
       });
     }
@@ -80,7 +80,7 @@ export class AdminChatComponent implements OnInit, OnChanges, OnDestroy {
           this.humanChat = humanChat;
         },
         error: (e) => {
-          console.log(e);
+          console.error('Error loading human chat:', e);
         },
       });
     }
@@ -93,7 +93,7 @@ export class AdminChatComponent implements OnInit, OnChanges, OnDestroy {
           this.zombieChat = zombieChat;
         },
         error: (e) => {
-          console.log(e);
+          console.error('Error loading zombie chat:', e);
         },
       });
     }
