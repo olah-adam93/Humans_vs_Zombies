@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .show-chat-message {
   min-height: 200px;
   border: 1px solid lightgray;
@@ -9,23 +15,16 @@
   background: linear-gradient(
     0deg,
     rgba(23, 76, 74, 1) 0%,
-    rgba(0, 0, 0, 1) 100%,
-    rgba(0, 212, 255, 1) 100%
+    rgba(0, 0, 0, 1) 100%
   );
 }
 
 .delete-game-btn {
   cursor: pointer;
-}
 
-.delete-game-btn:hover {
-  color: red;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+  &:hover {
+    color: red;
+  }
 }
 
 .title-container {
@@ -33,7 +32,7 @@
   background: linear-gradient(
     0deg,
     rgba(9, 90, 100, 0) 0%,
-    rgba(9, 90, 100, 0.7483368347338936) 44%,
+    rgba(9, 90, 100, 0.75) 44%,
     rgba(9, 90, 100, 1) 100%
   );
 }
@@ -41,11 +40,16 @@
 .hm-bg-color {
   background-color: transparent;
 }
+
 .title-line {
   color: white;
   font-family: "Amatic SC", cursive;
   font-weight: bold;
   font-size: 11vw;
+
+  @media screen and (min-width: 768px) {
+    font-size: 5rem;
+  }
 }
 
 .hm-card {
@@ -57,11 +61,15 @@
   background-clip: border-box;
   text-align: left;
   padding: 1rem;
-  box-shadow: 0px 0px 32px rgb(0 0 0 / 15%);
-  background-color: #9fea4f;
+  box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.15);
+  background-color: #3ded97;
   border-radius: 10px;
-  box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.78);
+
+  &:hover {
+    box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.78);
+  }
 }
+
 .hm-btn {
   background-color: #30a09c;
   text-decoration: none;
@@ -69,11 +77,16 @@
   display: inline-block;
   padding: 5px;
   border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.56);
+  }
 }
 
 .hm-card-body {
   flex: 1 1 auto;
-  padding: 1rem 1rem;
+  padding: 1rem;
 }
 
 .hm-card-title {
@@ -87,36 +100,26 @@
   margin-bottom: 0;
 }
 
-.bite-code {
-  border: 2px solid black;
-  border-radius: 5px;
-  width: -moz-fit-content;
-  width: fit-content;
-  padding: 1px 3px;
-  background-color: #339162;
-  color: white;
-}
-
-.human-badge {
+.bite-code,
+.human-badge,
+.zombie-badge {
+  font-size: 12px;
   border: 2px solid black;
   border-radius: 5px;
   width: -moz-fit-content;
   width: fit-content;
   padding: 0 3px;
+}
+
+.human-badge,
+.bite-code {
   background-color: #339162;
   color: white;
-  font-size: 12px;
 }
 
 .zombie-badge {
-  border: 2px solid black;
-  border-radius: 5px;
-  width: -moz-fit-content;
-  width: fit-content;
-  padding: 0 3px;
   background-color: #464646;
   color: white;
-  font-size: 12px;
 }
 
 .game-state {
@@ -127,12 +130,15 @@
   padding: 1px 3px;
   font-size: 1.4rem;
 }
+
 .game-state-reg {
   background-color: #339162;
 }
+
 .game-state-in-prog {
-  background-color: red;
+  background-color: rgb(201, 49, 49);
 }
+
 .game-state-compl {
   background-color: #464646;
   color: white;
@@ -142,7 +148,7 @@
   border-radius: 5px;
   background-color: #d6ffab;
   min-height: 150px;
-  box-shadow: 1px 1px 2px #00000047;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.29);
 }
 
 @media screen and (min-width: 768px) {
@@ -156,7 +162,7 @@
   }
 
   .hm-btn:hover {
-    box-shadow: 1px 1px 5px rgb(0 0 0 / 56%);
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.56);
   }
 
   .title-line {

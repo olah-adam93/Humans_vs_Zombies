@@ -1,28 +1,6 @@
 export const mapstyles = [
   {
-    stylers: [
-      {
-        color: '#7a786c',
-      },
-    ],
-  },
-  {
-    elementType: 'geometry',
-    stylers: [
-      {
-        color: '#212121',
-      },
-    ],
-  },
-  {
-    elementType: 'labels',
-    stylers: [
-      {
-        color: '#ff0000',
-      },
-    ],
-  },
-  {
+    featureType: 'all',
     elementType: 'labels.icon',
     stylers: [
       {
@@ -31,150 +9,161 @@ export const mapstyles = [
     ],
   },
   {
-    elementType: 'labels.text',
+    featureType: 'administrative.country',
+    elementType: 'geometry.fill',
     stylers: [
       {
-        color: '#ff0000',
+        visibility: 'off',
       },
-    ],
-  },
-  {
-    elementType: 'labels.text.fill',
-    stylers: [
       {
-        color: '#757575',
+        hue: '#00ff00',
       },
-    ],
-  },
-  {
-    elementType: 'labels.text.stroke',
-    stylers: [
       {
-        color: '#212121',
+        saturation: '10',
       },
-    ],
-  },
-  {
-    featureType: 'administrative',
-    elementType: 'geometry',
-    stylers: [
       {
-        color: '#757575',
+        lightness: '30',
+      },
+      {
+        gamma: '5.43',
+      },
+      {
+        weight: '6.10',
+      },
+      {
+        invert_lightness: true,
       },
     ],
   },
   {
     featureType: 'administrative.country',
-    elementType: 'labels.text.fill',
+    elementType: 'geometry.stroke',
     stylers: [
       {
-        color: '#9e9e9e',
+        visibility: 'simplified',
+      },
+      {
+        hue: '#b9ff00',
       },
     ],
   },
   {
-    featureType: 'administrative.land_parcel',
-    stylers: [
-      {
-        visibility: 'off',
-      },
-    ],
-  },
-  {
-    featureType: 'administrative.locality',
-    elementType: 'labels.text.fill',
-    stylers: [
-      {
-        color: '#bdbdbd',
-      },
-    ],
-  },
-  {
-    featureType: 'administrative.neighborhood',
-    stylers: [
-      {
-        visibility: 'off',
-      },
-    ],
-  },
-  {
-    featureType: 'poi',
-    elementType: 'labels.text',
-    stylers: [
-      {
-        visibility: 'off',
-      },
-    ],
-  },
-  {
-    featureType: 'poi',
-    elementType: 'labels.text.fill',
-    stylers: [
-      {
-        color: '#757575',
-      },
-    ],
-  },
-  {
-    featureType: 'poi.park',
-    elementType: 'geometry',
-    stylers: [
-      {
-        color: '#181818',
-      },
-    ],
-  },
-  {
-    featureType: 'poi.park',
-    elementType: 'labels.text.fill',
-    stylers: [
-      {
-        color: '#616161',
-      },
-    ],
-  },
-  {
-    featureType: 'poi.park',
-    elementType: 'labels.text.stroke',
-    stylers: [
-      {
-        color: '#1b1b1b',
-      },
-    ],
-  },
-  {
-    featureType: 'road',
-    elementType: 'geometry.fill',
-    stylers: [
-      {
-        color: '#2c2c2c',
-      },
-    ],
-  },
-  {
-    featureType: 'road',
+    featureType: 'administrative.country',
     elementType: 'labels',
     stylers: [
       {
-        visibility: 'off',
+        visibility: 'simplified',
+      },
+      {
+        hue: '#00ff38',
       },
     ],
   },
   {
-    featureType: 'road',
-    elementType: 'labels.text.fill',
+    featureType: 'landscape.man_made',
+    elementType: 'all',
     stylers: [
       {
-        color: '#8a8a8a',
+        color: '#2eb7ab',
       },
     ],
   },
   {
-    featureType: 'road.arterial',
+    featureType: 'landscape.natural.landcover',
     elementType: 'geometry',
     stylers: [
       {
-        color: '#373737',
+        color: '#2eb7ab',
+      },
+    ],
+  },
+  {
+    featureType: 'landscape.natural.terrain',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#2eb7ab',
+      },
+    ],
+  },
+  {
+    featureType: 'poi',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#00af9b',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.attraction',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#00af9b',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.business',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#00af9b',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.government',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#00af9b',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.medical',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#00af9b',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'all',
+    stylers: [
+      {
+        color: '#2eb7ab',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.place_of_worship',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#2eb7ab',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.school',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#00af9b',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.sports_complex',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#00af9b',
       },
     ],
   },
@@ -183,34 +172,16 @@ export const mapstyles = [
     elementType: 'geometry',
     stylers: [
       {
-        color: '#3c3c3c',
+        color: '#fefdff',
       },
     ],
   },
   {
-    featureType: 'road.highway.controlled_access',
+    featureType: 'transit.station.airport',
     elementType: 'geometry',
     stylers: [
       {
-        color: '#4e4e4e',
-      },
-    ],
-  },
-  {
-    featureType: 'road.local',
-    elementType: 'labels.text.fill',
-    stylers: [
-      {
-        color: '#616161',
-      },
-    ],
-  },
-  {
-    featureType: 'transit',
-    elementType: 'labels.text.fill',
-    stylers: [
-      {
-        color: '#757575',
+        color: '#00af9b',
       },
     ],
   },
@@ -219,25 +190,7 @@ export const mapstyles = [
     elementType: 'geometry',
     stylers: [
       {
-        color: '#000000',
-      },
-    ],
-  },
-  {
-    featureType: 'water',
-    elementType: 'labels.text',
-    stylers: [
-      {
-        visibility: 'off',
-      },
-    ],
-  },
-  {
-    featureType: 'water',
-    elementType: 'labels.text.fill',
-    stylers: [
-      {
-        color: '#3d3d3d',
+        color: '#dfdee0',
       },
     ],
   },

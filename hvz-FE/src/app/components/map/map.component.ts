@@ -1,7 +1,8 @@
 import { Component, Input, OnChanges } from '@angular/core';
+import { environment } from 'src/environments/environment.prod';
+import { mapstyles } from './mapstyles';
 import { Loader } from '@googlemaps/js-api-loader';
 import { Game } from '../../models/Game';
-import { mapstyles } from './mapstyles';
 
 @Component({
   selector: 'app-map',
@@ -19,7 +20,7 @@ export class MapComponent implements OnChanges {
 
   loadMap(): void {
     const loader = new Loader({
-      apiKey: '',
+      apiKey: environment.GOOGLE_MAPS_API_KEY,
     });
 
     loader.importLibrary('maps').then(() => {

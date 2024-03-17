@@ -14,23 +14,23 @@
   line-height: 0.8;
   text-shadow: 4px 4px 5px black;
   letter-spacing: 1vw;
-}
 
-.hero-title-human {
-  color: #9fea4f;
-  font-family: "Chewy", cursive;
-  padding-top: 10px;
-}
+  &-human {
+    color: #9fea4f;
+    font-family: "Chewy", cursive;
+    padding-top: 10px;
+  }
 
-.hero-title-zombie {
-  color: red;
-  font-family: "Slackey", cursive;
-}
+  &-zombie {
+    color: red;
+    font-family: "Slackey", cursive;
+  }
 
-.hero-title-vs {
-  margin-bottom: 0;
-  font-size: 2rem;
-  font-style: italic;
+  &-vs {
+    margin-bottom: 0;
+    font-size: 2rem;
+    font-style: italic;
+  }
 }
 
 .logged-in {
