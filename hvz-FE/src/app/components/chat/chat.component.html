@@ -1,78 +1,188 @@
 <h5 *ngIf="player" class="mb-3">Chat</h5>
 
-<div *ngIf="player && game && game.state=='Registration'" class="mb-5">
+<div *ngIf="player && game && game.state == 'Registration'" class="mb-5">
   <small class="text-muted">
     Once the Game starts, you'll be able to chat with other Players.
   </small>
 </div>
 
-<div *ngIf="player && game && game.state!='Registration'" class="chat-container">
-
-
-
+<div
+  *ngIf="player && game && game.state != 'Registration'"
+  class="chat-container"
+>
   <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="global-tab" data-bs-toggle="tab" data-bs-target="#global-tab-content" type="button" role="tab" aria-controls="global-tab-content" aria-selected="true">Global</button>
+      <button
+        class="nav-link active"
+        id="global-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#global-tab-content"
+        type="button"
+        role="tab"
+        aria-controls="global-tab-content"
+        aria-selected="false"
+      >
+        Global
+      </button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="humans-tab" data-bs-toggle="tab" data-bs-target="#humans-tab-content" type="button" role="tab" aria-controls="humans-tab-content" aria-selected="false">Humans</button>
+      <button
+        class="nav-link"
+        id="humans-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#humans-tab-content"
+        type="button"
+        role="tab"
+        aria-controls="humans-tab-content"
+        aria-selected="false"
+      >
+        Humans
+      </button>
     </li>
     <li class="nav-item" role="presentation">
-      <button class="nav-link" id="zombies-tab" data-bs-toggle="tab" data-bs-target="#zombies-tab-content" type="button" role="tab" aria-controls="zombies-tab-content" aria-selected="false">Zombies</button>
+      <button
+        class="nav-link"
+        id="zombies-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#zombies-tab-content"
+        type="button"
+        role="tab"
+        aria-controls="zombies-tab-content"
+        aria-selected="false"
+      >
+        Zombies
+      </button>
     </li>
   </ul>
 
   <div class="tab-content" id="myTabContent">
-
-    <div class="tab-pane show active" id="global-tab-content" role="tabpanel" aria-labelledby="global-tab">
-
-      <div class="show-chat-message p-2 my-2">
+    <div
+      class="tab-pane show active"
+      id="global-tab-content"
+      role="tabpanel"
+      aria-labelledby="global-tab"
+    >
+      <div class="show-chat-message">
         <ul class="list-unstyled">
           <li *ngFor="let globalMessage of globalChat">
-            {{globalMessage.userName}}: {{globalMessage.message}} </li>
+            <span style="font-weight: bold">{{ globalMessage.userName }}:</span>
+            {{ globalMessage.message }}
+          </li>
         </ul>
       </div>
-      <div *ngIf="game && game.state =='In Progress'" class="mb-3" [formGroup]="globalChatForm">
-        <input formControlName="globalChatMessage" type="text" class="form-control mb-2" id="global-chat-input" placeholder="Type your message">
-        <button class="hm-btn" (click)="sendChat('global')" [disabled]=globalChatForm.invalid>Send</button>
+      <div
+        *ngIf="game && game.state == 'In Progress'"
+        class="mb-3"
+        [formGroup]="globalChatForm"
+      >
+        <input
+          [ngClass]="{ 'msg-empty': isMsgEmpty('global') }"
+          formControlName="globalChatMessage"
+          type="text"
+          class="form-control"
+          id="global-chat-input"
+          placeholder="Type your message"
+        />
+        <button
+          class="hm-btn"
+          (click)="sendChat('global')"
+          [disabled]="globalChatForm.invalid"
+        >
+          Send
+        </button>
       </div>
     </div>
 
-
-    <div class="tab-pane" id="humans-tab-content" role="tabpanel" aria-labelledby="humans-tab">
-
-      <div *ngIf="player && player.isHuman" class="show-chat-message p-2 my-2 humans-chat-display">
+    <div
+      class="tab-pane"
+      id="humans-tab-content"
+      role="tabpanel"
+      aria-labelledby="humans-tab"
+    >
+      <div
+        *ngIf="player && player.isHuman"
+        class="show-chat-message humans-chat-display"
+      >
         <ul class="list-unstyled">
           <li *ngFor="let humanMessage of humanChat">
-            {{humanMessage.userName}}: {{humanMessage.message}} </li>
+            <span style="font-weight: bold">{{ humanMessage.userName }}:</span>
+            {{ humanMessage.message }}
+          </li>
         </ul>
       </div>
-      <div *ngIf="player && !player.isHuman" class="show-chat-message p-2 my-2 humans-chat-display">
+      <div
+        *ngIf="player && !player.isHuman"
+        class="show-chat-message humans-chat-display"
+      >
         <p class="text-danger">Hey, you're not a Human! Stop spying!</p>
       </div>
-      <div *ngIf="player && player.isHuman && game && game.state =='In Progress'" [formGroup]="humanChatForm" class="mb-3 humans-chat-send-container">
-        <input formControlName="humanChatMessage" type="text" class="form-control mb-2" id="humans-chat-input" placeholder="Type your message">
-        <button class="hm-btn" (click)="sendChat('human')" [disabled]=humanChatForm.invalid>Send</button>
+      <div
+        *ngIf="player && player.isHuman && game && game.state == 'In Progress'"
+        [formGroup]="humanChatForm"
+        class="mb-3 humans-chat-send-container"
+      >
+        <input
+          [ngClass]="{ 'msg-empty': isMsgEmpty('human') }"
+          formControlName="humanChatMessage"
+          type="text"
+          class="form-control mb-2"
+          id="humans-chat-input"
+          placeholder="Type your message"
+        />
+        <button
+          class="hm-btn"
+          (click)="sendChat('human')"
+          [disabled]="humanChatForm.invalid"
+        >
+          Send
+        </button>
       </div>
-
     </div>
 
-    <div class="tab-pane" id="zombies-tab-content" role="tabpanel" aria-labelledby="zombies-tab">
-
-      <div *ngIf="player && !player.isHuman" class="show-chat-message p-2 my-2 zombies-chat-display">
+    <div
+      class="tab-pane"
+      id="zombies-tab-content"
+      role="tabpanel"
+      aria-labelledby="zombies-tab"
+    >
+      <div
+        *ngIf="player && !player.isHuman"
+        class="show-chat-message zombies-chat-display"
+      >
         <ul class="list-unstyled">
           <li *ngFor="let zombieMessage of zombieChat">
-            {{zombieMessage.userName}}: {{zombieMessage.message}} </li>
+            <span style="font-weight: bold">{{ zombieMessage.userName }}:</span>
+            {{ zombieMessage.message }}
+          </li>
         </ul>
       </div>
-      <div *ngIf="player && player.isHuman" class="show-chat-message p-2 my-2 zombies-chat-display">
+      <div
+        *ngIf="player && player.isHuman"
+        class="show-chat-message zombies-chat-display"
+      >
         <p class="text-danger">Hey, you're not a Zombie! Stop spying!</p>
       </div>
-      <div *ngIf="player && !player.isHuman && game && game.state =='In Progress'" [formGroup]="zombieChatForm" class="mb-3 zombies-chat-send-container">
-        <input formControlName="zombieChatMessage" type="text" class="form-control mb-2" id="zombies-chat-input" placeholder="Type your message">
-        <button class="hm-btn" (click)="sendChat('zombie')" [disabled]=zombieChatForm.invalid>Send</button>
+      <div
+        *ngIf="player && !player.isHuman && game && game.state == 'In Progress'"
+        [formGroup]="zombieChatForm"
+        class="mb-3 zombies-chat-send-container"
+      >
+        <input
+          [ngClass]="{ 'msg-empty': isMsgEmpty('zombie') }"
+          formControlName="zombieChatMessage"
+          type="text"
+          class="form-control mb-2"
+          id="zombies-chat-input"
+          placeholder="Type your message"
+        />
+        <button
+          class="hm-btn"
+          (click)="sendChat('zombie')"
+          [disabled]="zombieChatForm.invalid"
+        >
+          Send
+        </button>
       </div>
-
     </div>
   </div>
 </div>

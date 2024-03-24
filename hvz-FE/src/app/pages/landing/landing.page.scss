@@ -1,6 +1,6 @@
 .linear-gr-bg {
-  height: 65px;
-  background: linear-gradient(
+  height: 40px;
+  background-color: linear-gradient(
     0deg,
     rgba(23, 76, 74, 1) 0%,
     rgba(0, 0, 0, 1) 100%,
@@ -8,8 +8,12 @@
   );
 }
 
+.hero-container {
+  margin-bottom: 4.1rem;
+}
+
 .hero-title {
-  font-size: 16vw;
+  font-size: 3rem;
   margin: 0;
   line-height: 0.8;
   text-shadow: 4px 4px 5px black;
@@ -18,7 +22,7 @@
   &-human {
     color: #9fea4f;
     font-family: "Chewy", cursive;
-    padding-top: 10px;
+    padding-top: 0.8rem;
   }
 
   &-zombie {
@@ -33,13 +37,9 @@
   }
 }
 
-.logged-in {
-  color: #30a09c;
-}
-
 @media screen and (min-width: 768px) {
   .hero-title {
-    font-size: 8rem;
+    font-size: 4rem;
     margin: 0;
     line-height: 0.8;
     text-shadow: 4px 4px 5px black;

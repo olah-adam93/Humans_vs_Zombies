@@ -1,13 +1,21 @@
-<div class="container-fluid px-5 py-4 background">
-  <div *ngIf="isUserAdmin && !gameFormVisible" class="row mb-5">
-    <div class="col">
-      <button class="hm-btn" (click)="openGameForm()">New Game</button>
-    </div>
-  </div>
-
+<div class="container-fluid px-5 background game-list-container">
   <div class="row">
-    <div *ngIf="gameFormVisible" class="col-sm-6 col-md-4 col-lg-3">
-      <div class="hm-card mb-3">
+    <div>
+      <button
+        *ngIf="isUserAdmin"
+        class="hm-btn game-form-toggle"
+        [class.visible]="gameFormVisible"
+        (click)="openGameForm()"
+      >
+        New Game
+      </button>
+    </div>
+    <div
+      *ngIf="isUserAdmin"
+      class="col-sm-6 col-md-4 col-lg-3 game-form-container"
+      [class.visible]="gameFormVisible"
+    >
+      <div class="hm-card col-10 mb-2">
         <div class="card-body">
           <h5 class="card-title mb-1" [formGroup]="gameForm">
             <input
@@ -45,45 +53,13 @@
       </div>
     </div>
 
-    <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let game of games">
-      <div class="hm-card mb-3">
-        <div class=".hm-card-body">
-          <p class="hm-card-title d-flex justify-content-between">
-            <span class="game-name">{{ game.name | uppercase }}</span>
-            <span *ngIf="game.playerIdofCurrentUser"
-              ><i class="fa-solid fa-street-view fa-lg"></i
-            ></span>
-            <span
-              *ngIf="isUserAdmin"
-              (click)="deleteGame(game)"
-              class="delete-game-btn"
-            >
-              <i class="fa-solid fa-xmark"></i>
-            </span>
-          </p>
-
-          <p [ngClass]="setCurrentClasses(game)">{{ game.state }}</p>
-          <p class="hm-card-text">
-            Number of Players: {{ game?.players ? game?.players?.length : "0" }}
-          </p>
-          <a
-            *ngIf="isLoggedIn && !isUserAdmin"
-            class="hm-btn"
-            [routerLink]="decideRoute(game)"
-            >Details
-          </a>
-          <a
-            *ngIf="isUserAdmin"
-            class="hm-btn"
-            [routerLink]="'/admin/' + game.id"
-          >
-            Manage
-          </a>
-          <a *ngIf="!isLoggedIn" class="hm-btn" (click)="handleLogin()"
-            >Details
-          </a>
-        </div>
+    <ng-container *ngFor="let game of games">
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <app-game-card
+          [game]="game"
+          (deleteGameEvent)="deleteGame($event)"
+        ></app-game-card>
       </div>
-    </div>
+    </ng-container>
   </div>
 </div>

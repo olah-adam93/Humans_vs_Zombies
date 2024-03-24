@@ -27,14 +27,14 @@
             </p>
 
             <button
-              *ngIf="game?.state === 'Registration'"
+              *ngIf="game?.state === 'Registration' && isAdmin "
               (click)="changeGameState('In Progress')"
               class="btn btn-success d-block"
             >
               Start game
             </button>
             <button
-              *ngIf="game?.state === 'In Progress'"
+              *ngIf="game?.state === 'In Progress' && isAdmin"
               (click)="changeGameState('Complete')"
               class="btn btn-danger d-block"
             >

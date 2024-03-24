@@ -1,0 +1,29 @@
+<a [routerLink]="decideRoute(game)" class="hm-card-link">
+  <div class="hm-card col-10 mb-4">
+    <img
+      src="../../../assets/images/tokio.jpg"
+      alt="tokio"
+      class="hm-card-img"
+    />
+    <div class=".hm-card-body">
+      <p class="hm-card-title d-flex justify-content-between">
+        <span class="hm-card-game-name">{{ game.name | uppercase }}</span>
+        <span *ngIf="game?.playerIdofCurrentUser">
+          <i class="fa-solid fa-street-view fa-lg"></i>
+        </span>
+        <span
+          *ngIf="isUserAdmin"
+          class="delete-game-btn"
+          (click)="deleteGame()"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </span>
+      </p>
+      <p [ngClass]="setCurrentClasses(game)">{{ game.state }}</p>
+      <p class="hm-card-text">
+        Number of Players:
+        {{ game.players ? game.players.length : "0" }}
+      </p>
+    </div>
+  </div>
+</a>

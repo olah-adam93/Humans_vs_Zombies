@@ -13,7 +13,7 @@
               <span class="fw-bold">Number of Players:</span> {{game?.players ?
               game?.players?.length : "0"}}
             </p>
-            <p *ngIf="player" class="card-text">
+            <p class="card-text">
               <span class="fw-bold">Player:</span> {{username}}
             </p>
             <p
@@ -56,59 +56,155 @@
           </div>
 
           <!-- Map segment-->
-          <div class="map my-5">
+          <!--  <div class="map my-5">
             <app-map [game]="game"></app-map>
-          </div>
+          </div> -->
+          <div><p></p></div>
+          <div><p></p></div>
 
-          <!-- Bite code -->
           <div
-            class="bite-code mb-5"
-            *ngIf="player && player.isHuman && game?.state ==='In Progress'"
+            class="register-container"
+            *ngIf="player && !player.isHuman && game && game.state=='In Progress' "
           >
-            <h5 class="mb-0 p-1">Your Bite code: {{player.biteCode}}</h5>
-          </div>
+            <div class="register-left">
+              <!-- Bite code -->
+              <div class="bite-code mb-5">
+                <h5 class="mb-0 p-1">Your Bite code: {{player.biteCode}}</h5>
+              </div>
 
-          <!-- Bite code entry form-->
-          <h5
-            *ngIf="player && !player.isHuman && game && game.state=='In Progress' "
-            class="mb-3"
-          >
-            Bite a Human!
-          </h5>
-          <form
-            *ngIf="player && !player.isHuman && game && game.state=='In Progress' "
-            [formGroup]="killForm"
-            (ngSubmit)="onKillSubmit()"
-            class="mb-5"
-          >
-            <div class="mb-3 bite-code-container">
-              <label for="bite-code-input" class="form-label"
-                >Enter bite code</label
+              <!-- Bite code entry form-->
+              <h5 class="mb-3">Bite a Human!</h5>
+              <form
+                [formGroup]="killForm"
+                (ngSubmit)="onKillSubmit()"
+                class="form-kill-register mb-5"
               >
-              <input
-                formControlName="biteCode"
-                type="text"
-                class="form-control"
-                id="bite-code-input"
-                placeholder="1234"
-              />
+                <div class="mb-3 bite-code-container">
+                  <label for="bite-code-input" class="form-label"
+                    >Enter a four digits binary code</label
+                  >
+                  <input
+                    [ngClass]="{ 'empty-bite-code': isBiteCodeEmpty }"
+                    formControlName="biteCode"
+                    type="text-box"
+                    class="form-control"
+                    id="bite-code-input"
+                    placeholder="0101 , 1100, ..."
+                  />
+                </div>
+                <div class="mb-3 kill-story-container">
+                  <label for="kill-story-input" class="form-label"
+                    >Add your story</label
+                  >
+                  <textarea
+                    [ngClass]="{ 'empty-kill-story': isKillStoryEmpty }"
+                    formControlName="killStory"
+                    type="text"
+                    class="form-control story"
+                    id="kill-story-input"
+                    placeholder="E.g. CrazyZombie killed LameHuman"
+                  ></textarea>
+                </div>
+
+                <!-- Register message -->
+                <div class="message">
+                  <div *ngIf="messageType === 'success'" class="success">
+                    Congrats, u luckily bite a human!
+                  </div>
+                  <div *ngIf="messageType === 'failure'" class="failure">
+                    {{randomFailureMessage}}
+                  </div>
+                </div>
+                <button class="hm-btn" [disabled]="killForm.invalid">
+                  Register Kill
+                </button>
+              </form>
             </div>
-            <div class="mb-3 kill-story-container">
-              <label for="kill-story-input" class="form-label"
-                >Add your story</label
+            <!-- Zombie image-->
+            <div class="register-right">
+              <img src="../../../assets/images/zombie.gif" alt="Your GIF" />
+            </div>
+
+            <div class="player-list-container p-2">
+              <nav id="navbar-example2" class="player-list-navbar">
+                <ul class="nav nav-pills">
+                  <li class="nav-item">
+                    <a
+                      class="nav-link"
+                      (click)="selectedTab = 'global'"
+                      [class.active]="selectedTab === 'global'"
+                      >Global</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a
+                      class="nav-link"
+                      (click)="selectedTab = 'human'"
+                      [class.active]="selectedTab === 'human'"
+                      >Human</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a
+                      class="nav-link"
+                      (click)="selectedTab = 'zombie'"
+                      [class.active]="selectedTab === 'zombie'"
+                      >Zombie</a
+                    >
+                  </li>
+                </ul>
+              </nav>
+
+              <div
+                data-bs-spy="scroll"
+                data-bs-target="#navbar-example2"
+                data-bs-offset="0"
+                class="scrollspy-example"
+                tabindex="0"
               >
-              <input
-                formControlName="killStory"
-                type="text"
-                class="form-control"
-                id="kill-story-input"
-                placeholder="E.g. CrazyZombie killed LameHuman"
-              />
+                <div
+                  class="player-list-container p-2"
+                  *ngIf="selectedTab === 'global'"
+                >
+                  <p *ngFor="let player of players" class="mb-1">
+                    <span class="fw-bold">
+                      {{ player.username }}
+                      <span *ngIf="player.isHuman">
+                        <i class="fa-regular fa-face-smile"></i
+                      ></span>
+                      <span *ngIf="!player.isHuman">
+                        <i class="fa-solid fa-skull"></i
+                      ></span>
+                    </span>
+                  </p>
+                </div>
+
+                <div
+                  class="player-list-container p-2"
+                  *ngIf="selectedTab === 'human'"
+                >
+                  <p *ngFor="let human of humans" class="mb-1">
+                    <span class="fw-bold"> {{ human.username }} </span>
+                    <i class="fa-regular fa-face-smile"></i>
+                  </p>
+                </div>
+
+                <div
+                  class="player-list-container p-2"
+                  *ngIf="selectedTab === 'zombie'"
+                >
+                  <p *ngFor="let zombie of zombies" class="mb-1">
+                    <span class="fw-bold"> {{ zombie.username }} </span>
+                    <i class="fa-solid fa-skull"></i>
+                  </p>
+                </div>
+              </div>
             </div>
-            <button class="hm-btn mb-2" [disabled]="killForm.invalid">
-              Register Kill
-            </button>
-          </form>
+
+            <!--<div class="register-right">
+              <img src="../../../assets/images/zombie.gif" alt="Your GIF" />
+            </div> -->
+          </div>
 
           <!--  Chat segment          -->
           <app-chat [game]="game" [player]="player"></app-chat>

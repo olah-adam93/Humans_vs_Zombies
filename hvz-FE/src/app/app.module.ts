@@ -19,6 +19,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { JwtInterceptor } from './services/jwt-interceptor.service';
 import { KeycloakService } from './services/keycloak.service';
 import { StompService } from './services/stomp.service';
+import { GameCardComponent } from './components/game-card/game-card.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { StompService } from './services/stomp.service';
     LandingPage,
     GameDetailsPage,
     AdminPage,
+    GameCardComponent,
   ],
   imports: [
     BrowserModule,

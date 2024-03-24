@@ -1,14 +1,21 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Game } from '../../models/Game';
-import { GameService } from '../../services/game.service';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { Game } from '../../models/Game';
+import { Player } from '../../models/Player';
+import { CreateGame } from '../../models/CreateGame';
+import { GameService } from '../../services/game.service';
 import { KeycloakService } from 'src/app/services/keycloak.service';
 import { LoginUserService } from '../../services/login-user.service';
-import { Player } from '../../models/Player';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { CreateGame } from '../../models/CreateGame';
-import { Options } from 'ngx-google-places-autocomplete/objects/options/options';
 import { StompService } from '../../services/stomp.service';
+import { Options } from 'ngx-google-places-autocomplete/objects/options/options';
 
 @Component({
   selector: 'app-game-list',
@@ -16,21 +23,22 @@ import { StompService } from '../../services/stomp.service';
   styleUrls: ['./game-list.component.scss'],
 })
 export class GameListComponent implements OnInit, OnDestroy {
+  @Input() deleteGameEvent?: EventEmitter<Game>;
   public games: Game[] = [];
   public gameFormVisible = false;
-  public wsGameSubs?: any;
+  private wsGameSubs?: Subscription;
 
   public gameForm: FormGroup = new FormGroup({
     name: new FormControl('', Validators.required),
     location: new FormControl('', Validators.required),
   });
 
-  get isLoggedIn(): Boolean | undefined {
+  get isLoggedIn(): boolean {
     return this.keycloakService.isAuthenticated;
   }
 
-  public get isUserAdmin(): Boolean | undefined {
-    return this.keycloakService.isUserAdmin;
+  get isUserAdmin(): boolean {
+    return !!this.keycloakService.isUserAdmin;
   }
 
   constructor(
@@ -50,7 +58,6 @@ export class GameListComponent implements OnInit, OnDestroy {
     this.gameService.getGames().subscribe({
       next: (gamesFromServer: Game[]) => {
         this.games = gamesFromServer;
-        console.log('Games loaded:', this.games);
         if (this.keycloakService.isAuthenticated) {
           this.loadPlayerIdsForCurrentUser();
         }
@@ -70,7 +77,6 @@ export class GameListComponent implements OnInit, OnDestroy {
               game.playerIdofCurrentUser = player.id;
             }
           });
-          console.log('Player IDs loaded for current user:', this.games);
         },
         error: (e) => {
           console.error('Error loading player IDs:', e);
@@ -95,24 +101,12 @@ export class GameListComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToGameUpdates(): void {
-    setTimeout(() => {
-      this.wsGameSubs = this.stompService.subscribe(
-        '/topic/game',
-        (response: any): void => {
-          console.log('Game update notification received');
-          this.loadGames();
-        }
-      );
-    }, 1000);
-  }
-
-  setCurrentClasses(game: Game): Record<string, boolean> {
-    return {
-      'game-state': true,
-      'game-state-reg': game.state === 'Registration',
-      'game-state-in-prog': game.state === 'In Progress',
-      'game-state-compl': game.state === 'Complete',
-    };
+    this.wsGameSubs = this.stompService.subscribe(
+      '/topic/game',
+      (response: any): void => {
+        this.loadGames();
+      }
+    );
   }
 
   decideRoute(game: Game): string {
@@ -121,11 +115,10 @@ export class GameListComponent implements OnInit, OnDestroy {
       : `/game/${game.id}`;
   }
 
-  deleteGame(gameToDelete: Game): void {
-    this.gameService.deleteGame(gameToDelete.id).subscribe({
+  deleteGame(game: Game): void {
+    this.gameService.deleteGame(game.id).subscribe({
       next: () => {
-        console.log('Game deleted:', gameToDelete.id);
-        this.games = this.games.filter((game) => game.id !== gameToDelete.id);
+        console.log('Game deleted:', game.id);
       },
       error: (e) => console.error('Error deleting game:', e),
     });
@@ -140,7 +133,6 @@ export class GameListComponent implements OnInit, OnDestroy {
       };
       this.gameService.saveGame(newGame).subscribe({
         next: (response) => {
-          console.log('Game created');
           const locationFromHeaders = response.headers
             .get('Location')
             ?.split('/');
@@ -175,7 +167,6 @@ export class GameListComponent implements OnInit, OnDestroy {
 
   handleAddressChange(address: any) {
     this.formattedAddress = address.vicinity ? address.vicinity : address.name;
-    console.log('Formatted address:', this.formattedAddress);
   }
 
   ngOnDestroy(): void {

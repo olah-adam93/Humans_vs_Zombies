@@ -1,13 +1,8 @@
-<div class="linear-gr-bg"></div>
-
-<div class="container-fluid p-2 text-center mt-2 mb-3">
-  <h1 class="hero-title hero-title-human">Humans</h1>
-  <h3 class="hero-title-vs">vs</h3>
-  <h1 class="hero-title hero-title-zombie">Zombies</h1>
+<div class="linear-gr-bg">
+  <div class="hero-container container-fluid p2 text-center">
+    <h3 class="hero-title hero-title-human">Humans</h3>
+    <h5 class="hero-title-vs">vs</h5>
+    <h3 class="hero-title hero-title-zombie">Zombies</h3>
+  </div>
+  <app-game-list></app-game-list>
 </div>
-
-<div *ngIf="isLoggedIn" class="text-center logged-in">
-  <span>Logged in as {{username}}</span>
-</div>
-
-<app-game-list></app-game-list>

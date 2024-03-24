@@ -42,9 +42,12 @@ export class AdminPage implements OnInit, OnDestroy {
     });
 
     this.username = this.keycloakService.username ?? '';
-
     this.loadGameAndPlayers();
     this.setupWebsocketSubscriptions();
+  }
+
+  get isAdmin() {
+    return this.keycloakService.isUserAdmin;
   }
 
   private loadGameAndPlayers(): void {

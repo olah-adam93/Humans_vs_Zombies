@@ -50,6 +50,17 @@ export class ChatComponent implements OnChanges, OnDestroy {
     }
   }
 
+  isMsgEmpty(chatType: 'global' | 'human' | 'zombie'): boolean {
+    switch (chatType) {
+      case 'global':
+        return !this.globalChatForm.get('globalChatMessage')?.value;
+      case 'human':
+        return !this.humanChatForm.get('humanChatMessage')?.value;
+      case 'zombie':
+        return !this.zombieChatForm.get('zombieChatMessage')?.value;
+    }
+  }
+
   public sendChat(faction: string): void {
     const newChat: CreateChat = {
       message: '',

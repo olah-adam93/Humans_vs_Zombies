@@ -6,6 +6,7 @@ require('dotenv').config({ path: 'src/environments/.env' });
 // Configuration for development environment
 const developmentConfig = {
   GAME_URL: 'http://localhost:5000/api/game',
+  WEBSOCKET_URL: 'http://localhost:5000/websocket',
   GOOGLE_MAPS_API_KEY: process.env['GOOGLE_MAPS_API_KEY'],
   production: false,
 };

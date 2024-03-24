@@ -26,12 +26,17 @@ export class GameDetailsPage implements OnInit, OnDestroy {
   public routeSubscription?: Subscription;
   public game?: Game;
   public player?: Player;
-  public allPlayers?: Player[];
+  public players?: Player[];
+  public humans?: Player[];
+  public zombies?: Player[];
   public allSquads?: Squad[];
   public allKills?: Kill[];
+  public username?: string;
+  public selectedTab: string = 'global';
   public wsGameSubscription?: Subscription;
   public wsKillSubscription?: Subscription;
-  public username: string = '';
+  public randomFailureMessage?: string;
+  public messageType: 'success' | 'failure' | 'none' = 'none';
 
   public killForm: FormGroup = new FormGroup({
     biteCode: new FormControl('', Validators.required),
@@ -59,12 +64,15 @@ export class GameDetailsPage implements OnInit, OnDestroy {
       },
     });
 
-    this.loadGame();
-    this.loadPlayer();
+    this.username = this.keycloakService.username ?? '';
+    this.randomFailureMessage = this.getRandomBiteFailureMessage();
+    this.loadGameAndPlayers();
     this.setupWebSocketSubscriptions();
   }
 
-  private loadGame(): void {
+  private loadGameAndPlayers(): void {
+    if (!this.gameIdReadFromRoute) return;
+
     this.gameService.getGame(this.gameIdReadFromRoute).subscribe({
       next: (game) => {
         this.game = game;
@@ -73,21 +81,34 @@ export class GameDetailsPage implements OnInit, OnDestroy {
         console.log(e);
       },
     });
-  }
 
-  private loadPlayer(): void {
-    if (this.playerIdReadFromRoute) {
-      this.playerService
-        .getPlayerById(this.gameIdReadFromRoute, this.playerIdReadFromRoute)
-        .subscribe({
-          next: (player) => {
-            this.player = player;
-          },
-          error: (e) => {
-            console.log(e);
-          },
-        });
-    }
+    this.playerService.getAllPlayersInGame(this.gameIdReadFromRoute).subscribe({
+      next: (players) => {
+        // global
+        this.players = players;
+
+        // Filter humans
+        this.humans = players.filter((player) => player.isHuman);
+
+        // Filter zombies
+        this.zombies = players.filter((player) => !player.isHuman);
+        console.log('All players', this.players);
+      },
+      error: (e) => {
+        console.log(e);
+      },
+    });
+
+    this.playerService
+      .getPlayerById(this.gameIdReadFromRoute, this.playerIdReadFromRoute)
+      .subscribe({
+        next: (player) => {
+          this.player = player;
+        },
+        error: (e) => {
+          console.log(e);
+        },
+      });
   }
 
   private setupWebSocketSubscriptions(): void {
@@ -131,24 +152,69 @@ export class GameDetailsPage implements OnInit, OnDestroy {
     }, 1000);
   }
 
+  get isBiteCodeEmpty(): boolean {
+    return !this.killForm.get('biteCode')?.value;
+  }
+
+  get isKillStoryEmpty(): boolean {
+    return !this.killForm.get('killStory')?.value;
+  }
+
   public onKillSubmit(): void {
     const newKill: CreateKill = {
       time: new Date(Date.now()),
       location: 'some coordinates',
       killerId: this.player?.id || 0,
       biteCode: this.killForm.get('biteCode')?.value,
+      story: this.killForm.get('killStory')?.value,
       game: this.game?.id || 0,
     };
-
     this.killService.registerKill(newKill).subscribe({
       next: () => {
         console.log('kill registered');
+        this.showMessage('success'); // Display the success message
+        setTimeout(() => {
+          this.hideMessage();
+        }, 3800); // Hide the message after a delay (e.g., 3000 ms)
         this.killForm.reset();
       },
       error: (e) => {
         console.log(e);
+        this.showMessage('failure'); // Display the danger message
+        setTimeout(() => {
+          this.hideMessage();
+        }, 3800); // Hide the message after a delay (e.g., 3000 ms)
+        this.killForm.reset();
       },
     });
+  }
+
+  showMessage(type: 'success' | 'failure'): void {
+    this.messageType = type;
+  }
+
+  hideMessage(): void {
+    this.messageType = 'none'; // Hide the message
+  }
+
+  private getRandomBiteFailureMessage(): string {
+    const failureMessages: string[] = [
+      'Missed! Human dodged the bite.',
+      'No luck! Human got away.',
+      'Whoops! Human slipped out.',
+      'Darn! Human escaped.',
+      'Close call! Human dodged.',
+      'Oops! Human outsmarted.',
+      'Missed again! Human fled.',
+      'No bite! Human too quick.',
+      'Failed! Human slipped away.',
+      'Zombie bite fail! Human free.',
+    ];
+
+    const randomIndex: number = Math.floor(
+      Math.random() * failureMessages.length
+    );
+    return failureMessages[randomIndex];
   }
 
   public joinGame(): void {
