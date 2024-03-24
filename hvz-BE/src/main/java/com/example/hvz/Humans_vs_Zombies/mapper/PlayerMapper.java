@@ -11,13 +11,18 @@ import com.example.hvz.Humans_vs_Zombies.service.squadmember.SquadMemberService;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
 public abstract class PlayerMapper {
 
+  @Autowired
   protected LoginUserService loginUserService;
+  @Autowired
   protected GameService gameService;
+  @Autowired
   protected SquadMemberService squadMemberService;
+  @Autowired
   protected ChatService chatService;
 
   @Mapping(target = "loginUser", source = "loginUser.id")

@@ -10,11 +10,14 @@ import com.example.hvz.Humans_vs_Zombies.service.squadmember.SquadMemberService;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
 public abstract class SquadMapper {
 
+  @Autowired
   protected GameService gameService;
+  @Autowired
   protected SquadMemberService squadMemberService;
 
   @Mapping(target = "squadMembers", source = "squadMembers", qualifiedByName = "squadMembersToIds")

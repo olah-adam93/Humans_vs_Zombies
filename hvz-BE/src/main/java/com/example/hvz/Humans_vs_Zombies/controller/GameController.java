@@ -14,7 +14,6 @@ import com.example.hvz.Humans_vs_Zombies.service.player.PlayerService;
 import com.example.hvz.Humans_vs_Zombies.service.squad.SquadService;
 import com.example.hvz.Humans_vs_Zombies.service.squadmember.SquadMemberService;
 import com.example.hvz.Humans_vs_Zombies.validator.CreateGameConstraint;
-import com.example.hvz.Humans_vs_Zombies.validator.UpdateGameConstraint;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -83,7 +82,7 @@ public class GameController {
   @Operation(summary = "Update a game")
   @PutMapping("/{gameId}")
   public ResponseEntity<Void> update(
-      @Validated(UpdateGameConstraint.class) @Valid @RequestBody GameDTO gameDTO,
+      @Valid @RequestBody GameDTO gameDTO,
       @PathVariable("gameId") int gameId) {
     gameDTO.setId(gameId);
     Game game = gameService.findById(gameId);

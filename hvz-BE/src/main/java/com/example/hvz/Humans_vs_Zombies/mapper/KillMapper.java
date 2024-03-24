@@ -8,10 +8,12 @@ import com.example.hvz.Humans_vs_Zombies.service.game.GameService;
 import java.util.Collection;
 import java.util.Optional;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class KillMapper {
 
+  @Autowired
   protected GameService gameService;
 
   @Mapping(target = "game", source = "game.id")

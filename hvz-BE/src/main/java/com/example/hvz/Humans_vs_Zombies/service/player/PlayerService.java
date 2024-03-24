@@ -20,7 +20,7 @@ public interface PlayerService extends CrudService<Player, Integer> {
 
   Player findByGameIdAndBiteCode(int gameId, String biteCode);
 
-  String createRandomBiteCode(int length);
+  String createRandomBiteCode();
 
   Player findByBiteCode(String biteCode);
 }

@@ -18,12 +18,10 @@ public class CreateKillDTO {
 
   private String location;
 
-  @NotBlank(message = "BiteCode cannot be empty.")
-  @Pattern(regexp = "[a-z]+", message = "Given biteCode is invalid.")
+  @Pattern(regexp = "[01]{4}", message = "Given biteCode is invalid.")
   private String biteCode;
 
   @PastOrPresent private LocalDateTime time;
 
-  @NotBlank(message = "Game id cannot be empty.")
   private Integer game;
 }

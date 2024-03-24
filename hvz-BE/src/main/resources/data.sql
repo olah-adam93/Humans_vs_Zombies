@@ -1,47 +1,47 @@
 -- USERS
 INSERT INTO tb_user (first_name, last_name, keycloak_id, user_name)
-VALUES ('John', 'Doe', '123e4567-e89b-12d3-a456-426614174000', 'johndoe');
+VALUES ('John', 'Doe', 'd60e79b6-0766-4266-acf0-cc6fa0e8db3b', 'johndoe');
 
 INSERT INTO tb_user (first_name, last_name, keycloak_id, user_name)
-VALUES ('Jane', 'Smith', '98765432-1a2b-3c4d-5e6f-abcdef123456', 'janesmith');
+VALUES ('Jane', 'Smith', '4c2229dc-1e06-4e92-a5eb-33662ecc1fc8', 'janesmith');
 
 INSERT INTO tb_user (first_name, last_name, keycloak_id, user_name)
-VALUES ('Alice', 'Johnson', 'abcdef12-3456-789a-bcde-f123456789ab', 'alicej');
+VALUES ('Alice', 'Johnson', 'ff96af5f-050f-4fce-abeb-21ea2e974fa0', 'alicej');
 
 -- GAMES
-INSERT INTO tb_game (name, state, human_count, location)
-VALUES ('London HvZ', 'Registration', 10, 'London');
+INSERT INTO tb_game (id, name, state, human_count, location)
+VALUES (1, 'London HvZ', 'Registration', 10, 'London');
 
-INSERT INTO tb_game (name, state, human_count, location)
-VALUES ('Paris HvZ', 'Registration', 8, 'Paris');
+INSERT INTO tb_game (id, name, state, human_count, location)
+VALUES (2, 'Paris HvZ', 'Registration', 8, 'Paris');
 
-INSERT INTO tb_game (name, state, human_count, location)
-VALUES ('Tokyo HvZ', 'Registration', 15, 'Tokyo');
+INSERT INTO tb_game (id, name, state, human_count, location)
+VALUES (3, 'Tokyo HvZ', 'In Progress', 15, 'Tokyo');
 
 -- PLAYERS
 -- game 1
-INSERT INTO tb_player (is_patient_zero, is_human, login_user_id, game_id, bite_code)
-VALUES ('false', 'true', 1, 1, 'abc123');
+INSERT INTO tb_player (is_patient_zero, is_Human, login_user_id, game_id, bite_code)
+VALUES ('false', 'true', 1, 1, '0011');
 
 INSERT INTO tb_player (is_patient_zero, is_human, login_user_id, game_id, bite_code)
-VALUES ('false', 'true', 2, 1, 'def456');
+VALUES ('false', 'true', 2, 1, '0101');
 
 INSERT INTO tb_player (is_patient_zero, is_human, login_user_id, game_id, bite_code)
-VALUES ('false', 'true', 3, 1, 'ghi789');
+VALUES ('true', 'false', 3, 1, '1100');
 
 -- game 2
 INSERT INTO tb_player (is_patient_zero, is_human, login_user_id, game_id, bite_code)
-VALUES ('false', 'true', 1, 2, 'xyz987');
+VALUES ('false', 'true', 1, 2, '0011');
 
 INSERT INTO tb_player (is_patient_zero, is_human, login_user_id, game_id, bite_code)
-VALUES ('false', 'true', 2, 2, 'uvw654');
+VALUES ('false', 'true', 2, 2, '0101');
 
 -- game 3
 INSERT INTO tb_player (is_patient_zero, is_human, login_user_id, game_id, bite_code)
-VALUES ('false', 'true', 1, 3, '123abc');
+VALUES ('false', 'true', 1, 3, '0011');
 
 INSERT INTO tb_player (is_patient_zero, is_human, login_user_id, game_id, bite_code)
-VALUES ('false', 'true', 2, 3, '456def');
+VALUES ('false', 'true', 2, 3, '0101');
 
 INSERT INTO tb_player (is_patient_zero, is_human, login_user_id, game_id, bite_code)
-VALUES ('false', 'true', 3, 3, '789ghi');
+VALUES ('true', 'false', 3, 3, '1100');

@@ -75,7 +75,7 @@ public class PlayerController {
 
     createPlayerDTO.setLoginUser(
         loginUserService.findByKeycloakId(createPlayerDTO.getKeycloakId()).getId());
-    createPlayerDTO.setBiteCode(playerService.createRandomBiteCode(4));
+    createPlayerDTO.setBiteCode(playerService.createRandomBiteCode());
 
     Player player = playerService.add(playerMapper.createPlayerDtoToPlayer(createPlayerDTO));
     game.setHumanCount(game.getHumanCount() + 1);

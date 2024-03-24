@@ -8,11 +8,14 @@ import com.example.hvz.Humans_vs_Zombies.service.game.GameService;
 import com.example.hvz.Humans_vs_Zombies.service.player.PlayerService;
 import java.util.*;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
 public abstract class ChatMapper {
 
+  @Autowired
   protected PlayerService playerService;
+  @Autowired
   protected GameService gameService;
 
   @Mapping(target = "game", source = "game.id")

@@ -7,10 +7,12 @@ import com.example.hvz.Humans_vs_Zombies.service.player.PlayerService;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.mapstruct.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
 public abstract class LoginUserMapper {
 
+  @Autowired
   protected PlayerService playerService;
 
   @Mapping(target = "players", source = "players", qualifiedByName = "playersToIds")

@@ -102,23 +102,17 @@ public class PlayerServiceImpl implements PlayerService {
         .orElseThrow(() -> new PlayerWithBiteCodeNotFoundException(gameId, biteCode));
   }
 
-  public String createRandomBiteCode(int length) {
-    if (length <= 0 || length > 1000) {
-      throw new IllegalArgumentException(
-          "Length of bite code is invalid, it must be between 0 and 1000.");
-    }
-
-    StringBuilder name;
+  public String createRandomBiteCode() {
+    StringBuilder code;
     do {
-      name = new StringBuilder();
-      for (int i = 0; i < length; i++) {
-        int v = 1 + (int) (Math.random() * 26);
-        char c = (char) (v + 'a' - 1);
-        name.append(c);
+      code = new StringBuilder();
+      for (int i = 0; i < 4; i++) {
+        int randomBit = (int) (Math.random() * 2);
+        code.append(randomBit);
       }
-    } while (playerRepository.findByBiteCode(name.toString()).isPresent());
+    } while (playerRepository.findByBiteCode(code.toString()).isPresent());
 
-    return name.toString();
+    return code.toString();
   }
 
   @Override
