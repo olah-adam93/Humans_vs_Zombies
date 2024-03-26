@@ -19,6 +19,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { JwtInterceptor } from './services/jwt-interceptor.service';
 import { KeycloakService } from './services/keycloak.service';
 import { StompService } from './services/stomp.service';
+import { GoogleMapsLoaderService } from './services/google-maps-loader.service';
 import { GameCardComponent } from './components/game-card/game-card.component';
 
 @NgModule({
@@ -45,6 +46,7 @@ import { GameCardComponent } from './components/game-card/game-card.component';
   providers: [
     StompService,
     KeycloakService,
+    GoogleMapsLoaderService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],

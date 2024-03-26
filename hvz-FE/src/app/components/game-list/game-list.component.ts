@@ -8,6 +8,7 @@ import {
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment.prod';
 import { Game } from '../../models/Game';
 import { Player } from '../../models/Player';
 import { CreateGame } from '../../models/CreateGame';
@@ -16,6 +17,7 @@ import { KeycloakService } from 'src/app/services/keycloak.service';
 import { LoginUserService } from '../../services/login-user.service';
 import { StompService } from '../../services/stomp.service';
 import { Options } from 'ngx-google-places-autocomplete/objects/options/options';
+import { GoogleMapsLoaderService } from 'src/app/services/google-maps-loader.service';
 
 @Component({
   selector: 'app-game-list',
@@ -45,12 +47,14 @@ export class GameListComponent implements OnInit, OnDestroy {
     private gameService: GameService,
     private loginUserService: LoginUserService,
     private keycloakService: KeycloakService,
+    private googleMapsLoaderService: GoogleMapsLoaderService,
     private stompService: StompService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loadGames();
+    this.loadMaps();
     this.subscribeToGameUpdates();
   }
 
@@ -85,6 +89,12 @@ export class GameListComponent implements OnInit, OnDestroy {
           }
         },
       });
+  }
+
+  loadMaps(): void {
+    this.googleMapsLoaderService.loadGoogleMaps(
+      environment.GOOGLE_MAPS_API_KEY
+    );
   }
 
   private createLoginUser(): void {
@@ -124,25 +134,26 @@ export class GameListComponent implements OnInit, OnDestroy {
     });
   }
 
-  createGame() {
+  public createGame() {
     if (this.gameForm.valid) {
       const newGame: CreateGame = {
         name: this.gameForm.get('name')?.value,
-        location: this.gameForm.get('location')?.value,
+        location: this.formattedAddress,
         state: 'Registration',
       };
       this.gameService.saveGame(newGame).subscribe({
         next: (response) => {
+          console.log('Game created');
           const locationFromHeaders = response.headers
             .get('Location')
-            ?.split('/');
-          const gameId = locationFromHeaders
-            ? locationFromHeaders[locationFromHeaders.length - 1]
-            : '';
+            .split('/');
+          const gameId = locationFromHeaders[locationFromHeaders.length - 1];
           this.gameForm.reset();
           this.router.navigateByUrl(`/admin/${gameId}`);
         },
-        error: (e) => console.error('Error creating game:', e),
+        error: (e) => {
+          console.log(e);
+        },
       });
     }
   }
