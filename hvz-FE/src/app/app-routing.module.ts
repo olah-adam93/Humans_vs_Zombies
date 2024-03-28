@@ -3,12 +3,22 @@ import { RouterModule, Routes } from '@angular/router';
 import { LandingPage } from './pages/landing/landing.page';
 import { GameDetailsPage } from './pages/game-details/game-details.page';
 import { AdminPage } from './pages/admin/admin.page';
+import { RoleGuard } from './guards/role.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   { path: '', component: LandingPage },
-  { path: 'game/:gameId', component: GameDetailsPage },
-  { path: 'game/:gameId/:playerId', component: GameDetailsPage },
-  { path: 'admin/:gameId', component: AdminPage },
+  {
+    path: 'game/:gameId',
+    component: GameDetailsPage,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'game/:gameId/:playerId',
+    component: GameDetailsPage,
+    canActivate: [AuthGuard],
+  },
+  { path: 'admin/:gameId', component: AdminPage, canActivate: [RoleGuard] },
 ];
 
 @NgModule({

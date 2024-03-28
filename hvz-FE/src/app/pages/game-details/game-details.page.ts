@@ -54,6 +54,14 @@ export class GameDetailsPage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    this.setupRouteSubscription();
+    this.username = this.keycloakService.username ?? '';
+    this.randomFailureMessage = this.getRandomBiteFailureMessage();
+    this.loadGameAndPlayers();
+    this.setupWebSocketSubscriptions();
+  }
+
+  private setupRouteSubscription(): void {
     this.routeSubscription = this.activatedRoute.paramMap.subscribe({
       next: (param) => {
         this.gameIdReadFromRoute = param.get('gameId') || '';
@@ -63,14 +71,9 @@ export class GameDetailsPage implements OnInit, OnDestroy {
         console.log(e);
       },
     });
-
-    this.username = this.keycloakService.username ?? '';
-    this.randomFailureMessage = this.getRandomBiteFailureMessage();
-    this.loadGameAndPlayers();
-    this.setupWebSocketSubscriptions();
   }
 
-  private loadGameAndPlayers(): void {
+  private loadGame(): void {
     if (!this.gameIdReadFromRoute) return;
 
     this.gameService.getGame(this.gameIdReadFromRoute).subscribe({
@@ -81,16 +84,17 @@ export class GameDetailsPage implements OnInit, OnDestroy {
         console.log(e);
       },
     });
+  }
+
+  private loadPlayers(): void {
+    if (!this.gameIdReadFromRoute) return;
 
     this.playerService.getAllPlayersInGame(this.gameIdReadFromRoute).subscribe({
       next: (players) => {
-        // global
         this.players = players;
 
-        // Filter humans
         this.humans = players.filter((player) => player.isHuman);
 
-        // Filter zombies
         this.zombies = players.filter((player) => !player.isHuman);
         console.log('All players', this.players);
       },
@@ -98,6 +102,10 @@ export class GameDetailsPage implements OnInit, OnDestroy {
         console.log(e);
       },
     });
+  }
+
+  private loadPlayerById(): void {
+    if (!this.gameIdReadFromRoute || !this.playerIdReadFromRoute) return;
 
     this.playerService
       .getPlayerById(this.gameIdReadFromRoute, this.playerIdReadFromRoute)
@@ -109,6 +117,12 @@ export class GameDetailsPage implements OnInit, OnDestroy {
           console.log(e);
         },
       });
+  }
+
+  private loadGameAndPlayers(): void {
+    this.loadGame();
+    this.loadPlayers();
+    this.loadPlayerById();
   }
 
   private setupWebSocketSubscriptions(): void {
@@ -233,9 +247,7 @@ export class GameDetailsPage implements OnInit, OnDestroy {
           const locationFromHeaders = response.headers
             .get('Location')
             ?.split('/');
-          const playerId = locationFromHeaders
-            ? locationFromHeaders[locationFromHeaders.length - 1]
-            : '';
+          const playerId = locationFromHeaders[locationFromHeaders.length - 1];
           this.router.navigateByUrl(
             `game/${this.gameIdReadFromRoute}/${playerId}`
           );

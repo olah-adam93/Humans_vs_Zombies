@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { KeycloakService } from 'src/app/services/keycloak.service';
 
 @Component({
@@ -6,16 +6,30 @@ import { KeycloakService } from 'src/app/services/keycloak.service';
   templateUrl: './landing.page.html',
   styleUrls: ['./landing.page.scss'],
 })
-export class LandingPage implements OnInit {
-  constructor(private keycloak: KeycloakService) {}
+export class LandingPage {
+  public isAuthenticated?: boolean;
+  public isUserAdmin?: boolean;
+  public keycloakId?: string;
+  public username?: string;
 
-  ngOnInit(): void {}
+  constructor(private keycloakService: KeycloakService) {}
 
-  get username(): string | undefined {
-    return this.keycloak.username;
+  ngOnInit(): void {
+    this.subscribeToAuthentication(this.handleAuthentication.bind(this));
   }
 
-  get isLoggedIn(): boolean | undefined {
-    return this.keycloak.isAuthenticated;
+  private subscribeToAuthentication(
+    callback: (authenticated: boolean) => void
+  ) {
+    this.keycloakService.subscribeToAuth(callback);
+  }
+
+  private handleAuthentication(authenticated: boolean): void {
+    if (authenticated) {
+      this.isAuthenticated = authenticated;
+      this.isUserAdmin = this.keycloakService.isUserAdmin;
+      this.keycloakId = this.keycloakService.keycloakId;
+      this.username = this.keycloakService.username;
+    }
   }
 }

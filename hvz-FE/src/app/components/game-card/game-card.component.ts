@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Game } from 'src/app/models/Game';
-import { KeycloakService } from 'src/app/services/keycloak.service';
 
 @Component({
   selector: 'app-game-card',
@@ -9,13 +8,8 @@ import { KeycloakService } from 'src/app/services/keycloak.service';
 })
 export class GameCardComponent {
   @Input() public game!: Game;
+  @Input() public isUserAdmin?: boolean;
   @Output() deleteGameEvent = new EventEmitter<Game>();
-
-  constructor(private keycloakService: KeycloakService) {}
-
-  get isUserAdmin(): boolean {
-    return !!this.keycloakService.isUserAdmin;
-  }
 
   decideRoute(game: Game): string {
     return game?.playerIdofCurrentUser

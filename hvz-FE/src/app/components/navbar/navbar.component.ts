@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { KeycloakService } from 'src/app/services/keycloak.service';
 
 @Component({
@@ -6,15 +7,36 @@ import { KeycloakService } from 'src/app/services/keycloak.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss'],
 })
-export class NavbarComponent {
-  constructor(private keycloakService: KeycloakService) {}
+export class NavbarComponent implements OnInit {
+  private isLoggedIn = false;
+  private username?: string;
 
-  get isLoggedIn(): boolean {
-    return this.keycloakService.isAuthenticated;
+  constructor(
+    private keycloakService: KeycloakService,
+    private cd: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
+    this.subscribeToAuthentication(this.handleAuthentication.bind(this));
   }
 
-  get username(): string | undefined {
-    return this.keycloakService.username;
+  ngOnChanges(): void {
+    if (this.isLoggedIn && this.username) {
+      this.cd.detectChanges();
+    }
+  }
+
+  private subscribeToAuthentication(
+    callback: (authenticated: boolean) => void
+  ) {
+    this.keycloakService.subscribeToAuth(callback);
+  }
+
+  private handleAuthentication(authenticated: boolean): void {
+    if (authenticated) {
+      this.isLoggedIn = authenticated;
+      this.username = this.keycloakService.username;
+    }
   }
 
   handleLogin(): void {

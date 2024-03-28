@@ -1,13 +1,15 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
 import { Game } from '../../models/Game';
 import { Player } from '../../models/Player';
@@ -24,8 +26,11 @@ import { GoogleMapsLoaderService } from 'src/app/services/google-maps-loader.ser
   templateUrl: './game-list.component.html',
   styleUrls: ['./game-list.component.scss'],
 })
-export class GameListComponent implements OnInit, OnDestroy {
+export class GameListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() deleteGameEvent?: EventEmitter<Game>;
+  @Input() public keycloakId?: string;
+  @Input() public isUserAdmin?: boolean;
+
   public games: Game[] = [];
   public gameFormVisible = false;
   private wsGameSubs?: Subscription;
@@ -35,18 +40,11 @@ export class GameListComponent implements OnInit, OnDestroy {
     location: new FormControl('', Validators.required),
   });
 
-  get isLoggedIn(): boolean {
-    return this.keycloakService.isAuthenticated;
-  }
-
-  get isUserAdmin(): boolean {
-    return !!this.keycloakService.isUserAdmin;
-  }
-
   constructor(
     private gameService: GameService,
     private loginUserService: LoginUserService,
     private keycloakService: KeycloakService,
+    private cd: ChangeDetectorRef,
     private googleMapsLoaderService: GoogleMapsLoaderService,
     private stompService: StompService,
     private router: Router
@@ -58,37 +56,41 @@ export class GameListComponent implements OnInit, OnDestroy {
     this.subscribeToGameUpdates();
   }
 
+  ngOnChanges(): void {
+    if (this.keycloakId && this.isUserAdmin) {
+      this.loadPlayerIdsForCurrentUser();
+      this.cd.detectChanges();
+    }
+  }
+
   private loadGames(): void {
     this.gameService.getGames().subscribe({
       next: (gamesFromServer: Game[]) => {
         this.games = gamesFromServer;
-        if (this.keycloakService.isAuthenticated) {
-          this.loadPlayerIdsForCurrentUser();
-        }
       },
       error: (e) => console.error('Error loading games:', e),
     });
   }
 
   private loadPlayerIdsForCurrentUser(): void {
-    this.loginUserService
-      .getLoginUser(this.keycloakService.keycloakId)
-      .subscribe({
-        next: (playersFromServer: Player[]) => {
-          playersFromServer.forEach((player) => {
-            const game = this.games.find((game) => game.id === player.game);
-            if (game) {
-              game.playerIdofCurrentUser = player.id;
-            }
-          });
-        },
-        error: (e) => {
-          console.error('Error loading player IDs:', e);
-          if (e.status === 404) {
-            this.createLoginUser();
+    console.log('this is the keycloakId' + this.keycloakId);
+
+    this.loginUserService.getLoginUser(this.keycloakId).subscribe({
+      next: (playersFromServer: Player[]) => {
+        playersFromServer.forEach((player) => {
+          const game = this.games.find((game) => game.id === player.game);
+          if (game) {
+            game.playerIdofCurrentUser = player.id;
           }
-        },
-      });
+        });
+      },
+      error: (e) => {
+        console.error('Error loading player IDs:', e);
+        if (e.status === 404) {
+          this.createLoginUser();
+        }
+      },
+    });
   }
 
   loadMaps(): void {
@@ -148,6 +150,7 @@ export class GameListComponent implements OnInit, OnDestroy {
             .get('Location')
             .split('/');
           const gameId = locationFromHeaders[locationFromHeaders.length - 1];
+          console.log('Game id:' + gameId);
           this.gameForm.reset();
           this.router.navigateByUrl(`/admin/${gameId}`);
         },

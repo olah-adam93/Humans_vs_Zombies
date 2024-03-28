@@ -3,27 +3,36 @@ import Keycloak, {
   KeycloakInitOptions,
   KeycloakTokenParsed,
 } from 'keycloak-js';
+import { Observable, Subject, Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class KeycloakService {
   private keycloak: KeycloakInstance;
+  private isAuthenticatedSubject: Subject<boolean> = new Subject<boolean>();
+  private authSubscription?: Subscription;
 
   constructor() {
     this.keycloak = new Keycloak('./assets/keycloak.json') as KeycloakInstance;
   }
 
-  initialize(): Promise<boolean> {
+  initialize(): void {
     const config: KeycloakInitOptions = {
       checkLoginIframe: false,
       onLoad: 'check-sso',
     };
-    return this.keycloak.init(config);
+    this.keycloak.init(config).then((authenticated) => {
+      this.isAuthenticatedSubject.next(authenticated);
+    });
   }
 
-  get isAuthenticated(): boolean {
-    return !!this.keycloak.authenticated ?? false;
+  public subscribeToAuth(callback: (authenticated: boolean) => void): void {
+    this.authSubscription = this.isAuthenticated.subscribe(callback);
+  }
+
+  get isAuthenticated(): Observable<boolean> {
+    return this.isAuthenticatedSubject.asObservable();
   }
 
   get token(): string | undefined {
@@ -60,6 +69,12 @@ export class KeycloakService {
 
   logout(): void {
     this.keycloak.logout();
+  }
+
+  public unsubscribeFromAuth(): void {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 }
 
