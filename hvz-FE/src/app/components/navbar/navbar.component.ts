@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { KeycloakService } from 'src/app/services/keycloak.service';
 
 @Component({
@@ -8,28 +7,22 @@ import { KeycloakService } from 'src/app/services/keycloak.service';
   styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
-  private isLoggedIn = false;
-  private username?: string;
+  public isLoggedIn = false;
+  public username?: string;
+  public navbarSticky = false;
+  public navbarOpacity = 1;
+  public authSubscription: any;
 
-  constructor(
-    private keycloakService: KeycloakService,
-    private cd: ChangeDetectorRef
-  ) {}
+  constructor(private keycloakService: KeycloakService) {}
 
   ngOnInit(): void {
-    this.subscribeToAuthentication(this.handleAuthentication.bind(this));
+    this.authSubscription = this.keycloakService.subscribeToAuth(
+      this.handleAuthentication.bind(this)
+    );
   }
 
-  ngOnChanges(): void {
-    if (this.isLoggedIn && this.username) {
-      this.cd.detectChanges();
-    }
-  }
-
-  private subscribeToAuthentication(
-    callback: (authenticated: boolean) => void
-  ) {
-    this.keycloakService.subscribeToAuth(callback);
+  ngOnDestroy(): void {
+    this.authSubscription?.unsubscribe();
   }
 
   private handleAuthentication(authenticated: boolean): void {
@@ -45,5 +38,18 @@ export class NavbarComponent implements OnInit {
 
   handleLogout(): void {
     this.keycloakService.logout();
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollY = window.scrollY || window.pageYOffset;
+    this.navbarSticky = scrollY > 0;
+
+    if (scrollTop > 100) {
+      this.navbarOpacity = 0.5;
+    } else {
+      this.navbarOpacity = 1;
+    }
   }
 }
