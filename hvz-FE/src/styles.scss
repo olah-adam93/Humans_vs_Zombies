@@ -9,7 +9,6 @@
 html,
 body {
   height: 100%;
-  margin: 50px 0;
 }
 
 .body-background {
@@ -17,6 +16,6 @@ body {
   background-image: url("./assets/images/zombie-bg05.png"),
     url("./assets/images/zombie-bg02.png");
   background-repeat: no-repeat, no-repeat;
-  background-position: 3rem 1rem, right bottom;
-  background-size: 200px 300px, 400px 275px;
+  background-position: 3rem 4rem, right bottom;
+  background-size: 178px 266px, 400px 275px;
 }

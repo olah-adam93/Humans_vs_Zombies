@@ -6,14 +6,14 @@ import {
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
-import { Observable } from 'rxjs';
-import { KeycloakService } from '../services/keycloak.service';
+import { Observable, map } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private router: Router, private keycloak: KeycloakService) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -23,12 +23,15 @@ export class AuthGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    // Authenticated
-    if (this.keycloak.isAuthenticated) {
-      return true;
-    }
-    // Automatically navigate to landing page
-    this.router.navigateByUrl('');
-    return false;
+    return this.authService.isInitialized().pipe(
+      map((initialized: any) => {
+        if (initialized && this.authService.isAuthenticated) {
+          return true;
+        } else {
+          this.router.navigateByUrl('');
+          return false;
+        }
+      })
+    );
   }
 }

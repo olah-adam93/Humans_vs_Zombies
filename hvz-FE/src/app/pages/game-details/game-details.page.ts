@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth.service';
 
 import { Game } from '../../models/Game';
 import { Player } from '../../models/Player';
@@ -11,7 +12,6 @@ import { CreateKill } from '../../models/CreateKill';
 
 import { GameService } from '../../services/game.service';
 import { PlayerService } from '../../services/player.service';
-import { KeycloakService } from 'src/app/services/keycloak.service';
 import { KillService } from '../../services/kill.service';
 import { StompService } from '../../services/stomp.service';
 
@@ -47,7 +47,7 @@ export class GameDetailsPage implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private gameService: GameService,
     private playerService: PlayerService,
-    private keycloakService: KeycloakService,
+    private authService: AuthService,
     private killService: KillService,
     private stompService: StompService,
     private router: Router
@@ -55,7 +55,7 @@ export class GameDetailsPage implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.setupRouteSubscription();
-    this.username = this.keycloakService.username ?? '';
+    this.username = this.authService.userName;
     this.randomFailureMessage = this.getRandomBiteFailureMessage();
     this.loadGameAndPlayers();
     this.setupWebSocketSubscriptions();
@@ -236,7 +236,7 @@ export class GameDetailsPage implements OnInit, OnDestroy {
       isHuman: true,
       isPatientZero: false,
       game: this.game?.id || 0,
-      keycloakId: this.keycloakService.keycloakId,
+      keycloakId: this.authService.keycloakId,
     };
 
     this.playerService

@@ -1,10 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 
 import { AppRoutingModule } from './app-routing.module';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
+import { initializeKeycloak } from 'src/keycloak';
 
 import { AdminChatComponent } from './components/admin-chat/admin-chat.component';
 import { AdminPage } from './pages/admin/admin.page';
@@ -15,12 +17,12 @@ import { GameListComponent } from './components/game-list/game-list.component';
 import { LandingPage } from './pages/landing/landing.page';
 import { MapComponent } from './components/map/map.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { GameCardComponent } from './components/game-card/game-card.component';
 
 import { JwtInterceptor } from './services/jwt-interceptor.service';
-import { KeycloakService } from './services/keycloak.service';
 import { StompService } from './services/stomp.service';
 import { GoogleMapsLoaderService } from './services/google-maps-loader.service';
-import { GameCardComponent } from './components/game-card/game-card.component';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [
@@ -38,15 +40,21 @@ import { GameCardComponent } from './components/game-card/game-card.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    KeycloakAngularModule,
     HttpClientModule,
     ReactiveFormsModule,
     GooglePlaceModule,
   ],
-
   providers: [
     StompService,
-    KeycloakService,
     GoogleMapsLoaderService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeKeycloak,
+      multi: true,
+      deps: [KeycloakService],
+    },
+    AuthService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],

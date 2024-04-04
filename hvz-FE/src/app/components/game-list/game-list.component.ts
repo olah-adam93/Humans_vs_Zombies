@@ -1,5 +1,4 @@
 import {
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -15,11 +14,12 @@ import { Game } from '../../models/Game';
 import { Player } from '../../models/Player';
 import { CreateGame } from '../../models/CreateGame';
 import { GameService } from '../../services/game.service';
-import { KeycloakService } from 'src/app/services/keycloak.service';
+import { KeycloakService } from 'keycloak-angular';
 import { LoginUserService } from '../../services/login-user.service';
 import { StompService } from '../../services/stomp.service';
 import { Options } from 'ngx-google-places-autocomplete/objects/options/options';
 import { GoogleMapsLoaderService } from 'src/app/services/google-maps-loader.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-game-list',
@@ -28,8 +28,12 @@ import { GoogleMapsLoaderService } from 'src/app/services/google-maps-loader.ser
 })
 export class GameListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() deleteGameEvent?: EventEmitter<Game>;
-  @Input() public keycloakId?: string;
-  @Input() public isUserAdmin?: boolean;
+
+  public firstName?: string;
+  public lastName?: string;
+  public userName?: string;
+  public keycloakId?: string;
+  public isUserAdmin?: boolean;
 
   public games: Game[] = [];
   public gameFormVisible = false;
@@ -44,13 +48,14 @@ export class GameListComponent implements OnInit, OnChanges, OnDestroy {
     private gameService: GameService,
     private loginUserService: LoginUserService,
     private keycloakService: KeycloakService,
-    private cd: ChangeDetectorRef,
+    private authService: AuthService,
     private googleMapsLoaderService: GoogleMapsLoaderService,
     private stompService: StompService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.initUserAttributes();
     this.loadGames();
     this.loadMaps();
     this.subscribeToGameUpdates();
@@ -59,8 +64,15 @@ export class GameListComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(): void {
     if (this.keycloakId && this.isUserAdmin) {
       this.loadPlayerIdsForCurrentUser();
-      this.cd.detectChanges();
     }
+  }
+
+  private initUserAttributes(): void {
+    this.firstName = this.authService.firstName;
+    this.lastName = this.authService.lastName;
+    this.userName = this.authService.userName;
+    this.keycloakId = this.authService.keycloakId;
+    this.isUserAdmin = this.keycloakService.isUserInRole('Administrator');
   }
 
   private loadGames(): void {
@@ -101,10 +113,10 @@ export class GameListComponent implements OnInit, OnChanges, OnDestroy {
 
   private createLoginUser(): void {
     const newLoginUser = {
-      firstName: this.keycloakService.firstName,
-      lastName: this.keycloakService.lastName,
-      keycloakId: this.keycloakService.keycloakId,
-      userName: this.keycloakService.username,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      keycloakId: this.keycloakId,
+      userName: this.userName,
     };
     this.loginUserService.saveLoginUser(newLoginUser).subscribe({
       next: () => console.log('Login user created'),
@@ -168,10 +180,6 @@ export class GameListComponent implements OnInit, OnChanges, OnDestroy {
   closeGameForm(): void {
     this.gameFormVisible = false;
     this.gameForm.reset();
-  }
-
-  handleLogin(): void {
-    this.keycloakService.login();
   }
 
   formattedAddress = '';

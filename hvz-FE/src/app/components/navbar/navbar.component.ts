@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { KeycloakService } from 'src/app/services/keycloak.service';
+import { KeycloakService } from 'keycloak-angular';
 
 @Component({
   selector: 'app-navbar',
@@ -11,25 +11,12 @@ export class NavbarComponent implements OnInit {
   public username?: string;
   public navbarSticky = false;
   public navbarOpacity = 1;
-  public authSubscription: any;
 
   constructor(private keycloakService: KeycloakService) {}
 
   ngOnInit(): void {
-    this.authSubscription = this.keycloakService.subscribeToAuth(
-      this.handleAuthentication.bind(this)
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.authSubscription?.unsubscribe();
-  }
-
-  private handleAuthentication(authenticated: boolean): void {
-    if (authenticated) {
-      this.isLoggedIn = authenticated;
-      this.username = this.keycloakService.username;
-    }
+    this.isLoggedIn = this.keycloakService?.isLoggedIn();
+    this.username = this.keycloakService?.getUsername();
   }
 
   handleLogin(): void {

@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 import { Game } from '../../models/Game';
 import { Player } from '../../models/Player';
 import { GameService } from '../../services/game.service';
 import { PlayerService } from '../../services/player.service';
 import { StompService } from '../../services/stomp.service';
-import { KeycloakService } from '../../services/keycloak.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-admin',
@@ -17,9 +17,10 @@ export class AdminPage implements OnInit, OnDestroy {
   public gameIdReadFromRoute?: any;
   public game?: Game;
   public players?: Player[];
-  public username = '';
+  public username?: string;
+  public isAdmin?: boolean;
+  private routeDestroyed$ = new Subject<void>();
 
-  private routeSubscription?: Subscription;
   private wsGameSubscription?: Subscription;
   private wsKillSubscription?: Subscription;
 
@@ -27,30 +28,36 @@ export class AdminPage implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private gameService: GameService,
     private playerService: PlayerService,
-    private keycloakService: KeycloakService,
+    private authService: AuthService,
     private stompService: StompService
   ) {}
 
   ngOnInit(): void {
-    this.routeSubscription = this.activatedRoute.paramMap.subscribe({
-      next: (param) => {
-        this.gameIdReadFromRoute = param.get('gameId');
-      },
-      error: (e) => {
-        console.log(e);
-      },
-    });
-
-    this.username = this.keycloakService.username ?? '';
+    this.setupRouteSubscription();
+    this.initializeUser();
     this.loadGameAndPlayers();
     this.setupWebsocketSubscriptions();
   }
 
-  get isAdmin() {
-    return this.keycloakService.isUserAdmin;
+  private setupRouteSubscription(): void {
+    this.activatedRoute.paramMap
+      .pipe(takeUntil(this.routeDestroyed$))
+      .subscribe({
+        next: (param) => {
+          this.gameIdReadFromRoute = param.get('gameId');
+        },
+        error: (error) => {
+          console.error('Error occurred in route subscription:', error);
+        },
+      });
   }
 
-  private loadGameAndPlayers(): void {
+  private initializeUser(): void {
+    this.username = this.authService.userName;
+    this.isAdmin = this.authService.isUserAdmin;
+  }
+
+  private loadGame(): void {
     if (!this.gameIdReadFromRoute) return;
 
     this.gameService.getGame(this.gameIdReadFromRoute).subscribe({
@@ -58,37 +65,55 @@ export class AdminPage implements OnInit, OnDestroy {
         this.game = game;
       },
       error: (e) => {
-        console.log(e);
+        console.error('Error loading game:', e);
       },
     });
+  }
+
+  private loadPlayers(): void {
+    if (!this.gameIdReadFromRoute) return;
 
     this.playerService.getAllPlayersInGame(this.gameIdReadFromRoute).subscribe({
       next: (players) => {
         this.players = players;
       },
       error: (e) => {
-        console.log(e);
+        console.error('Error loading players:', e);
       },
     });
   }
 
+  private loadGameAndPlayers(): void {
+    this.loadGame();
+    this.loadPlayers();
+  }
+
+  private subscribeToGameUpdates(): void {
+    if (!this.gameIdReadFromRoute) return;
+
+    this.wsGameSubscription = this.stompService.subscribe(
+      `/topic/game/${this.gameIdReadFromRoute}`,
+      (response: any): void => {
+        this.refreshGameAndPlayers();
+      }
+    );
+  }
+
+  private subscribeToKillUpdates(): void {
+    if (!this.gameIdReadFromRoute) return;
+
+    this.wsKillSubscription = this.stompService.subscribe(
+      `/topic/kill/${this.gameIdReadFromRoute}`,
+      (response: any): void => {
+        this.refreshPlayers();
+      }
+    );
+  }
+
   private setupWebsocketSubscriptions(): void {
     setTimeout(() => {
-      if (!this.gameIdReadFromRoute) return;
-
-      this.wsGameSubscription = this.stompService.subscribe(
-        `/topic/game/${this.gameIdReadFromRoute}`,
-        (response: any): void => {
-          this.refreshGameAndPlayers();
-        }
-      );
-
-      this.wsKillSubscription = this.stompService.subscribe(
-        `/topic/kill/${this.gameIdReadFromRoute}`,
-        (response: any): void => {
-          this.refreshPlayers();
-        }
-      );
+      this.subscribeToGameUpdates();
+      this.subscribeToKillUpdates();
     }, 1000);
   }
 
@@ -123,7 +148,8 @@ export class AdminPage implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.routeSubscription?.unsubscribe();
+    this.routeDestroyed$.next();
+    this.routeDestroyed$.complete();
     this.wsGameSubscription?.unsubscribe();
     this.wsKillSubscription?.unsubscribe();
   }

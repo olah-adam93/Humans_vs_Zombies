@@ -7,7 +7,7 @@ import {
   UrlTree,
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { KeycloakService } from '../services/keycloak.service';
+import { KeycloakService } from 'keycloak-angular';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +23,10 @@ export class RoleGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    if (this.keycloak.isAuthenticated && this.keycloak.isUserAdmin) {
+    if (
+      this.keycloak.isLoggedIn() &&
+      this.keycloak.isUserInRole('Administrator')
+    ) {
       return true;
     }
 
