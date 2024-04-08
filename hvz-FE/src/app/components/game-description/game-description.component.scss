@@ -1,0 +1,32 @@
+.human-badge,
+.zombie-badge {
+  background-color: #1995ad;
+  color: white;
+  border: 1px solid black;
+  border-radius: 0.3rem;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 0.3rem;
+}
+
+.game-state {
+  border: 1px solid black;
+  border-radius: 0.3rem;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 0.3rem;
+  font-size: 1.4rem;
+}
+
+.game-state-reg {
+  background-color: #ffa500;
+}
+
+.game-state-in-prog {
+  background-color: #3498db;
+}
+
+.game-state-compl {
+  background-color: #464646;
+  color: white;
+}

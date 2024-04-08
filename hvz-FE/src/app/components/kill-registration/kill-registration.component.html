@@ -1,0 +1,33 @@
+<h5 class="mb-3">Bite a Human!</h5>
+<form
+  [formGroup]="killForm"
+  (ngSubmit)="onKillSubmit()"
+  class="form-kill-register mb-5"
+>
+  <div class="mb-3 bite-code-container">
+    <label for="bite-code-input" class="form-label"
+      >Enter a four digits binary code</label
+    >
+    <input
+      [ngClass]="{ 'empty-bite-code': isBiteCodeEmpty }"
+      formControlName="biteCode"
+      type="text-box"
+      class="form-control"
+      id="bite-code-input"
+      placeholder="0101 , 1100, ..."
+    />
+  </div>
+  <div class="mb-3 kill-story-container">
+    <label for="kill-story-input" class="form-label">Add your story</label>
+    <textarea
+      [ngClass]="{ 'empty-kill-story': isKillStoryEmpty }"
+      formControlName="killStory"
+      type="text"
+      class="form-control story"
+      id="kill-story-input"
+      placeholder="E.g. CrazyZombie killed LameHuman"
+    ></textarea>
+  </div>
+
+  <button class="hm-btn" [disabled]="killForm.invalid">Register Kill</button>
+</form>
