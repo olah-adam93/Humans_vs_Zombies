@@ -1,56 +1,5 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  //background-attachment: sticky !important;
-}
-
-.show-chat-message {
-  min-height: 200px;
-  border: 1px solid lightgray;
-  border-radius: 0.3rem;
-}
-
 .linear-gr-bg {
   height: 65px;
-  /*background: linear-gradient(
-    0deg,
-    rgba(23, 76, 74, 1) 0%,
-    rgba(0, 0, 0, 1) 100%
-  );*/
-}
-
-.delete-game-btn {
-  cursor: pointer;
-
-  &:hover {
-    color: red;
-  }
-}
-
-.title-container {
-  min-height: 9rem;
-  background: linear-gradient(
-    0deg,
-    rgba(9, 90, 100, 0) 0%,
-    rgba(9, 90, 100, 0.75) 44%,
-    rgba(9, 90, 100, 1) 100%
-  );
-}
-
-.hm-bg-color {
-  background-color: transparent;
-}
-
-.title-line {
-  color: white;
-  font-family: "Amatic SC", cursive;
-  font-weight: bold;
-  font-size: 11vw;
-
-  @media screen and (min-width: 768px) {
-    font-size: 5rem;
-  }
 }
 
 .hm-card {
@@ -92,33 +41,6 @@
   }
 }
 
-.player-list-container {
-}
-
-.player-list-container .nav-link {
-  background-color: #1995ad;
-  font-size: 1rem;
-  font-weight: 500;
-  border: none;
-  outline: none;
-  color: white;
-  border: 1px solid #017371;
-  border-radius: 0.3rem;
-  text-decoration: none;
-  cursor: pointer;
-  margin: auto 0.1rem 1rem 0.1rem;
-}
-
-.player-list-container .nav-link:hover {
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.56);
-  background-color: #017371;
-}
-
-.player-list-container .player-list-navbar {
-  display: flex;
-  flex-direction: column;
-}
-
 .hm-card-body {
   flex: 1 1 auto;
   padding: 1rem;
@@ -135,25 +57,14 @@
   margin-bottom: 0;
 }
 
-.bite-code,
-.human-badge,
-.zombie-badge {
+.bite-code {
+  background-color: #1995ad;
+  color: white;
   border: 1px solid black;
   border-radius: 0.3rem;
   width: -moz-fit-content;
   width: fit-content;
   padding: 0.3rem;
-}
-
-.human-badge,
-.bite-code {
-  background-color: #1995ad;
-  color: white;
-}
-
-.zombie-badge {
-  background-color: #1995ad;
-  color: white;
 }
 
 .register-container {
@@ -167,106 +78,10 @@
   padding: 0.5rem;
 }
 
-.form-control {
-  max-height: 12rem;
-  border: 1px solid black;
-  border-radius: 0.3rem;
-}
+.delete-game-btn {
+  cursor: pointer;
 
-.form-control.story {
-  padding: 1rem 2rem;
-  min-height: 6.5rem;
-  margin: auto;
-}
-
-/*
-.player-list-container .nav-link {
-  margin: 2px;
-  background-color: #66a5ad;
-  border: 1px solid black;
-  border-radius: 5px;
-}*/
-
-.game-state {
-  border: 1px solid black;
-  border-radius: 0.3rem;
-  width: -moz-fit-content;
-  width: fit-content;
-  padding: 0.3rem;
-  font-size: 1.4rem;
-}
-
-.game-state-reg {
-  background-color: #ffa500;
-}
-
-.game-state-in-prog {
-  background-color: #3498db;
-}
-
-.game-state-compl {
-  background-color: #464646;
-  color: white;
-}
-
-.empty-bite-code,
-.empty-kill-story {
-  animation: shake 0.9s ease-in-out;
-}
-@keyframes shake {
-  0% {
-    transform: translate(0);
+  &:hover {
+    color: red;
   }
-  20%,
-  40%,
-  60%,
-  80% {
-    transform: translate(0.5rem);
-    box-shadow: var(--hover-box-shadow);
-  }
-  10%,
-  30%,
-  50% {
-    transform: translate(-0.2rem);
-  }
-  70%,
-  100% {
-    transform: translate(0);
-  }
-}
-
-.message {
-  width: 100%;
-  position: relative;
-  margin-bottom: 60px;
-  display: flex;
-  justify-content: center;
-}
-.message .success {
-  font-size: 20px;
-  color: green;
-  position: absolute;
-  animation: buttons 0.3s linear;
-}
-.message .failure {
-  font-size: 20px;
-  color: red;
-  position: absolute;
-  transition: 0.3s;
-  animation: buttons 0.3s linear;
-}
-
-@keyframes buttons {
-  0% {
-    transform: scale(0.1);
-  }
-  50% {
-    transform: scale(0.5);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-@media screen and (min-width: 768px) {
 }

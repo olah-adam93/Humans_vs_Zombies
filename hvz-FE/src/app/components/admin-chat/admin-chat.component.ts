@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { Game } from '../../models/Game';
 import { CreateChat } from '../../models/CreateChat';
 import { ChatService } from '../../services/chat.service';
@@ -24,40 +24,39 @@ export class AdminChatComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(): void {
     if (this.game) {
-      // Load chats
-      this.loadGlobalChat();
-      this.loadHumanChat();
-      this.loadZombieChat();
-
-      if (this.firstLoad) {
-        setTimeout(() => {
-          // Websocket subscription to chat updates
-          this.wsChatSubscription = this.stompService.subscribe(
-            `/topic/chat/${this.game?.id}`,
-            (response: any): void => {
-              console.log('Notification received');
-              console.log(response.body);
-
-              switch (response.body) {
-                case 'global':
-                  this.loadGlobalChat();
-                  break;
-                case 'human':
-                  this.loadHumanChat();
-                  break;
-                case 'zombie':
-                  this.loadZombieChat();
-                  break;
-                default:
-                  break;
-              }
-            }
-          );
-        }, 1000);
-      }
-
-      this.firstLoad = false;
+      this.subscribeToChatUpdates();
+      this.loadChats();
     }
+  }
+
+  private subscribeToChatUpdates(): void {
+    if (this.firstLoad) {
+      setTimeout(() => {
+        // Websocket subscription to chat updates
+        this.wsChatSubscription = this.stompService.subscribe(
+          `/topic/chat/${this.game?.id}`,
+          (response: any): void => {
+            console.log('Notification received');
+            console.log(response.body);
+
+            switch (response.body) {
+              case 'global':
+                this.loadGlobalChat();
+                break;
+              case 'human':
+                this.loadHumanChat();
+                break;
+              case 'zombie':
+                this.loadZombieChat();
+                break;
+              default:
+                break;
+            }
+          }
+        );
+      }, 1000);
+    }
+    this.firstLoad = false;
   }
 
   public loadGlobalChat() {
@@ -97,6 +96,12 @@ export class AdminChatComponent implements OnChanges, OnDestroy {
         },
       });
     }
+  }
+
+  private loadChats(): void {
+    this.loadGlobalChat();
+    this.loadHumanChat();
+    this.loadZombieChat();
   }
 
   ngOnDestroy(): void {

@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -8,12 +7,11 @@ import { Game } from '../../models/Game';
 import { Player } from '../../models/Player';
 import { Squad } from '../../models/Squad';
 import { Kill } from '../../models/Kill';
-import { CreateKill } from '../../models/CreateKill';
 
 import { GameService } from '../../services/game.service';
 import { PlayerService } from '../../services/player.service';
-import { KillService } from '../../services/kill.service';
 import { StompService } from '../../services/stomp.service';
+import { LoginUserService } from 'src/app/services/login-user.service';
 
 @Component({
   selector: 'app-game-details',
@@ -32,40 +30,55 @@ export class GameDetailsPage implements OnInit, OnDestroy {
   public allSquads?: Squad[];
   public allKills?: Kill[];
   public username?: string;
-  public selectedTab: string = 'global';
+  public keycloakId?: string;
   public wsGameSubscription?: Subscription;
   public wsKillSubscription?: Subscription;
   public randomFailureMessage?: string;
-  public messageType: 'success' | 'failure' | 'none' = 'none';
-
-  public killForm: FormGroup = new FormGroup({
-    biteCode: new FormControl('', Validators.required),
-    killStory: new FormControl(''),
-  });
 
   constructor(
     private activatedRoute: ActivatedRoute,
     private gameService: GameService,
     private playerService: PlayerService,
+    private loginUserService: LoginUserService,
     private authService: AuthService,
-    private killService: KillService,
     private stompService: StompService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.setupRouteSubscription();
     this.username = this.authService.userName;
-    this.randomFailureMessage = this.getRandomBiteFailureMessage();
+    this.keycloakId = this.authService.keycloakId;
+
+    this.setupRouteSubscription();
+    this.handleLoginUser();
     this.loadGameAndPlayers();
     this.setupWebSocketSubscriptions();
   }
 
-  private setupRouteSubscription(): void {
-    this.routeSubscription = this.activatedRoute.paramMap.subscribe({
-      next: (param) => {
-        this.gameIdReadFromRoute = param.get('gameId') || '';
-        this.playerIdReadFromRoute = param.get('playerId') || '';
+  handleLoginUser(): void {
+    this.loginUserService.getLoginUser(this.keycloakId).subscribe({
+      next: (playersFromServer: Player[]) => {
+        console.log(playersFromServer);
+        if (this.playerIdReadFromRoute) {
+          if (
+            !this.getPlayerId(playersFromServer) ||
+            this.getPlayerId(playersFromServer) != this.playerIdReadFromRoute
+          ) {
+            this.router.navigateByUrl(`game/${this.gameIdReadFromRoute}`);
+          } else {
+            this.player = playersFromServer.find(
+              (player) => player.id == this.getPlayerId(playersFromServer)
+            );
+          }
+        } else {
+          if (this.getPlayerId(playersFromServer)) {
+            this.router.navigateByUrl(
+              `game/${this.gameIdReadFromRoute}/${this.getPlayerId(
+                playersFromServer
+              )}`
+            );
+          }
+        }
       },
       error: (e) => {
         console.log(e);
@@ -73,6 +86,30 @@ export class GameDetailsPage implements OnInit, OnDestroy {
     });
   }
 
+  getPlayerId(playersOfUser: Player[]): number | undefined {
+    let playerId: number | undefined = undefined;
+    playersOfUser.forEach((player) => {
+      if (this.game?.id === player?.game) {
+        playerId = player.id;
+      }
+    });
+    return playerId;
+  }
+
+  private setupRouteSubscription(): void {
+    this.routeSubscription = this.activatedRoute.paramMap.subscribe({
+      next: (param) => {
+        console.log('param gameId: ' + param.get('gameId'));
+        this.gameIdReadFromRoute = param.get('gameId');
+        if (param.get('playerId')) {
+          this.playerIdReadFromRoute = param.get('playerId');
+        }
+      },
+      error: (e) => {
+        console.log(e);
+      },
+    });
+  }
   private loadGame(): void {
     if (!this.gameIdReadFromRoute) return;
 
@@ -92,11 +129,12 @@ export class GameDetailsPage implements OnInit, OnDestroy {
     this.playerService.getAllPlayersInGame(this.gameIdReadFromRoute).subscribe({
       next: (players) => {
         this.players = players;
-
+        console.log('All players', this.players);
         this.humans = players.filter((player) => player.isHuman);
+        console.log('All humans', this.humans);
 
         this.zombies = players.filter((player) => !player.isHuman);
-        console.log('All players', this.players);
+        console.log('All zombies', this.zombies);
       },
       error: (e) => {
         console.log(e);
@@ -106,12 +144,14 @@ export class GameDetailsPage implements OnInit, OnDestroy {
 
   private loadPlayerById(): void {
     if (!this.gameIdReadFromRoute || !this.playerIdReadFromRoute) return;
+    console.log('Passed loadPlayerById');
 
     this.playerService
       .getPlayerById(this.gameIdReadFromRoute, this.playerIdReadFromRoute)
       .subscribe({
         next: (player) => {
           this.player = player;
+          console.log('Found player by id: ' + this.player);
         },
         error: (e) => {
           console.log(e);
@@ -166,51 +206,6 @@ export class GameDetailsPage implements OnInit, OnDestroy {
     }, 1000);
   }
 
-  get isBiteCodeEmpty(): boolean {
-    return !this.killForm.get('biteCode')?.value;
-  }
-
-  get isKillStoryEmpty(): boolean {
-    return !this.killForm.get('killStory')?.value;
-  }
-
-  public onKillSubmit(): void {
-    const newKill: CreateKill = {
-      time: new Date(Date.now()),
-      location: 'some coordinates',
-      killerId: this.player?.id || 0,
-      biteCode: this.killForm.get('biteCode')?.value,
-      story: this.killForm.get('killStory')?.value,
-      game: this.game?.id || 0,
-    };
-    this.killService.registerKill(newKill).subscribe({
-      next: () => {
-        console.log('kill registered');
-        this.showMessage('success'); // Display the success message
-        setTimeout(() => {
-          this.hideMessage();
-        }, 3800); // Hide the message after a delay (e.g., 3000 ms)
-        this.killForm.reset();
-      },
-      error: (e) => {
-        console.log(e);
-        this.showMessage('failure'); // Display the danger message
-        setTimeout(() => {
-          this.hideMessage();
-        }, 3800); // Hide the message after a delay (e.g., 3000 ms)
-        this.killForm.reset();
-      },
-    });
-  }
-
-  showMessage(type: 'success' | 'failure'): void {
-    this.messageType = type;
-  }
-
-  hideMessage(): void {
-    this.messageType = 'none'; // Hide the message
-  }
-
   private getRandomBiteFailureMessage(): string {
     const failureMessages: string[] = [
       'Missed! Human dodged the bite.',
@@ -229,47 +224,6 @@ export class GameDetailsPage implements OnInit, OnDestroy {
       Math.random() * failureMessages.length
     );
     return failureMessages[randomIndex];
-  }
-
-  public joinGame(): void {
-    const newPlayer: Player = {
-      isHuman: true,
-      isPatientZero: false,
-      game: this.game?.id || 0,
-      keycloakId: this.authService.keycloakId,
-    };
-
-    this.playerService
-      .addPlayerToGame(this.gameIdReadFromRoute, newPlayer)
-      .subscribe({
-        next: (response) => {
-          console.log('Player added');
-          const locationFromHeaders = response.headers
-            .get('Location')
-            ?.split('/');
-          const playerId = locationFromHeaders[locationFromHeaders.length - 1];
-          this.router.navigateByUrl(
-            `game/${this.gameIdReadFromRoute}/${playerId}`
-          );
-        },
-        error: (e) => {
-          console.log(e);
-        },
-      });
-  }
-
-  public leaveGame(): void {
-    this.playerService
-      .deletePalyer(this.gameIdReadFromRoute, this.playerIdReadFromRoute || '')
-      .subscribe({
-        next: () => {
-          console.log('Player deleted');
-        },
-        error: (e) => {
-          console.log(e);
-        },
-      });
-    this.router.navigateByUrl(`game/${this.gameIdReadFromRoute}`);
   }
 
   public refreshGame(): void {
@@ -301,20 +255,6 @@ export class GameDetailsPage implements OnInit, OnDestroy {
     }
   }
 
-  public setCurrentClasses(game: Game | undefined): Record<string, boolean> {
-    if (game) {
-      return {
-        'game-state': true,
-        'game-state-reg': game.state === 'Registration',
-        'game-state-in-prog': game.state === 'In Progress',
-        'game-state-compl': game.state === 'Complete',
-      };
-    } else {
-      return {
-        'game-state': true,
-      };
-    }
-  }
   ngOnDestroy(): void {
     if (this.routeSubscription) {
       this.routeSubscription.unsubscribe();

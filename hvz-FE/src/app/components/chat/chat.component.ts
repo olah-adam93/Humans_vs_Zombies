@@ -41,12 +41,8 @@ export class ChatComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(): void {
     if (this.game && this.player) {
-      console.log('Chat component ngOnChanges');
-
       this.loadChats();
       this.subscribeToChatUpdates();
-
-      this.firstLoad = false;
     }
   }
 
@@ -84,6 +80,8 @@ export class ChatComponent implements OnChanges, OnDestroy {
         break;
     }
 
+    console.log(newChat);
+
     this.chatService.sendChat(newChat).subscribe({
       next: () => {
         console.log(
@@ -97,7 +95,7 @@ export class ChatComponent implements OnChanges, OnDestroy {
     });
   }
 
-  private loadChats(): void {
+  private loadGlobalChat(): void {
     this.chatService.getGlobalChatByGame(this.game?.id || 0).subscribe({
       next: (globalChat) => {
         this.globalChat = globalChat;
@@ -106,7 +104,9 @@ export class ChatComponent implements OnChanges, OnDestroy {
         console.error('Error loading global chat:', e);
       },
     });
+  }
 
+  private loadHumanChat(): void {
     if (this.player?.isHuman) {
       this.chatService.getHumanChatByGame(this.game?.id || 0).subscribe({
         next: (humanChat) => {
@@ -117,6 +117,12 @@ export class ChatComponent implements OnChanges, OnDestroy {
         },
       });
     } else {
+      console.error('Player is not human.');
+    }
+  }
+
+  private loadZombieChat(): void {
+    if (!this.player?.isHuman) {
       this.chatService.getZombieChatByGame(this.game?.id || 0).subscribe({
         next: (zombieChat) => {
           this.zombieChat = zombieChat;
@@ -125,7 +131,15 @@ export class ChatComponent implements OnChanges, OnDestroy {
           console.error('Error loading zombie chat:', e);
         },
       });
+    } else {
+      console.error('Player is not a zombie.');
     }
+  }
+
+  private loadChats(): void {
+    this.loadGlobalChat();
+    this.loadHumanChat();
+    this.loadZombieChat();
   }
 
   private subscribeToChatUpdates(): void {
@@ -154,6 +168,7 @@ export class ChatComponent implements OnChanges, OnDestroy {
         );
       }, 1000);
     }
+    this.firstLoad = false;
   }
 
   private resetChatForms(): void {
@@ -163,36 +178,42 @@ export class ChatComponent implements OnChanges, OnDestroy {
   }
 
   private refreshGlobalChat(): void {
-    this.chatService.getGlobalChatByGame(this.game?.id || 0).subscribe({
-      next: (globalChat) => {
-        this.globalChat = globalChat;
-      },
-      error: (e) => {
-        console.error('Error refreshing global chat:', e);
-      },
-    });
+    if (this.game) {
+      this.chatService.getGlobalChatByGame(this.game.id).subscribe({
+        next: (globalChat) => {
+          this.globalChat = globalChat;
+        },
+        error: (e) => {
+          console.error('Error refreshing global chat:', e);
+        },
+      });
+    }
   }
 
   private refreshHumanChat(): void {
-    this.chatService.getHumanChatByGame(this.game?.id || 0).subscribe({
-      next: (humanChat) => {
-        this.humanChat = humanChat;
-      },
-      error: (e) => {
-        console.error('Error refreshing human chat:', e);
-      },
-    });
+    if (this.game) {
+      this.chatService.getHumanChatByGame(this.game.id).subscribe({
+        next: (humanChat) => {
+          this.humanChat = humanChat;
+        },
+        error: (e) => {
+          console.error('Error refreshing human chat:', e);
+        },
+      });
+    }
   }
 
   private refreshZombieChat(): void {
-    this.chatService.getZombieChatByGame(this.game?.id || 0).subscribe({
-      next: (zombieChat) => {
-        this.zombieChat = zombieChat;
-      },
-      error: (e) => {
-        console.error('Error refreshing zombie chat:', e);
-      },
-    });
+    if (this.game) {
+      this.chatService.getZombieChatByGame(this.game?.id).subscribe({
+        next: (zombieChat) => {
+          this.zombieChat = zombieChat;
+        },
+        error: (e) => {
+          console.error('Error refreshing zombie chat:', e);
+        },
+      });
+    }
   }
 
   public ngOnDestroy(): void {

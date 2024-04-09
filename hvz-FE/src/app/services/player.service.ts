@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Player } from '../models/Player';
 import { Observable, catchError, throwError } from 'rxjs';
@@ -32,7 +32,7 @@ export class PlayerService {
       );
   }
 
-  public addPlayerToGame(gameId: string, player: Player): Observable<any> {
+  public addPlayerToGame(gameId: number, player: Player): Observable<any> {
     return this.http
       .post<any>(`${this.GAME_URL}/${gameId}/player`, player, {
         observe: 'response',
@@ -45,7 +45,7 @@ export class PlayerService {
       );
   }
 
-  public updatePlayer(gameId: string, player: Player): Observable<Player> {
+  public updatePlayer(gameId: number, player: Player): Observable<Player> {
     return this.http
       .put<Player>(`${this.GAME_URL}/${gameId}/player/${player.id}`, player)
       .pipe(
@@ -57,7 +57,7 @@ export class PlayerService {
   }
 
   public patchPlayer(
-    gameId: string,
+    gameId: number,
     player: Player,
     body: any
   ): Observable<Player> {
@@ -71,7 +71,7 @@ export class PlayerService {
       );
   }
 
-  public deletePalyer(gameId: string, playerId: string): Observable<Object> {
+  public deletePlayer(gameId: number, playerId: number): Observable<Object> {
     return this.http
       .delete<Object>(`${this.GAME_URL}/${gameId}/player/${playerId}`)
       .pipe(

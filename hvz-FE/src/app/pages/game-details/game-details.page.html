@@ -7,53 +7,11 @@
           <h4 class="hm-card-title">{{game?.name | uppercase}}</h4>
 
           <!-- Game description segment-->
-          <div class="game-info">
-            <p [ngClass]="setCurrentClasses(game)">{{game?.state}}</p>
-            <p class="card-text">
-              <span class="fw-bold">Number of Players:</span> {{game?.players ?
-              game?.players?.length : "0"}}
-            </p>
-            <p class="card-text">
-              <span class="fw-bold">Player:</span> {{username}}
-            </p>
-            <p
-              *ngIf="player && player.isHuman && game && game.state=='In Progress'"
-              class="card-text human-badge"
-            >
-              HUMAN &nbsp;<i class="fa-regular fa-face-smile"></i>
-            </p>
-            <p
-              *ngIf="player && !player.isHuman && game && game.state=='In Progress'"
-              class="card-text zombie-badge"
-            >
-              ZOMBIE &nbsp;<i class="fa-solid fa-skull"></i>
-            </p>
-
-            <p class="card-text">
-              Players can Join or Leave the Game in the Registration period.
-              Once the Game starts, Players will be notified whether they are or
-              they are not the Patient Zero. When a Zombie bites a Human, the
-              Human must show their bite code to the Zombie so they can register
-              the bite. The bitten Human then turns into a Zombie. The Game ends
-              when there is only one Human left, who is the winner of the game.
-              You can chat with other Players during the game. The Global
-              channel is available to all Players, while the Human/Zombie
-              channels can only be accessed by Players with the corresponding
-              state.
-            </p>
-            <a
-              *ngIf="game?.state === 'Registration' && !player"
-              (click)="joinGame()"
-              class="btn btn-success d-block"
-              >Join game</a
-            >
-            <a
-              *ngIf="game?.state === 'Registration' && player"
-              (click)="leaveGame()"
-              class="btn btn-danger d-block"
-              >Leave game</a
-            >
-          </div>
+          <app-game-description
+            [game]="game"
+            [username]="username"
+            [player]="player"
+          ></app-game-description>
 
           <!-- Map segment-->
           <!--  <div class="map my-5">
@@ -70,137 +28,26 @@
                 <h5 class="mb-0 p-1">Your Bite code: {{player.biteCode}}</h5>
               </div>
 
-              <!-- Bite code entry form-->
-              <h5 class="mb-3">Bite a Human!</h5>
-              <form
-                [formGroup]="killForm"
-                (ngSubmit)="onKillSubmit()"
-                class="form-kill-register mb-5"
-              >
-                <div class="mb-3 bite-code-container">
-                  <label for="bite-code-input" class="form-label"
-                    >Enter a four digits binary code</label
-                  >
-                  <input
-                    [ngClass]="{ 'empty-bite-code': isBiteCodeEmpty }"
-                    formControlName="biteCode"
-                    type="text-box"
-                    class="form-control"
-                    id="bite-code-input"
-                    placeholder="0101 , 1100, ..."
-                  />
-                </div>
-                <div class="mb-3 kill-story-container">
-                  <label for="kill-story-input" class="form-label"
-                    >Add your story</label
-                  >
-                  <textarea
-                    [ngClass]="{ 'empty-kill-story': isKillStoryEmpty }"
-                    formControlName="killStory"
-                    type="text"
-                    class="form-control story"
-                    id="kill-story-input"
-                    placeholder="E.g. CrazyZombie killed LameHuman"
-                  ></textarea>
-                </div>
-
-                <!-- Register message -->
-                <div class="message">
-                  <div *ngIf="messageType === 'success'" class="success">
-                    Congrats, u luckily bite a human!
-                  </div>
-                  <div *ngIf="messageType === 'failure'" class="failure">
-                    {{randomFailureMessage}}
-                  </div>
-                </div>
-                <button class="hm-btn" [disabled]="killForm.invalid">
-                  Register Kill
-                </button>
-              </form>
+              <!-- Kill registration -->
+              <app-kill-registration
+                [game]="game"
+                [player]="player"
+              ></app-kill-registration>
             </div>
             <!-- Zombie image-->
             <div class="register-right">
               <img src="../../../assets/images/zombie.gif" alt="Your GIF" />
             </div>
 
-            <div class="player-list-container p-2">
-              <nav id="navbar-example2" class="player-list-navbar">
-                <ul class="nav nav-pills">
-                  <li class="nav-item">
-                    <a
-                      class="nav-link"
-                      (click)="selectedTab = 'global'"
-                      [class.active]="selectedTab === 'global'"
-                      >Global</a
-                    >
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      class="nav-link"
-                      (click)="selectedTab = 'human'"
-                      [class.active]="selectedTab === 'human'"
-                      >Human</a
-                    >
-                  </li>
-                  <li class="nav-item">
-                    <a
-                      class="nav-link"
-                      (click)="selectedTab = 'zombie'"
-                      [class.active]="selectedTab === 'zombie'"
-                      >Zombie</a
-                    >
-                  </li>
-                </ul>
-              </nav>
-
-              <div
-                data-bs-spy="scroll"
-                data-bs-target="#navbar-example2"
-                data-bs-offset="0"
-                class="scrollspy-example"
-                tabindex="0"
-              >
-                <div
-                  class="player-list-container p-2"
-                  *ngIf="selectedTab === 'global'"
-                >
-                  <p *ngFor="let player of players" class="mb-1">
-                    <span class="fw-bold">
-                      {{ player.username }}
-                      <span *ngIf="player.isHuman">
-                        <i class="fa-regular fa-face-smile"></i
-                      ></span>
-                      <span *ngIf="!player.isHuman">
-                        <i class="fa-solid fa-skull"></i
-                      ></span>
-                    </span>
-                  </p>
-                </div>
-
-                <div
-                  class="player-list-container p-2"
-                  *ngIf="selectedTab === 'human'"
-                >
-                  <p *ngFor="let human of humans" class="mb-1">
-                    <span class="fw-bold"> {{ human.username }} </span>
-                    <i class="fa-regular fa-face-smile"></i>
-                  </p>
-                </div>
-
-                <div
-                  class="player-list-container p-2"
-                  *ngIf="selectedTab === 'zombie'"
-                >
-                  <p *ngFor="let zombie of zombies" class="mb-1">
-                    <span class="fw-bold"> {{ zombie.username }} </span>
-                    <i class="fa-solid fa-skull"></i>
-                  </p>
-                </div>
-              </div>
-            </div>
+            <!-- Player chart segment -->
+            <app-player-chart
+              [players]="players"
+              [humans]="humans"
+              [zombies]="zombies"
+            ></app-player-chart>
           </div>
 
-          <!--  Chat segment          -->
+          <!-- Chat segment -->
           <app-chat [game]="game" [player]="player"></app-chat>
 
           <button class="hm-btn" routerLink="">Back to list</button>

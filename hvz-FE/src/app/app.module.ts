@@ -23,6 +23,9 @@ import { JwtInterceptor } from './services/jwt-interceptor.service';
 import { StompService } from './services/stomp.service';
 import { GoogleMapsLoaderService } from './services/google-maps-loader.service';
 import { AuthService } from './services/auth.service';
+import { GameDescriptionComponent } from './components/game-description/game-description.component';
+import { KillRegistrationComponent } from './components/kill-registration/kill-registration.component';
+import { PlayerChartComponent } from './components/player-chart/player-chart.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +39,9 @@ import { AuthService } from './services/auth.service';
     GameDetailsPage,
     AdminPage,
     GameCardComponent,
+    GameDescriptionComponent,
+    KillRegistrationComponent,
+    PlayerChartComponent,
   ],
   imports: [
     BrowserModule,
