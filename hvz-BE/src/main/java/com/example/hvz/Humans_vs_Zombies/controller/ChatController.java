@@ -44,15 +44,9 @@ public class ChatController {
       @PathVariable("gameId") Integer gameId, @RequestBody ChatDTO chatDTO) {
     Chat chat = chatService.add(chatMapper.chatDtoToChat(chatDTO));
 
-    // Send WebSocket message based on faction
     switch (chatDTO.getFaction()) {
-      case "global":
-      case "zombie":
-      case "human":
-        webSocketService.sendMessage("chat/" + gameId, chatDTO.getFaction());
-        break;
-      default:
-        throw new BadRequestException("Invalid faction provided");
+      case "global", "zombie", "human" -> webSocketService.sendMessage("chat/" + gameId, chatDTO.getFaction());
+      default -> throw new BadRequestException("Invalid faction provided");
     }
 
     URI location = URI.create("/chat" + chat.getId());

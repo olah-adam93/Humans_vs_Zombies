@@ -2,6 +2,7 @@ package com.example.hvz.Humans_vs_Zombies.model.DTO;
 
 import com.example.hvz.Humans_vs_Zombies.validator.CreateGameConstraint;
 import com.example.hvz.Humans_vs_Zombies.validator.GameStatus;
+import com.example.hvz.Humans_vs_Zombies.validator.UpdateGameConstraint;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -11,6 +12,7 @@ import lombok.Data;
 public class GameDTO {
 
   @Null(groups = CreateGameConstraint.class)
+  @NotNull(groups = UpdateGameConstraint.class)
   private Integer id;
 
   private String name;
