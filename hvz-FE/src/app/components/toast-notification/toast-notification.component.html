@@ -1,0 +1,16 @@
+<ul class="notifications">
+  <li
+    *ngIf="currentToast"
+    [ngClass]="
+      currentToast.messageType
+        ? 'toast ' + currentToast.messageType
+        : 'toast hide'
+    "
+  >
+    <div class="column">
+      <i [ngClass]="'fa-solid ' + currentToast.icon"></i>
+      <span>{{ currentToast.text }}</span>
+    </div>
+    <i class="fa-solid fa-xmark" (click)="removeToast()"></i>
+  </li>
+</ul>

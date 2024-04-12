@@ -26,6 +26,7 @@ import { AuthService } from './services/auth.service';
 import { GameDescriptionComponent } from './components/game-description/game-description.component';
 import { KillRegistrationComponent } from './components/kill-registration/kill-registration.component';
 import { PlayerChartComponent } from './components/player-chart/player-chart.component';
+import { ToastNotificationComponent } from './components/toast-notification/toast-notification.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { PlayerChartComponent } from './components/player-chart/player-chart.com
     GameDescriptionComponent,
     KillRegistrationComponent,
     PlayerChartComponent,
+    ToastNotificationComponent,
   ],
   imports: [
     BrowserModule,

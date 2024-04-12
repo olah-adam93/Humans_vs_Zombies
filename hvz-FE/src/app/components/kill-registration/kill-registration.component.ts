@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CreateKill } from 'src/app/models/CreateKill';
 import { Game } from 'src/app/models/Game';
@@ -13,6 +13,7 @@ import { KillService } from 'src/app/services/kill.service';
 export class KillRegistrationComponent {
   @Input() game?: Game;
   @Input() player?: Player;
+  public messageTyp?: string;
 
   constructor(private killService: KillService) {}
 
@@ -41,11 +42,19 @@ export class KillRegistrationComponent {
     this.killService.registerKill(newKill).subscribe({
       next: () => {
         console.log('kill registered');
+        this.messageTyp = 'success';
         this.killForm.reset();
+        setTimeout(() => {
+          this.messageTyp = undefined;
+        }, 5000);
       },
       error: (e) => {
         console.log(e);
+        this.messageTyp = 'warning';
         this.killForm.reset();
+        setTimeout(() => {
+          this.messageTyp = undefined;
+        }, 5000);
       },
     });
   }

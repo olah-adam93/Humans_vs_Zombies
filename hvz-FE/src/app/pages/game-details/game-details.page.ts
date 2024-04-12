@@ -33,7 +33,6 @@ export class GameDetailsPage implements OnInit, OnDestroy {
   public keycloakId?: string;
   public wsGameSubscription?: Subscription;
   public wsKillSubscription?: Subscription;
-  public randomFailureMessage?: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -204,26 +203,6 @@ export class GameDetailsPage implements OnInit, OnDestroy {
         }
       );
     }, 1000);
-  }
-
-  private getRandomBiteFailureMessage(): string {
-    const failureMessages: string[] = [
-      'Missed! Human dodged the bite.',
-      'No luck! Human got away.',
-      'Whoops! Human slipped out.',
-      'Darn! Human escaped.',
-      'Close call! Human dodged.',
-      'Oops! Human outsmarted.',
-      'Missed again! Human fled.',
-      'No bite! Human too quick.',
-      'Failed! Human slipped away.',
-      'Zombie bite fail! Human free.',
-    ];
-
-    const randomIndex: number = Math.floor(
-      Math.random() * failureMessages.length
-    );
-    return failureMessages[randomIndex];
   }
 
   public refreshGame(): void {
