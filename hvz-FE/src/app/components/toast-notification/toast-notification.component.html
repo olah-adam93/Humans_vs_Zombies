@@ -1,16 +1,11 @@
-<ul class="notifications">
-  <li
-    *ngIf="currentToast"
-    [ngClass]="
-      currentToast.messageType
-        ? 'toast ' + currentToast.messageType
-        : 'toast hide'
-    "
-  >
-    <div class="column">
-      <i [ngClass]="'fa-solid ' + currentToast.icon"></i>
-      <span>{{ currentToast.text }}</span>
+<div class="notifications">
+  <ng-container *ngFor="let toast of toastQueue">
+    <div class="toast" [ngClass]="setCurrentClasses(toast)">
+      <div class="column">
+        <i [ngClass]="'fa-solid ' + toast.icon"></i>
+        <span>{{ toast.text }}</span>
+      </div>
+      <i class="fa-solid fa-xmark" (click)="removeToast(toast)"></i>
     </div>
-    <i class="fa-solid fa-xmark" (click)="removeToast()"></i>
-  </li>
-</ul>
+  </ng-container>
+</div>

@@ -32,10 +32,19 @@
               <app-kill-registration
                 [game]="game"
                 [player]="player"
-              ></app-kill-registration>
+                (messageTypeChange)="setNotification($event)"
+              >
+                ></app-kill-registration
+              >
             </div>
 
             <!-- Toast notification -->
+            <app-toast-notification
+              [messageType]="messageTyp"
+              [username]="username"
+            >
+              ></app-toast-notification
+            >
 
             <!-- Zombie image-->
             <div class="register-right">

@@ -1,5 +1,7 @@
 .notifications {
   position: fixed;
+  display: flex;
+  flex-direction: column;
   top: 112px;
   right: 20px;
 }
@@ -17,6 +19,8 @@
   border-radius: 4px;
   padding: 16px 17px;
   margin-bottom: 10px;
+  font-size: 1.5rem;
+  font-weight: 600;
   background: #ffffff;
   justify-content: space-between;
   animation: show_toast 0.3s ease forwards;
@@ -131,11 +135,5 @@
     width: 100%;
     font-size: 1rem;
     margin-left: 20px;
-  }
-
-  .buttons .btn {
-    margin: 0 1px;
-    font-size: 1.1rem;
-    padding: 8px 15px;
   }
 }

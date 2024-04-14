@@ -31,6 +31,7 @@ export class GameDetailsPage implements OnInit, OnDestroy {
   public allKills?: Kill[];
   public username?: string;
   public keycloakId?: string;
+  public messageTyp?: string;
   public wsGameSubscription?: Subscription;
   public wsKillSubscription?: Subscription;
 
@@ -143,7 +144,6 @@ export class GameDetailsPage implements OnInit, OnDestroy {
 
   private loadPlayerById(): void {
     if (!this.gameIdReadFromRoute || !this.playerIdReadFromRoute) return;
-    console.log('Passed loadPlayerById');
 
     this.playerService
       .getPlayerById(this.gameIdReadFromRoute, this.playerIdReadFromRoute)
@@ -164,45 +164,66 @@ export class GameDetailsPage implements OnInit, OnDestroy {
     this.loadPlayerById();
   }
 
+  private setupGameSubscription(): void {
+    this.wsGameSubscription = this.stompService.subscribe(
+      `/topic/game/${this.gameIdReadFromRoute}`,
+      (response: any): void => {
+        console.log('Game update notified');
+        console.log(response.body);
+
+        this.handleGameUpdate(response.body);
+      }
+    );
+  }
+
+  private setupKillSubscription(): void {
+    this.wsKillSubscription = this.stompService.subscribe(
+      `/topic/kill/${this.playerIdReadFromRoute}`,
+      (response: any): void => {
+        console.log('Kill notification received');
+        console.log(response.body);
+
+        this.handleKillNotification();
+      }
+    );
+  }
+
   private setupWebSocketSubscriptions(): void {
     setTimeout(() => {
-      //websocket subscription to Game updates
-      this.wsGameSubscription = this.stompService.subscribe(
-        `/topic/game/${this.gameIdReadFromRoute}`,
-        (response: any): void => {
-          console.log('notified');
-          console.log(response.body);
-
-          this.refreshGame();
-          if (this.game && this.player?.id) {
-            this.refreshPlayer();
-            if (response.body == 'update_game_start') {
-              alert(
-                `Game started! You ${
-                  this.player.isPatientZero ? 'are' : 'are not'
-                } Patient Zero`
-              );
-            }
-            if (response.body == 'update_game_end') {
-              alert('Game over');
-            }
-          }
-        }
-      );
-
-      //websocket subscription to Kill
-      this.wsKillSubscription = this.stompService.subscribe(
-        `/topic/kill/${this.playerIdReadFromRoute}`,
-        (response: any): void => {
-          console.log('notified');
-          console.log(response.body);
-
-          this.refreshGame();
-          this.refreshPlayer();
-          alert("You've been bitten! You are now a Zombie!");
-        }
-      );
+      this.setupGameSubscription();
+      this.setupKillSubscription();
     }, 1000);
+  }
+
+  private handleGameUpdate(body: any): void {
+    if (this.game && this.player?.id) {
+      this.refreshGame();
+      this.refreshPlayer();
+
+      switch (body) {
+        case 'update_game_start':
+          this.setNotification('patient_zero');
+          break;
+        case 'update_game_end':
+          this.setNotification('game_over');
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
+  private handleKillNotification(): void {
+    this.setNotification('kill');
+    this.refreshGame();
+    this.refreshPlayer();
+  }
+
+  public setNotification(messageType: string): void {
+    this.messageTyp = messageType;
+    setTimeout(() => {
+      this.messageTyp = undefined;
+    }, 5000);
   }
 
   public refreshGame(): void {

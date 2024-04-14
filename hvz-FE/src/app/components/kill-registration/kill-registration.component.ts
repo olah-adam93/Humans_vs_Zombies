@@ -1,4 +1,4 @@
-import { Component, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CreateKill } from 'src/app/models/CreateKill';
 import { Game } from 'src/app/models/Game';
@@ -13,6 +13,8 @@ import { KillService } from 'src/app/services/kill.service';
 export class KillRegistrationComponent {
   @Input() game?: Game;
   @Input() player?: Player;
+  @Output() messageTypeChange = new EventEmitter<string>();
+
   public messageTyp?: string;
 
   constructor(private killService: KillService) {}
@@ -41,21 +43,28 @@ export class KillRegistrationComponent {
     };
     this.killService.registerKill(newKill).subscribe({
       next: () => {
-        console.log('kill registered');
-        this.messageTyp = 'success';
-        this.killForm.reset();
-        setTimeout(() => {
-          this.messageTyp = undefined;
-        }, 5000);
+        console.log('Kill registered successfully');
+        this.setMessageType('success');
+        this.resetFormAndMessageTypeAfterDelay();
       },
-      error: (e) => {
-        console.log(e);
-        this.messageTyp = 'warning';
-        this.killForm.reset();
-        setTimeout(() => {
-          this.messageTyp = undefined;
-        }, 5000);
+      error: (error) => {
+        console.error('Error registering kill:', error);
+        this.setMessageType('warning');
+        this.resetFormAndMessageTypeAfterDelay();
       },
     });
+  }
+
+  private setMessageType(type: string): void {
+    this.messageTyp = type;
+    this.messageTypeChange.emit(type);
+  }
+
+  private resetFormAndMessageTypeAfterDelay(): void {
+    this.killForm.reset();
+    setTimeout(() => {
+      this.messageTyp = undefined;
+      this.messageTypeChange.emit(undefined);
+    }, 5000);
   }
 }
