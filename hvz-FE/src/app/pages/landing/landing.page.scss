@@ -18,22 +18,57 @@
   line-height: 0.8;
   text-shadow: 4px 4px 5px black;
   letter-spacing: 1vw;
+  position: relative;
 
   &-human {
     color: #9fea4f;
     font-family: "Chewy", cursive;
     padding-top: 0.8rem;
+    animation: slideInLeft 2s forwards;
   }
 
   &-zombie {
     color: red;
     font-family: "Slackey", cursive;
+    animation: slideInRight 2s forwards;
   }
 
   &-vs {
     margin-bottom: 0;
     font-size: 2rem;
     font-style: italic;
+    animation: fadeIn 2s forwards;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
