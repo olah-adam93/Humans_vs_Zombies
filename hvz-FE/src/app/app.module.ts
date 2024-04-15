@@ -27,6 +27,7 @@ import { GameDescriptionComponent } from './components/game-description/game-des
 import { KillRegistrationComponent } from './components/kill-registration/kill-registration.component';
 import { PlayerChartComponent } from './components/player-chart/player-chart.component';
 import { ToastNotificationComponent } from './components/toast-notification/toast-notification.component';
+import { AboutPage } from './pages/about/about.page';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { ToastNotificationComponent } from './components/toast-notification/toas
     KillRegistrationComponent,
     PlayerChartComponent,
     ToastNotificationComponent,
+    AboutPage,
   ],
   imports: [
     BrowserModule,

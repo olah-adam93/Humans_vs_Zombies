@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { KeycloakService } from 'keycloak-angular';
 
 @Component({
@@ -12,7 +13,10 @@ export class NavbarComponent implements OnInit {
   public navbarSticky = false;
   public navbarOpacity = 1;
 
-  constructor(private keycloakService: KeycloakService) {}
+  constructor(
+    private keycloakService: KeycloakService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.isLoggedIn = this.keycloakService?.isLoggedIn();
@@ -25,6 +29,14 @@ export class NavbarComponent implements OnInit {
 
   handleLogout(): void {
     this.keycloakService.logout();
+  }
+
+  navigateToHome(): void {
+    this.router.navigateByUrl('');
+  }
+
+  navigateToAbout(): void {
+    this.router.navigateByUrl('/about');
   }
 
   @HostListener('window:scroll', [])

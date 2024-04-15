@@ -8,6 +8,7 @@
 }
 
 .navbar-brand img {
+  cursor: pointer;
   height: 40px;
 }
 
@@ -38,6 +39,7 @@
 
 .nav-link {
   color: #333;
+  cursor: pointer;
   font-weight: bold;
   text-decoration: none;
   transition: color 0.3s;
