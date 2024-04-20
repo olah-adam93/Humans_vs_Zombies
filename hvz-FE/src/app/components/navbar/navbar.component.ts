@@ -20,7 +20,9 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoggedIn = this.keycloakService?.isLoggedIn();
-    this.username = this.keycloakService?.getUsername();
+    if (this.isLoggedIn) {
+      this.username = this.keycloakService?.getUsername();
+    }
   }
 
   handleLogin(): void {

@@ -1,20 +1,27 @@
+.kill-container {
+  position: relative;
+  top: -3rem;
+  padding: 0.5rem;
+  font-weight: 500;
+}
+
 .form-control {
   max-height: 12rem;
-  border: 1px solid black;
+  border: 1px solid rgb(1 115 113);
+  border-top: none;
   border-radius: 0.3rem;
 }
 
 .form-control.story {
-  padding: 1rem 2rem;
   min-height: 6.5rem;
-  margin: auto;
+  margin: auto auto -0.4rem;
 }
 
 .hm-btn {
   background-color: #1995ad;
   padding: 0.5rem;
-  font-size: 1rem;
   font-weight: 500;
+  font-size: 1rem;
   border: none;
   outline: none;
   color: white;
@@ -22,7 +29,7 @@
   border: 1px solid #017371;
   text-decoration: none;
   cursor: pointer;
-  margin: 0 0.1rem 1rem 0.1rem;
+  margin: 0 0.1rem;
 
   &:hover {
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.56);
@@ -43,7 +50,6 @@
   60%,
   80% {
     transform: translate(0.5rem);
-    box-shadow: var(--hover-box-shadow);
   }
   10%,
   30%,

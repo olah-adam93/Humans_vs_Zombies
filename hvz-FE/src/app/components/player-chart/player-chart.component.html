@@ -1,4 +1,4 @@
-<div class="player-list-container p-2">
+<div class="player-list-container container-fluid p-2">
   <nav id="navbar-example2" class="player-list-navbar">
     <ul class="nav nav-pills">
       <li class="nav-item">
@@ -28,39 +28,40 @@
     </ul>
   </nav>
 
-  <div
-    data-bs-spy="scroll"
-    data-bs-target="#navbar-example2"
-    data-bs-offset="0"
-    class="scrollspy-example"
-    tabindex="0"
-  >
-    <div class="player-list-container p-2" *ngIf="selectedTab === 'global'">
-      <p *ngFor="let player of players" class="mb-1">
-        <span class="fw-bold">
-          {{ player.username }}
-          <span *ngIf="player.isHuman">
-            <i class="fa-regular fa-face-smile"></i
-          ></span>
-          <span *ngIf="!player.isHuman">
-            <i class="fa-solid fa-skull"></i
-          ></span>
-        </span>
-      </p>
-    </div>
+  <div class="players-state-list">
+    <div
+      class="scrollable-content"
+      data-bs-spy="scroll"
+      data-bs-target="#navbar-example2"
+      data-bs-offset="0"
+    >
+      <div class="player-state-list p-2" *ngIf="selectedTab === 'global'">
+        <p *ngFor="let player of players" class="mb-1">
+          <span class="fw-bold">
+            {{ player.username }}
+            <span *ngIf="player.isHuman">
+              <i class="fa-regular fa-face-smile"></i
+            ></span>
+            <span *ngIf="!player.isHuman">
+              <i class="fa-solid fa-skull"></i
+            ></span>
+          </span>
+        </p>
+      </div>
 
-    <div class="player-list-container p-2" *ngIf="selectedTab === 'human'">
-      <p *ngFor="let human of humans" class="mb-1">
-        <span class="fw-bold"> {{ human.username }} </span>
-        <i class="fa-regular fa-face-smile"></i>
-      </p>
-    </div>
+      <div class="player-state-list p-2" *ngIf="selectedTab === 'human'">
+        <p *ngFor="let human of humans" class="mb-1">
+          <span class="fw-bold"> {{ human.username }} </span>
+          <i class="fa-regular fa-face-smile"></i>
+        </p>
+      </div>
 
-    <div class="player-list-container p-2" *ngIf="selectedTab === 'zombie'">
-      <p *ngFor="let zombie of zombies" class="mb-1">
-        <span class="fw-bold"> {{ zombie.username }} </span>
-        <i class="fa-solid fa-skull"></i>
-      </p>
+      <div class="player-state-list p-2" *ngIf="selectedTab === 'zombie'">
+        <p *ngFor="let zombie of zombies" class="mb-1">
+          <span class="fw-bold"> {{ zombie.username }} </span>
+          <i class="fa-solid fa-skull"></i>
+        </p>
+      </div>
     </div>
   </div>
 </div>

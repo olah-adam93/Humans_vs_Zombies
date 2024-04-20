@@ -1,70 +1,55 @@
-<div class="linear-gr-bg"></div>
-<div class="container-fluid pt-5 background">
-  <div class="row d-felx justify-content-center">
-    <div class="col-sm-10 col-md-10 col-xl-8">
-      <div class="hm-card mb-3 mb-md-2">
-        <div class="card-body">
-          <h4 class="hm-card-title">{{game?.name | uppercase}}</h4>
+<div class="game-details-container container-fluid pt-5 background">
+  <div class="hm-card mb-3 mb-md-2">
+    <div class="card-body">
+      <h4 class="hm-card-title">
+        {{game?.name | uppercase}}
+        <span [ngClass]="setCurrentClasses(game)"
+          >{{ game?.state | uppercase }}</span
+        >
+      </h4>
 
-          <!-- Game description segment-->
-          <app-game-description
-            [game]="game"
-            [username]="username"
-            [player]="player"
-          ></app-game-description>
-
-          <!-- Map segment-->
-          <!--  <div class="map my-5">
-            <app-map [game]="game"></app-map>
-          </div> -->
-
-          <div
-            class="register-container"
-            *ngIf="player && !player.isHuman && game && game.state=='In Progress' "
-          >
-            <div class="register-left">
-              <!-- Bite code -->
-              <div class="bite-code mb-5">
-                <h5 class="mb-0 p-1">Your Bite code: {{player.biteCode}}</h5>
-              </div>
-
-              <!-- Kill registration -->
-              <app-kill-registration
-                [game]="game"
-                [player]="player"
-                (messageTypeChange)="setNotification($event)"
-              >
-                ></app-kill-registration
-              >
-            </div>
-
-            <!-- Toast notification -->
-            <app-toast-notification
-              [messageType]="messageTyp"
-              [username]="username"
-            >
-              ></app-toast-notification
-            >
-
-            <!-- Zombie image-->
-            <div class="register-right">
-              <img src="../../../assets/images/zombie.gif" alt="Your GIF" />
-            </div>
-
-            <!-- Player chart segment -->
-            <app-player-chart
-              [players]="players"
-              [humans]="humans"
-              [zombies]="zombies"
-            ></app-player-chart>
-          </div>
-
-          <!-- Chat segment -->
-          <app-chat [game]="game" [player]="player"></app-chat>
-
-          <button class="hm-btn" routerLink="">Back to list</button>
-        </div>
+      <!-- Map segment-->
+      <div class="map my-5">
+        <app-map [game]="game"></app-map>
       </div>
+
+      <!-- Game description segment-->
+      <!--<app-game-description
+        [game]="game"
+        [username]="username"
+        [player]="player"
+      ></app-game-description> -->
+
+      <!-- Toast notification -->
+      <app-toast-notification [messageType]="messageTyp" [username]="username">
+        ></app-toast-notification
+      >
+
+      <div
+        class="register-container"
+        *ngIf="player && !player.isHuman && game && game.state=='In Progress' "
+      >
+        <!-- Kill registration -->
+        <app-kill-registration
+          [game]="game"
+          [player]="player"
+          (messageTypeChange)="setNotification($event)"
+        >
+          ></app-kill-registration
+        >
+
+        <!-- Player chart segment -->
+        <app-player-chart
+          [players]="players"
+          [humans]="humans"
+          [zombies]="zombies"
+        ></app-player-chart>
+
+        <!-- Chat segment -->
+        <app-chat [game]="game" [player]="player"></app-chat>
+      </div>
+
+      <button class="hm-btn back" routerLink="">Back to list</button>
     </div>
   </div>
 </div>

@@ -1,4 +1,4 @@
-<div class="container-fluid px-5 background game-list-container">
+<div class="container-fluid game-list-container">
   <div class="row">
     <div class="hm-btn-container">
       <button
@@ -57,7 +57,6 @@
       <div class="col-sm-6 col-md-4 col-lg-3">
         <app-game-card
           [game]="game"
-          [isUserAdmin]="isUserAdmin"
           (deleteGameEvent)="deleteGame($event)"
         ></app-game-card>
       </div>

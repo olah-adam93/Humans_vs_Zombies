@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { KeycloakService } from 'keycloak-angular';
 import { Game } from 'src/app/models/Game';
 
 @Component({
@@ -6,10 +7,20 @@ import { Game } from 'src/app/models/Game';
   templateUrl: './game-card.component.html',
   styleUrls: ['./game-card.component.scss'],
 })
-export class GameCardComponent {
+export class GameCardComponent implements OnInit {
   @Input() public game!: Game;
-  @Input() public isUserAdmin?: boolean;
+  //@Input() public isLoggedIn?: boolean;
+  // @Input() public isUserAdmin?: boolean;
   @Output() deleteGameEvent = new EventEmitter<Game>();
+  public isLoggedIn?: boolean;
+  public isUserAdmin?: boolean;
+
+  constructor(private keycloakService: KeycloakService) {}
+
+  ngOnInit(): void {
+    this.isLoggedIn = this.keycloakService?.isLoggedIn();
+    this.isUserAdmin = this.keycloakService.isUserInRole('Administrator');
+  }
 
   decideRoute(game: Game): string {
     return game?.playerIdofCurrentUser
@@ -28,5 +39,11 @@ export class GameCardComponent {
       'game-state-in-prog': game?.state === 'In Progress',
       'game-state-compl': game?.state === 'Complete',
     };
+  }
+
+  handleLogin(): void {
+    if (!this.isLoggedIn) {
+      this.keycloakService.login();
+    }
   }
 }

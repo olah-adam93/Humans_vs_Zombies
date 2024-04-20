@@ -8,14 +8,5 @@
 
 html,
 body {
-  height: 100%;
-}
-
-.body-background {
   background-color: #1995ad;
-  background-image: url("./assets/images/zombie-bg05.png"),
-    url("./assets/images/zombie-bg02.png");
-  background-repeat: no-repeat, no-repeat;
-  background-position: 3rem 4rem, right bottom;
-  background-size: 178px 266px, 400px 275px;
 }

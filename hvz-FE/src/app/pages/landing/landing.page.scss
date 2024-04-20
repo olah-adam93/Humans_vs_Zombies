@@ -1,15 +1,20 @@
-.linear-gr-bg {
-  height: 40px;
-  background-color: linear-gradient(
-    0deg,
-    rgba(23, 76, 74, 1) 0%,
-    rgba(0, 0, 0, 1) 100%,
-    rgba(0, 212, 255, 1) 100%
-  );
+.landing-container {
+  background-color: #1995ad;
+  background-image: url("../../../assets/images/zombie-bg05.png"),
+    url("../../../assets/images/zombie-bg02.png");
+  background-repeat: no-repeat, no-repeat;
+  background-position: 3rem 0rem, right bottom;
+  background-size: 145px 215px, 400px 275px;
 }
 
-.hero-container {
-  margin: 4rem auto;
+@media screen and (max-width: 767px) {
+  .landing-container {
+    background-image: none;
+  }
+}
+
+.title-container {
+  margin: 4rem auto 1rem auto;
 }
 
 .hero-title {

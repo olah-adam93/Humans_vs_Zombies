@@ -1,23 +1,22 @@
-.linear-gr-bg {
-  height: 65px;
+.game-details-container {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 .hm-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  min-width: 0;
   word-wrap: break-word;
   background-clip: border-box;
   text-align: left;
+  max-width: 80rem;
   padding: 2rem;
-  box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.15);
+  margin: 2rem auto;
+  box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.78);
   background-color: #c4dfe6;
   border-radius: 0.3rem;
-
-  &:hover {
-    box-shadow: 0px 0px 32px rgba(0, 0, 0, 0.78);
-  }
 }
 
 .hm-btn,
@@ -33,7 +32,7 @@
   border: 1px solid #017371;
   text-decoration: none;
   cursor: pointer;
-  margin: 0 0.1rem 1rem 0.1rem;
+  margin: 0 0.1rem 1rem 0.5rem;
 
   &:hover {
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.56);
@@ -41,41 +40,53 @@
   }
 }
 
-.hm-card-body {
-  flex: 1 1 auto;
-  padding: 1rem;
-}
-
 .hm-card-title {
   text-align: left;
-  margin-bottom: 1rem;
-  font-size: 3.4rem;
+  font-size: 1.8rem;
+  margin: -1rem 0 -3rem;
   font-family: "Caveat Brush", cursive;
+}
+
+.game-state {
+  position: absolute;
+  border: 1px solid black;
+  margin: 0.2rem auto -2rem 0.5rem;
+  color: white;
+  border-radius: 0.3rem;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 0.1rem;
+  font-size: 1.2rem;
+}
+
+.game-state-reg {
+  background-color: #ffa500;
+}
+
+.game-state-in-prog {
+  background-color: #3498db;
+}
+
+.game-state-compl {
+  background-color: #464646;
+  color: white;
 }
 
 .hm-card-text:last-child {
   margin-bottom: 0;
 }
 
-.bite-code {
-  background-color: #1995ad;
-  color: white;
-  border: 1px solid black;
-  border-radius: 0.3rem;
-  width: -moz-fit-content;
-  width: fit-content;
-  padding: 0.3rem;
-}
-
 .register-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: -2.8rem;
 }
 
-.register-left {
-  padding: 0.5rem;
+.hm-btn.back {
+  position: relative;
+  top: -2.2rem;
 }
 
 .delete-game-btn {

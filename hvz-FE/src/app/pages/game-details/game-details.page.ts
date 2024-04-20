@@ -183,6 +183,7 @@ export class GameDetailsPage implements OnInit, OnDestroy {
         console.log('Kill notification received');
         console.log(response.body);
 
+        this.loadPlayers();
         this.handleKillNotification();
       }
     );
@@ -252,6 +253,21 @@ export class GameDetailsPage implements OnInit, OnDestroy {
             console.log(e);
           },
         });
+    }
+  }
+
+  public setCurrentClasses(game: Game | undefined): Record<string, boolean> {
+    if (game) {
+      return {
+        'game-state': true,
+        'game-state-reg': game.state === 'Registration',
+        'game-state-in-prog': game.state === 'In Progress',
+        'game-state-compl': game.state === 'Complete',
+      };
+    } else {
+      return {
+        'game-state': true,
+      };
     }
   }
 

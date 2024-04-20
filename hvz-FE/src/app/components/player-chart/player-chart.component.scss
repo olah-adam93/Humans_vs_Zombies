@@ -1,3 +1,35 @@
+.player-list-container,
+.player-state-list {
+  size: 15rem;
+}
+
+.players-state-list {
+  height: calc(100% - 30px);
+}
+
+.scrollable-content {
+  height: 9rem;
+  overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1995ad;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1995ad;
+}
+
 .player-list-container .nav-link {
   background-color: #1995ad;
   font-size: 1rem;
@@ -9,7 +41,7 @@
   border-radius: 0.3rem;
   text-decoration: none;
   cursor: pointer;
-  margin: auto 0.1rem 1rem 0.1rem;
+  margin: 0.1rem 0.1rem 1rem 0.1rem;
 }
 
 .player-list-container .nav-link:hover {

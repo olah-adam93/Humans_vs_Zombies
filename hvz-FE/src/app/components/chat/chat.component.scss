@@ -1,9 +1,12 @@
 .chat-container {
-  size: 15rem;
+  height: 335px;
+  padding: 8px;
 }
 
 .form-control {
   margin: 0.5rem auto;
+  border: 1px solid rgb(1 115 113);
+  border-top: none;
 }
 
 .chat-container .nav-link {
@@ -23,12 +26,46 @@
   }
 }
 
+.text-danger {
+  font-weight: 500;
+}
+
+.invisible-human-chat .invisible-zombie-chat {
+  visibility: hidden;
+}
+
 .show-chat-message {
   min-height: 9rem;
+  min-width: 278px;
   padding: 0.5rem;
   border-radius: 0.3rem;
+  border: 1px solid rgb(1 115 113);
+  border-top: none;
   background-color: white;
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.29);
+}
+
+.list-unstyled {
+  height: 7rem;
+  overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1995ad;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1995ad;
 }
 
 .hm-btn {
@@ -80,5 +117,24 @@
 @media screen and (min-width: 768px) {
   .hm-btn:hover {
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.56);
+  }
+}
+
+.chat-container {
+  transition: width 0.3s ease;
+
+  @media (min-width: 320px) {
+    width: 300px;
+  }
+
+  @media (min-width: 768px) {
+    width: 350px;
+  }
+
+  @media (min-width: 992px) {
+    width: 400px;
+  }
+  @media (min-width: 1200px) {
+    width: 440px;
   }
 }

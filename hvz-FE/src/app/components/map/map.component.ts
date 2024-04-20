@@ -72,15 +72,19 @@ export class MapComponent implements OnChanges {
   }
 
   addInfoWindow(marker: google.maps.Marker, map: google.maps.Map): void {
-    const contentString = `<div>
-      <h1 class="title">${this.game?.name ? this.game?.name : 'HvZ'}</h1>
-      <p>Start date: ${
-        this.game?.date ? this.game?.date : this.getRandomDate()
-      }</p>
-      <p>Number of players: ${
-        this.game?.players ? this.game?.players?.length : '0'
-      }</p>
-      </div>`;
+    const formattedDate = this.game?.date
+      ? this.formatDate(this.game.date)
+      : this.formatDate(this.getDateNow());
+    const contentString = `
+        <div style="max-width: 250px; color: #000">
+            <h1 style="font-size: 20px; margin-bottom: 5px;">${
+              this.game?.name ? this.game?.name : 'HVZ'
+            }</h1>
+            <p style="font-size: 12px; margin-bottom: 5px;"><span style="font-size: 14px; font-weight: 500;">Start date: </span>${formattedDate}</p>
+            <p style="font-size: 12px; margin-bottom: 5px;"><span style="font-size: 14px; font-weight: 500;">Number of players: </span>${
+              this.game?.players ? this.game?.players?.length : '0'
+            }</p>
+        </div>`;
 
     const infoWindow = new google.maps.InfoWindow({
       content: contentString,
@@ -98,9 +102,21 @@ export class MapComponent implements OnChanges {
     });
   }
 
-  getRandomDate(): string {
-    const maxDate = Date.now();
-    const timestamp = Math.floor(Math.random() * maxDate);
-    return new Date(timestamp).toString();
+  getDateNow(): string {
+    const currentDate = new Date();
+    return currentDate.toString();
+  }
+
+  formatDate(date: string): string {
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'short',
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    };
+    return new Date(date).toLocaleString('en-US', options);
   }
 }

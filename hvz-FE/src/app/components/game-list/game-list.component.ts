@@ -29,6 +29,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class GameListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() deleteGameEvent?: EventEmitter<Game>;
 
+  public isLoggedIn?: boolean;
   public firstName?: string;
   public lastName?: string;
   public userName?: string;
@@ -68,6 +69,7 @@ export class GameListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private initUserAttributes(): void {
+    this.isLoggedIn = this.authService.isAuthenticated;
     this.firstName = this.authService.firstName;
     this.lastName = this.authService.lastName;
     this.userName = this.authService.userName;

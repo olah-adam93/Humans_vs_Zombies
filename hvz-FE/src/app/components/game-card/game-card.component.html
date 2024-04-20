@@ -1,5 +1,9 @@
-<a [routerLink]="decideRoute(game)" class="hm-card-link">
-  <div class="hm-card col-10 mb-4">
+<a
+  [routerLink]="decideRoute(game)"
+  class="hm-card-link"
+  (click)="handleLogin()"
+>
+  <div class="hm-card col-10">
     <img
       src="../../../assets/images/tokio.jpg"
       alt="tokio"
