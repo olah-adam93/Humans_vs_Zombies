@@ -40,7 +40,7 @@ export class ChatComponent implements OnChanges, OnDestroy {
   ) {}
 
   ngOnChanges(): void {
-    if (this.game && this.player) {
+    if (this.game || this.player) {
       this.loadChats();
       this.subscribeToChatUpdates();
     }

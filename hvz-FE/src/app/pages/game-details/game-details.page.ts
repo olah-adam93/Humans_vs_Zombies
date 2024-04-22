@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -19,9 +19,6 @@ import { LoginUserService } from 'src/app/services/login-user.service';
   styleUrls: ['./game-details.page.scss'],
 })
 export class GameDetailsPage implements OnInit, OnDestroy {
-  public gameIdReadFromRoute?: any;
-  public playerIdReadFromRoute?: any;
-  public routeSubscription?: Subscription;
   public game?: Game;
   public player?: Player;
   public players?: Player[];
@@ -32,8 +29,14 @@ export class GameDetailsPage implements OnInit, OnDestroy {
   public username?: string;
   public keycloakId?: string;
   public messageTyp?: string;
+  public gameIdReadFromRoute?: any;
+  public playerIdReadFromRoute?: any;
+  public routeSubscription?: Subscription;
   public wsGameSubscription?: Subscription;
   public wsKillSubscription?: Subscription;
+
+  public isPlayerLoaded: boolean = false;
+  public isGameLoaded: boolean = false;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -110,58 +113,65 @@ export class GameDetailsPage implements OnInit, OnDestroy {
       },
     });
   }
-  private loadGame(): void {
-    if (!this.gameIdReadFromRoute) return;
 
-    this.gameService.getGame(this.gameIdReadFromRoute).subscribe({
-      next: (game) => {
-        this.game = game;
-      },
-      error: (e) => {
-        console.log(e);
-      },
-    });
+  private async loadGameAndPlayers(): Promise<void> {
+    try {
+      await this.loadGame();
+      await this.loadPlayers();
+      await this.loadPlayerById();
+    } catch (error) {
+      console.error('Error loading game and players:', error);
+    }
   }
 
-  private loadPlayers(): void {
+  private async loadGame(): Promise<void> {
     if (!this.gameIdReadFromRoute) return;
 
-    this.playerService.getAllPlayersInGame(this.gameIdReadFromRoute).subscribe({
-      next: (players) => {
-        this.players = players;
-        console.log('All players', this.players);
-        this.humans = players.filter((player) => player.isHuman);
-        console.log('All humans', this.humans);
-
-        this.zombies = players.filter((player) => !player.isHuman);
-        console.log('All zombies', this.zombies);
-      },
-      error: (e) => {
-        console.log(e);
-      },
-    });
+    try {
+      this.game = await firstValueFrom(
+        this.gameService.getGame(this.gameIdReadFromRoute)
+      );
+      this.isGameLoaded = true;
+      console.log('Game loaded:', this.game);
+    } catch (error) {
+      console.error('Error loading game:', error);
+      throw error;
+    }
   }
 
-  private loadPlayerById(): void {
+  private async loadPlayers(): Promise<void> {
+    if (!this.gameIdReadFromRoute) return;
+
+    try {
+      this.players = await firstValueFrom(
+        this.playerService.getAllPlayersInGame(this.gameIdReadFromRoute)
+      );
+      this.humans = this.players?.filter((player) => player.isHuman);
+      this.zombies = this.players?.filter((player) => !player.isHuman);
+
+      this.isPlayerLoaded = true;
+      console.log('Players loaded:', this.players);
+    } catch (error) {
+      console.error('Error loading players:', error);
+      throw error;
+    }
+  }
+
+  private async loadPlayerById(): Promise<void> {
     if (!this.gameIdReadFromRoute || !this.playerIdReadFromRoute) return;
 
-    this.playerService
-      .getPlayerById(this.gameIdReadFromRoute, this.playerIdReadFromRoute)
-      .subscribe({
-        next: (player) => {
-          this.player = player;
-          console.log('Found player by id: ' + this.player);
-        },
-        error: (e) => {
-          console.log(e);
-        },
-      });
-  }
-
-  private loadGameAndPlayers(): void {
-    this.loadGame();
-    this.loadPlayers();
-    this.loadPlayerById();
+    try {
+      this.player = await firstValueFrom(
+        this.playerService.getPlayerById(
+          this.gameIdReadFromRoute,
+          this.playerIdReadFromRoute
+        )
+      );
+      console.log('Found player by id:', this.player);
+    } catch (error) {
+      console.error('Error loading player by ID:', error);
+      throw error;
+    }
   }
 
   private setupGameSubscription(): void {

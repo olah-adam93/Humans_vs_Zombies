@@ -1,13 +1,10 @@
-<div *ngIf="player && game && game.state == 'Registration'" class="mb-5">
+<div *ngIf="game?.state == 'Registration'" class="mb-5">
   <small class="text-muted">
     Once the Game starts, you'll be able to chat with other Players.
   </small>
 </div>
 
-<div
-  *ngIf="player && game && game.state != 'Registration'"
-  class="chat-container"
->
+<div *ngIf="game?.state != 'Registration'" class="chat-container">
   <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
       <button
@@ -69,7 +66,7 @@
         </ul>
       </div>
       <div
-        *ngIf="game && game.state == 'In Progress'"
+        *ngIf="game?.state == 'In Progress'"
         class="mb-3"
         [formGroup]="globalChatForm"
       >
@@ -98,7 +95,7 @@
       aria-labelledby="humans-tab"
     >
       <div
-        *ngIf="player && player.isHuman"
+        *ngIf="player?.isHuman"
         class="show-chat-message humans-chat-display"
       >
         <ul class="list-unstyled">
@@ -109,13 +106,13 @@
         </ul>
       </div>
       <div
-        *ngIf="player && !player.isHuman"
+        *ngIf="!player?.isHuman"
         class="show-chat-message humans-chat-display"
       >
         <p class="text-danger">Hey, you're not a Human! Stop spying!</p>
       </div>
       <div
-        *ngIf="player && player.isHuman && game && game.state == 'In Progress'"
+        *ngIf="player?.isHuman && game?.state == 'In Progress'"
         [formGroup]="humanChatForm"
         class="mb-3 humans-chat-send-container"
       >
@@ -144,7 +141,7 @@
       aria-labelledby="zombies-tab"
     >
       <div
-        *ngIf="player && !player.isHuman"
+        *ngIf="!player?.isHuman"
         class="show-chat-message zombies-chat-display"
       >
         <ul class="list-unstyled">
@@ -155,13 +152,13 @@
         </ul>
       </div>
       <div
-        *ngIf="player && player.isHuman"
+        *ngIf="player?.isHuman"
         class="show-chat-message zombies-chat-display"
       >
         <p class="text-danger">Hey, you're not a Zombie! Stop spying!</p>
       </div>
       <div
-        *ngIf="player && !player.isHuman && game && game.state == 'In Progress'"
+        *ngIf="!player?.isHuman && game?.state == 'In Progress'"
         [formGroup]="zombieChatForm"
         class="mb-3 zombies-chat-send-container"
       >

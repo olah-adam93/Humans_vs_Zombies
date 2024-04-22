@@ -20,14 +20,9 @@
         [player]="player"
       ></app-game-description> -->
 
-      <!-- Toast notification -->
-      <app-toast-notification [messageType]="messageTyp" [username]="username">
-        ></app-toast-notification
-      >
-
       <div
         class="register-container"
-        *ngIf="player && !player.isHuman && game && game.state=='In Progress' "
+        *ngIf="isGameLoaded && isPlayerLoaded && !player?.isHuman && game?.state=='In Progress' "
       >
         <!-- Kill registration -->
         <app-kill-registration
@@ -36,6 +31,14 @@
           (messageTypeChange)="setNotification($event)"
         >
           ></app-kill-registration
+        >
+
+        <!-- Toast notification -->
+        <app-toast-notification
+          [messageType]="messageTyp"
+          [username]="username"
+        >
+          ></app-toast-notification
         >
 
         <!-- Player chart segment -->
