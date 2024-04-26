@@ -1,10 +1,11 @@
 .landing-container {
   background-color: #1995ad;
-  background-image: url("../../../assets/images/zombie-bg05.png"),
-    url("../../../assets/images/zombie-bg02.png");
+  background-image: url("../../../assets/images/zombie-bg02.png"),
+    url("../../../assets/images/zombie-bg01.png");
   background-repeat: no-repeat, no-repeat;
-  background-position: 3rem 0rem, right bottom;
-  background-size: 145px 215px, 400px 275px;
+  background-position: 3rem 5rem, right bottom;
+  background-size: 147px 217px, 400px 275px;
+  overflow: hidden;
 }
 
 @media screen and (max-width: 767px) {
@@ -14,7 +15,7 @@
 }
 
 .title-container {
-  margin: 4rem auto 1rem auto;
+  margin: 3.5rem auto 1rem auto;
 }
 
 .hero-title {

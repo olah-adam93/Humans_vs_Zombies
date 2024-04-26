@@ -5,9 +5,12 @@
 >
   <div class="hm-card col-10">
     <img
-      src="../../../assets/images/tokio.jpg"
-      alt="tokio"
+      *ngIf="imgUrl"
+      [src]="imgUrl"
+      alt="Country Flag"
       class="hm-card-img"
+      width="200"
+      height="200"
     />
     <div class=".hm-card-body">
       <p class="hm-card-title d-flex justify-content-between">

@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { environment } from 'src/environments/environment.prod';
 import { KeycloakService } from 'keycloak-angular';
 import { Game } from 'src/app/models/Game';
 
@@ -9,17 +10,19 @@ import { Game } from 'src/app/models/Game';
 })
 export class GameCardComponent implements OnInit {
   @Input() public game!: Game;
-  //@Input() public isLoggedIn?: boolean;
-  // @Input() public isUserAdmin?: boolean;
   @Output() deleteGameEvent = new EventEmitter<Game>();
   public isLoggedIn?: boolean;
   public isUserAdmin?: boolean;
+  public imgUrl?: string;
 
   constructor(private keycloakService: KeycloakService) {}
 
   ngOnInit(): void {
     this.isLoggedIn = this.keycloakService?.isLoggedIn();
     this.isUserAdmin = this.keycloakService.isUserInRole('Administrator');
+    if (this.game.location) {
+      this.fetchCityPhotoByName(this.game.location);
+    }
   }
 
   decideRoute(game: Game): string {
@@ -45,5 +48,21 @@ export class GameCardComponent implements OnInit {
     if (!this.isLoggedIn) {
       this.keycloakService.login();
     }
+  }
+
+  private fetchCityPhotoByName(cityName: string): void {
+    fetch(
+      `https://api.unsplash.com/search/photos?query=${cityName}&client_id=${environment.UNSPLASH_API_KEY}`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        const photo = data.results[0];
+        this.imgUrl = photo.urls.regular;
+        console.log(this.imgUrl);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
   }
 }

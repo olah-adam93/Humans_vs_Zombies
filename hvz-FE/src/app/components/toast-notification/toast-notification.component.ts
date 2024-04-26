@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Game } from 'src/app/models/Game';
 import { Toast } from 'src/app/models/Toast';
 
 @Component({
@@ -9,6 +10,7 @@ import { Toast } from 'src/app/models/Toast';
 export class ToastNotificationComponent {
   @Input() messageType?: string;
   @Input() username?: string;
+  @Input() game?: Game;
   public toastQueue: Toast[] = [];
   private timeoutIds: { [key: string]: NodeJS.Timeout } = {};
 
@@ -19,6 +21,7 @@ export class ToastNotificationComponent {
   }
 
   displayToast(messageType: string): void {
+    console.log('Game toast message type reached' + messageType);
     const toast: Toast = this.createToast(messageType);
     this.toastQueue.push(toast);
 
@@ -51,6 +54,15 @@ export class ToastNotificationComponent {
         icon = ICON_INFO;
         text = `Another brave hero has fallen. Nobody is safe!`;
         break;
+      case 'game_join':
+        icon = ICON_SUCCESS;
+        text = `You successfully joined ${this.game?.name}!`;
+        console.log('Game_join reached');
+        break;
+      case 'game_leave':
+        icon = ICON_INFO;
+        text = `You successfully left ${this.game?.name}!`;
+        break;
       case 'patient_zero':
         icon = ICON_INFO;
         text = `Game has started, patient zero has been chosen. Good luck!`;
@@ -70,8 +82,10 @@ export class ToastNotificationComponent {
 
   public setCurrentClasses(toast: Toast): Record<string, boolean> {
     return {
-      info: ['kill', 'patient_zero', 'game-over'].includes(toast.messageType),
-      success: toast.messageType === 'success',
+      info: ['kill', 'patient_zero', 'game_leave', 'game_over'].includes(
+        toast.messageType
+      ),
+      success: ['success', 'game_join'].includes(toast.messageType),
       warning: toast.messageType === 'warning',
     };
   }

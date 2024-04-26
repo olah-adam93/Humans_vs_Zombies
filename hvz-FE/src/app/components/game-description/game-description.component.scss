@@ -1,19 +1,65 @@
-.human-badge,
-.zombie-badge {
-  background-color: #1995ad;
-  color: white;
-  border: 1px solid black;
-  border-radius: 0.3rem;
-  width: -moz-fit-content;
-  width: fit-content;
-  padding: 0.3rem;
+/* Game Description Container */
+.game-description-container {
+  position: relative;
+  margin: -6.5rem auto 5.3rem auto;
+  transition: margin-top 0.3s ease;
+
+  @media (max-width: 320px) {
+    margin-top: -4rem;
+  }
+
+  @media (max-width: 1024px) {
+    margin-top: -2.5rem;
+  }
 }
 
+/* Player Info */
+.player-info p {
+  margin: 4px 0 0 8px;
+
+  &.card-text {
+    width: 260px;
+    background-color: #1995ad;
+    text-align: center;
+    padding: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border: 1px solid #017371;
+    border-radius: 0.3rem;
+    color: white;
+  }
+
+  &:nth-child(1) {
+    border-top-right-radius: 70% !important;
+  }
+}
+
+/* Button */
+.hm-btn {
+  display: block;
+  width: 260px;
+  background-color: #1995ad;
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border: 1px solid #017371;
+  border-radius: 0.3rem;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  margin: 0 0.1rem -2rem 0.5rem;
+
+  &:hover {
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.56);
+    background-color: #017371;
+  }
+}
+
+/* Game State */
 .game-state {
   border: 1px solid black;
   border-radius: 0.3rem;
-  width: -moz-fit-content;
-  width: fit-content;
   padding: 0.3rem;
   font-size: 1.4rem;
 }

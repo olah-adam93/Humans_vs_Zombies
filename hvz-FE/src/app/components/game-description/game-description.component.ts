@@ -1,9 +1,9 @@
-import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PlayerService } from 'src/app/services/player.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Player } from 'src/app/models/Player';
 import { Game } from 'src/app/models/Game';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-game-description',
@@ -11,69 +11,74 @@ import { Game } from 'src/app/models/Game';
   styleUrls: ['./game-description.component.scss'],
 })
 export class GameDescriptionComponent {
+  @Output() joinGameEvent = new EventEmitter<void>();
+  @Output() leaveGameEvent = new EventEmitter<void>();
   @Input() game?: Game;
   @Input() username?: string;
   @Input() player?: Player;
 
+  @Input() players?: Player[];
+  @Input() humans?: Player[];
+  @Input() zombies?: Player[];
+
+  public messageTyp?: string;
+  public joinInProgress: boolean = false;
+
   constructor(
     private playerService: PlayerService,
-    private authService: AuthService,
-    private router: Router
+    private authService: AuthService
   ) {}
 
-  public joinGame(): void {
-    if (!this.game?.id) return;
+  async joinGame() {
+    if (!this.game?.id || this.joinInProgress) return;
+
+    this.joinInProgress = true;
 
     const newPlayer: Player = {
       isHuman: true,
       isPatientZero: false,
-      game: this.game?.id || 0,
+      game: this.game.id,
       keycloakId: this.authService.keycloakId,
     };
 
-    this.playerService.addPlayerToGame(this.game?.id, newPlayer).subscribe({
-      next: (response: any) => {
-        console.log('Player added');
-        const locationFromHeaders = response.headers
-          .get('Location')
-          ?.split('/');
-        const playerId = locationFromHeaders
-          ? locationFromHeaders[locationFromHeaders.length - 1]
-          : '';
-        this.router.navigateByUrl(`game/${this.game?.id}/${playerId}`);
-      },
-      error: (e) => {
-        console.log(e);
-      },
-    });
+    try {
+      const response = await firstValueFrom(
+        this.playerService.addPlayerToGame(this.game.id, newPlayer)
+      );
+      this.joinGameEvent.emit();
+
+      const locationFromHeaders = response.headers.get('Location')?.split('/');
+      const playerId = locationFromHeaders?.[locationFromHeaders.length - 1];
+
+      if (playerId) {
+        const player = await firstValueFrom(
+          this.playerService.getPlayerById(this.game.id, playerId)
+        );
+        this.player = player;
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      this.joinInProgress = false;
+    }
   }
 
-  public leaveGame(): void {
+  async leaveGame() {
     if (!this.game?.id || !this.player?.id) return;
 
-    this.playerService.deletePlayer(this.game?.id, this.player?.id).subscribe({
-      next: () => {
-        console.log('Player deleted');
-      },
-      error: (e) => {
-        console.log(e);
-      },
-    });
-    this.router.navigateByUrl(`game/${this.game?.id}`);
-  }
+    try {
+      await firstValueFrom(
+        this.playerService.deletePlayer(this.game.id, this.player.id)
+      );
+      this.leaveGameEvent.emit();
 
-  public setCurrentClasses(game: Game | undefined): Record<string, boolean> {
-    if (game) {
-      return {
-        'game-state': true,
-        'game-state-reg': game.state === 'Registration',
-        'game-state-in-prog': game.state === 'In Progress',
-        'game-state-compl': game.state === 'Complete',
-      };
-    } else {
-      return {
-        'game-state': true,
-      };
+      const players = await firstValueFrom(
+        this.playerService.getAllPlayersInGame(this.game.id)
+      );
+      this.players = players;
+      this.player = undefined;
+    } catch (e) {
+      console.log(e);
     }
   }
 }

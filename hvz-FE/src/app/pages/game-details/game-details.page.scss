@@ -4,6 +4,12 @@
   overflow: hidden;
 }
 
+.hm-card-title {
+  text-align: left;
+  font-size: 1.8rem;
+  margin: -1rem 0 -3rem;
+}
+
 .hm-card {
   position: relative;
   display: flex;
@@ -44,11 +50,22 @@
   }
 }
 
-.hm-card-title {
-  text-align: left;
-  font-size: 1.8rem;
-  margin: -1rem 0 -3rem;
-  font-family: "Caveat Brush", cursive;
+.img-zombie-container {
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+@media screen and (max-width: 767px) {
+  .img-zombie-container {
+    display: none;
+  }
+}
+
+.img-zombie {
+  width: 135px;
+  height: 235px;
 }
 
 .game-state {
@@ -64,7 +81,7 @@
 }
 
 .game-state-reg {
-  background-color: #ffa500;
+  background-color: #2ecc71;
 }
 
 .game-state-in-prog {
@@ -99,4 +116,13 @@
   &:hover {
     color: red;
   }
+}
+
+.fadeInOut {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.fadeInOut.show {
+  opacity: 1;
 }

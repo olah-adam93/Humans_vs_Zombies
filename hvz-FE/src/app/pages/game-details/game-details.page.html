@@ -1,4 +1,7 @@
-<div class="game-details-container container-fluid pt-5 background">
+<div
+  class="game-details-container container-fluid pt-5 background fadeInOut"
+  [class.show]="game"
+>
   <div class="hm-card mb-3 mb-md-2">
     <div class="card-body">
       <h4 class="hm-card-title">
@@ -14,18 +17,31 @@
       </div>
 
       <!-- Game description segment-->
-      <!--<app-game-description
+      <app-game-description
+        *ngIf="isGameLoaded && isPlayerLoaded && game?.state =='Registration'"
         [game]="game"
         [username]="username"
         [player]="player"
-      ></app-game-description> -->
+        [players]="players"
+        [humans]="humans"
+        [zombies]="zombies"
+        (joinGameEvent)="handleJoinGame()"
+        (leaveGameEvent)="handleLeaveGame()"
+      ></app-game-description>
 
-      <div
-        class="register-container"
-        *ngIf="isGameLoaded && isPlayerLoaded && !player?.isHuman && game?.state=='In Progress' "
+      <!-- Toast notification -->
+      <app-toast-notification
+        [game]="game"
+        [messageType]="messageTyp"
+        [username]="username"
       >
+        ></app-toast-notification
+      >
+
+      <div *ngIf="isGameLoaded && isPlayerLoaded" class="register-container">
         <!-- Kill registration -->
         <app-kill-registration
+          *ngIf="!player?.isHuman && game?.state=='In Progress'"
           [game]="game"
           [player]="player"
           (messageTypeChange)="setNotification($event)"
@@ -33,20 +49,22 @@
           ></app-kill-registration
         >
 
-        <!-- Toast notification -->
-        <app-toast-notification
-          [messageType]="messageTyp"
-          [username]="username"
-        >
-          ></app-toast-notification
-        >
-
         <!-- Player chart segment -->
         <app-player-chart
+          *ngIf="game?.state=='In Progress' || game?.state=='Complete'"
           [players]="players"
           [humans]="humans"
           [zombies]="zombies"
         ></app-player-chart>
+
+        <!-- Zombie img -->
+        <div *ngIf="game?.state == 'Complete'" class="img-zombie-container">
+          <img
+            class="img-zombie"
+            src="../../../assets/images/zombie.png"
+            alt="zombie"
+          />
+        </div>
 
         <!-- Chat segment -->
         <app-chat [game]="game" [player]="player"></app-chat>

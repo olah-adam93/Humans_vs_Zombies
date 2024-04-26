@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription, timer } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment.prod';
 import { Game } from '../../models/Game';
 import { Player } from '../../models/Player';

@@ -1,6 +1,9 @@
 .player-list-container,
 .player-state-list {
   size: 15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .players-state-list {

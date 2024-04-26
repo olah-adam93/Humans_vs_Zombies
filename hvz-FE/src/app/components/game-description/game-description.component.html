@@ -1,32 +1,16 @@
-<div class="game-info">
-  <p [ngClass]="setCurrentClasses(game)">{{ game?.state }}</p>
-  <p class="card-text">
-    <span class="fw-bold">Number of Players:</span>
-    {{ game?.players ? game?.players?.length : "0" }}
-  </p>
-  <p class="card-text"><span class="fw-bold">Player:</span> {{ username }}</p>
-  <p
-    *ngIf="player && player.isHuman && game && game.state == 'In Progress'"
-    class="card-text human-badge"
-  >
-    HUMAN &nbsp;<i class="fa-regular fa-face-smile"></i>
-  </p>
-  <p
-    *ngIf="player && !player.isHuman && game && game.state == 'In Progress'"
-    class="card-text zombie-badge"
-  >
-    ZOMBIE &nbsp;<i class="fa-solid fa-skull"></i>
-  </p>
-  <a
-    *ngIf="game?.state === 'Registration' && !player"
-    (click)="joinGame()"
-    class="btn btn-success d-block"
-    >Join game</a
-  >
-  <a
-    *ngIf="game?.state === 'Registration' && player"
-    (click)="leaveGame()"
-    class="btn btn-danger d-block"
-    >Leave game</a
-  >
+<div class="game-description-container">
+  <div class="player-info">
+    <p class="card-text">Player: {{ username }}</p>
+    <p class="card-text">
+      Number of Players:
+      {{ game?.players ? game?.players?.length : "0" }}
+    </p>
+  </div>
+  <app-player-chart
+    [players]="players"
+    [humans]="humans"
+    [zombies]="zombies"
+  ></app-player-chart>
+  <a *ngIf="!player" (click)="joinGame()" class="hm-btn">Join game</a>
+  <a *ngIf="player" (click)="leaveGame()" class="hm-btn">Leave game</a>
 </div>

@@ -114,7 +114,7 @@ export class GameDetailsPage implements OnInit, OnDestroy {
     });
   }
 
-  private async loadGameAndPlayers(): Promise<void> {
+  async loadGameAndPlayers(): Promise<void> {
     try {
       await this.loadGame();
       await this.loadPlayers();
@@ -124,7 +124,7 @@ export class GameDetailsPage implements OnInit, OnDestroy {
     }
   }
 
-  private async loadGame(): Promise<void> {
+  async loadGame(): Promise<void> {
     if (!this.gameIdReadFromRoute) return;
 
     try {
@@ -231,10 +231,23 @@ export class GameDetailsPage implements OnInit, OnDestroy {
   }
 
   public setNotification(messageType: string): void {
+    console.log('Set message type game-details: ' + messageType);
     this.messageTyp = messageType;
     setTimeout(() => {
       this.messageTyp = undefined;
-    }, 5000);
+    }, 500);
+  }
+
+  handleJoinGame() {
+    this.loadGameAndPlayers().then(() => {
+      this.setNotification('game_join');
+    });
+  }
+
+  handleLeaveGame() {
+    this.loadGameAndPlayers().then(() => {
+      this.setNotification('game_leave');
+    });
   }
 
   public refreshGame(): void {
