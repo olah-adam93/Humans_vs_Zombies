@@ -12,11 +12,11 @@ export class AuthService {
   isInitialized$ = this.initializedSubject.asObservable();
 
   isAuthenticated: boolean = false;
+  isUserAdmin: boolean = false;
   firstName?: string;
   lastName?: string;
   userName?: string;
   keycloakId?: string;
-  isUserAdmin: boolean = false;
 
   constructor(
     private router: Router,

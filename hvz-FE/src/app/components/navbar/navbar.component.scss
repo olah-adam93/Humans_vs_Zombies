@@ -1,3 +1,4 @@
+/* Navbar container */
 .navbar {
   background-color: #1995ad;
   position: fixed;
@@ -7,9 +8,10 @@
   z-index: 1000;
 }
 
+/* Logo */
 .navbar-brand img {
   cursor: pointer;
-  height: 40px;
+  height: 2.5rem;
 }
 
 .navbar.nav-sticky {
@@ -18,6 +20,7 @@
   transition: box-shadow 0.35s ease;
 }
 
+/* Offcanvas styles */
 .offcanvas {
   background: linear-gradient(
     to bottom,
@@ -31,6 +34,7 @@
   padding: 1rem;
 }
 
+/* Navbar navigation */
 .navbar-nav {
   list-style: none;
   margin: 0;
@@ -49,6 +53,7 @@
   color: #007bff;
 }
 
+/* Icon style */
 .fa-solid {
   margin-left: 1rem;
 }

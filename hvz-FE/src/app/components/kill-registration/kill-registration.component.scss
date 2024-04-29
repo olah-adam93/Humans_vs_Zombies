@@ -1,8 +1,14 @@
+/* Kill container */
 .kill-container {
   position: relative;
   top: -3rem;
   padding: 0.5rem;
   font-weight: 500;
+  transition: top 0.3s ease;
+
+  @media (max-width: 932px) {
+    top: 0;
+  }
 }
 
 .form-control {
@@ -17,6 +23,7 @@
   margin: auto auto -0.4rem;
 }
 
+/* Button */
 .hm-btn {
   background-color: #1995ad;
   padding: 0.5rem;
@@ -37,6 +44,7 @@
   }
 }
 
+/* Animation for empty bite code or kill story */
 .empty-bite-code,
 .empty-kill-story {
   animation: shake 0.9s ease-in-out;

@@ -11,6 +11,7 @@ import { Game } from 'src/app/models/Game';
 export class GameCardComponent implements OnInit {
   @Input() public game!: Game;
   @Output() deleteGameEvent = new EventEmitter<Game>();
+
   public isLoggedIn?: boolean;
   public isUserAdmin?: boolean;
   public imgUrl?: string;
@@ -25,14 +26,14 @@ export class GameCardComponent implements OnInit {
     }
   }
 
+  deleteGame(): void {
+    this.deleteGameEvent.emit(this.game);
+  }
+
   decideRoute(game: Game): string {
     return game?.playerIdofCurrentUser
       ? `/game/${game.id}/${game.playerIdofCurrentUser}`
       : `/game/${game.id}`;
-  }
-
-  deleteGame(): void {
-    this.deleteGameEvent.emit(this.game);
   }
 
   setCurrentClasses(game: Game): Record<string, boolean> {
@@ -56,10 +57,8 @@ export class GameCardComponent implements OnInit {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         const photo = data.results[0];
         this.imgUrl = photo.urls.regular;
-        console.log(this.imgUrl);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);

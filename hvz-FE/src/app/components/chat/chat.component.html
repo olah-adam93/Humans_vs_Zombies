@@ -52,7 +52,7 @@
       aria-labelledby="global-tab"
     >
       <div class="show-chat-message">
-        <ul class="list-unstyled">
+        <ul class="chat-list">
           <li *ngFor="let globalMessage of globalChat">
             <span style="font-weight: bold">{{ globalMessage.userName }}:</span>
             {{ globalMessage.message }}
@@ -92,7 +92,7 @@
         *ngIf="player?.isHuman"
         class="show-chat-message humans-chat-display"
       >
-        <ul class="list-unstyled">
+        <ul class="chat-list">
           <li *ngFor="let humanMessage of humanChat">
             <span style="font-weight: bold">{{ humanMessage.userName }}:</span>
             {{ humanMessage.message }}
@@ -138,7 +138,7 @@
         *ngIf="!player?.isHuman"
         class="show-chat-message zombies-chat-display"
       >
-        <ul class="list-unstyled">
+        <ul class="chat-list">
           <li *ngFor="let zombieMessage of zombieChat">
             <span style="font-weight: bold">{{ zombieMessage.userName }}:</span>
             {{ zombieMessage.message }}

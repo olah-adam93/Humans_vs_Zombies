@@ -8,7 +8,6 @@ export class GoogleMapsLoaderService {
 
       script.onload = () => {
         this.googleMapsLoaded = true;
-        console.log('Map is loaded.');
       };
 
       script.onerror = () => {

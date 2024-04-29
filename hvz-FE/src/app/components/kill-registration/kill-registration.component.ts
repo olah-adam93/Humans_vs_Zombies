@@ -11,9 +11,9 @@ import { KillService } from 'src/app/services/kill.service';
   styleUrls: ['./kill-registration.component.scss'],
 })
 export class KillRegistrationComponent {
+  @Output() messageTypeChange = new EventEmitter<string>();
   @Input() game?: Game;
   @Input() player?: Player;
-  @Output() messageTypeChange = new EventEmitter<string>();
 
   public messageTyp?: string;
 
@@ -43,16 +43,22 @@ export class KillRegistrationComponent {
     };
     this.killService.registerKill(newKill).subscribe({
       next: () => {
-        console.log('Kill registered successfully');
-        this.setMessageType('success');
-        this.resetFormAndMessageTypeAfterDelay();
+        this.handleSuccess();
       },
       error: (error) => {
-        console.error('Error registering kill:', error);
-        this.setMessageType('warning');
-        this.resetFormAndMessageTypeAfterDelay();
+        this.handleError(error);
       },
     });
+  }
+
+  private handleSuccess(): void {
+    this.setMessageType('success');
+    this.resetFormAndMessageTypeAfterDelay();
+  }
+
+  private handleError(error: any): void {
+    this.setMessageType('warning');
+    this.resetFormAndMessageTypeAfterDelay();
   }
 
   private setMessageType(type: string): void {

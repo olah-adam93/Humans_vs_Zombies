@@ -6,7 +6,7 @@
         <div class="card-body">
           <h4 class="hm-card-title">{{ game?.name | uppercase }}</h4>
 
-          <!-- Game description segment-->
+          <!--Game description segment-->
           <div class="game-info">
             <p [ngClass]="setCurrentClasses(game)">{{ game?.state }}</p>
             <p class="card-text">
@@ -42,12 +42,12 @@
             </button>
           </div>
 
-          <!-- Map segment-->
+          <!--Map segment-->
           <div class="map my-5">
             <app-map [game]="game"></app-map>
           </div>
 
-          <!--  Player list segment-->
+          <!--Player list segment-->
           <div class="player-list mb-2">
             <h5>Players</h5>
             <small class="text-muted" *ngIf="players?.length == 0"
@@ -67,7 +67,7 @@
               </p>
             </div>
           </div>
-          <!--  Chat segment          -->
+          <!--Chat segment-->
           <app-admin-chat [game]="game"></app-admin-chat>
 
           <a class="btn btn-light text-dark" routerLink="">Back to list</a>

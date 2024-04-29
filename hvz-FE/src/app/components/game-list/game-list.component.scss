@@ -1,9 +1,11 @@
+/* Game list container */
 .game-list-container {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
 
+/* Toggle button for showing/hiding the game creation form */
 .game-form-toggle {
   visibility: visible;
   opacity: 1;
@@ -21,6 +23,7 @@
   opacity: 1;
 }
 
+/* Card */
 .hm-card {
   position: relative;
   display: flex;
@@ -44,6 +47,7 @@
   position: relative;
 }
 
+/* Button */
 .hm-btn {
   background-color: #30a09c;
   text-decoration: none;
@@ -59,6 +63,7 @@
   }
 }
 
+/* Game state */
 .game-state {
   border: 2px solid black;
   border-radius: 5px;

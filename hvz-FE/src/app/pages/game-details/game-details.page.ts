@@ -5,8 +5,6 @@ import { AuthService } from 'src/app/services/auth.service';
 
 import { Game } from '../../models/Game';
 import { Player } from '../../models/Player';
-import { Squad } from '../../models/Squad';
-import { Kill } from '../../models/Kill';
 
 import { GameService } from '../../services/game.service';
 import { PlayerService } from '../../services/player.service';
@@ -24,13 +22,13 @@ export class GameDetailsPage implements OnInit, OnDestroy {
   public players?: Player[];
   public humans?: Player[];
   public zombies?: Player[];
-  public allSquads?: Squad[];
-  public allKills?: Kill[];
   public username?: string;
   public keycloakId?: string;
   public messageTyp?: string;
-  public gameIdReadFromRoute?: any;
-  public playerIdReadFromRoute?: any;
+
+  public gameIdReadFromRoute?: number;
+  public playerIdReadFromRoute?: number;
+
   public routeSubscription?: Subscription;
   public wsGameSubscription?: Subscription;
   public wsKillSubscription?: Subscription;
@@ -61,7 +59,6 @@ export class GameDetailsPage implements OnInit, OnDestroy {
   handleLoginUser(): void {
     this.loginUserService.getLoginUser(this.keycloakId).subscribe({
       next: (playersFromServer: Player[]) => {
-        console.log(playersFromServer);
         if (this.playerIdReadFromRoute) {
           if (
             !this.getPlayerId(playersFromServer) ||
@@ -102,10 +99,12 @@ export class GameDetailsPage implements OnInit, OnDestroy {
   private setupRouteSubscription(): void {
     this.routeSubscription = this.activatedRoute.paramMap.subscribe({
       next: (param) => {
-        console.log('param gameId: ' + param.get('gameId'));
-        this.gameIdReadFromRoute = param.get('gameId');
+        this.gameIdReadFromRoute = parseInt(param.get('gameId') || '', 10);
         if (param.get('playerId')) {
-          this.playerIdReadFromRoute = param.get('playerId');
+          this.playerIdReadFromRoute = parseInt(
+            param.get('playerId') || '',
+            10
+          );
         }
       },
       error: (e) => {
@@ -132,7 +131,6 @@ export class GameDetailsPage implements OnInit, OnDestroy {
         this.gameService.getGame(this.gameIdReadFromRoute)
       );
       this.isGameLoaded = true;
-      console.log('Game loaded:', this.game);
     } catch (error) {
       console.error('Error loading game:', error);
       throw error;
@@ -150,7 +148,6 @@ export class GameDetailsPage implements OnInit, OnDestroy {
       this.zombies = this.players?.filter((player) => !player.isHuman);
 
       this.isPlayerLoaded = true;
-      console.log('Players loaded:', this.players);
     } catch (error) {
       console.error('Error loading players:', error);
       throw error;
@@ -167,7 +164,6 @@ export class GameDetailsPage implements OnInit, OnDestroy {
           this.playerIdReadFromRoute
         )
       );
-      console.log('Found player by id:', this.player);
     } catch (error) {
       console.error('Error loading player by ID:', error);
       throw error;
@@ -178,9 +174,6 @@ export class GameDetailsPage implements OnInit, OnDestroy {
     this.wsGameSubscription = this.stompService.subscribe(
       `/topic/game/${this.gameIdReadFromRoute}`,
       (response: any): void => {
-        console.log('Game update notified');
-        console.log(response.body);
-
         this.handleGameUpdate(response.body);
       }
     );
@@ -190,9 +183,6 @@ export class GameDetailsPage implements OnInit, OnDestroy {
     this.wsKillSubscription = this.stompService.subscribe(
       `/topic/kill/${this.playerIdReadFromRoute}`,
       (response: any): void => {
-        console.log('Kill notification received');
-        console.log(response.body);
-
         this.loadPlayers();
         this.handleKillNotification();
       }
@@ -208,8 +198,8 @@ export class GameDetailsPage implements OnInit, OnDestroy {
 
   private handleGameUpdate(body: any): void {
     if (this.game && this.player?.id) {
-      this.refreshGame();
-      this.refreshPlayer();
+      this.loadGame();
+      this.loadPlayerById();
 
       switch (body) {
         case 'update_game_start':
@@ -226,12 +216,11 @@ export class GameDetailsPage implements OnInit, OnDestroy {
 
   private handleKillNotification(): void {
     this.setNotification('kill');
-    this.refreshGame();
-    this.refreshPlayer();
+    this.loadGame();
+    this.loadPlayerById();
   }
 
   public setNotification(messageType: string): void {
-    console.log('Set message type game-details: ' + messageType);
     this.messageTyp = messageType;
     setTimeout(() => {
       this.messageTyp = undefined;
@@ -248,35 +237,6 @@ export class GameDetailsPage implements OnInit, OnDestroy {
     this.loadGameAndPlayers().then(() => {
       this.setNotification('game_leave');
     });
-  }
-
-  public refreshGame(): void {
-    if (this.game) {
-      this.gameService.getGame(this.game?.id).subscribe({
-        next: (game: Game) => {
-          this.game = game;
-          console.log(game);
-        },
-        error: (e) => {
-          console.log(e);
-        },
-      });
-    }
-  }
-
-  public refreshPlayer(): void {
-    if (this.game && this.player?.id) {
-      this.playerService
-        .getPlayerById(this.game?.id, this.player?.id)
-        .subscribe({
-          next: (player: Player) => {
-            this.player = player;
-          },
-          error: (e) => {
-            console.log(e);
-          },
-        });
-    }
   }
 
   public setCurrentClasses(game: Game | undefined): Record<string, boolean> {

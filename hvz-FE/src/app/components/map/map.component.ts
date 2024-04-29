@@ -24,8 +24,6 @@ export class MapComponent implements OnChanges {
     });
 
     loader.importLibrary('maps').then(() => {
-      console.log('Map is loaded');
-
       const map = this.createMap();
       const geocoder = new google.maps.Geocoder();
 
@@ -49,7 +47,6 @@ export class MapComponent implements OnChanges {
       })
       .then((response) => {
         const positionGeo = response.results[0].geometry.location;
-        console.log(positionGeo);
 
         map.setCenter(positionGeo);
         this.addMarker(positionGeo, map);

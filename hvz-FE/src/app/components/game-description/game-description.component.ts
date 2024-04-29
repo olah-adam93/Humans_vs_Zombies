@@ -14,9 +14,8 @@ export class GameDescriptionComponent {
   @Output() joinGameEvent = new EventEmitter<void>();
   @Output() leaveGameEvent = new EventEmitter<void>();
   @Input() game?: Game;
-  @Input() username?: string;
   @Input() player?: Player;
-
+  @Input() username?: string;
   @Input() players?: Player[];
   @Input() humans?: Player[];
   @Input() zombies?: Player[];

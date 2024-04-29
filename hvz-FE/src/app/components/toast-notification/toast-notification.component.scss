@@ -1,9 +1,10 @@
+/* Notifications container */
 .notifications {
   position: fixed;
   display: flex;
   flex-direction: column;
-  top: 80px;
-  right: 20px;
+  top: 5rem;
+  right: 1.25rem;
 }
 
 .notifications :where(.toast, .column) {
@@ -11,6 +12,7 @@
   align-items: center;
 }
 
+/* Toast notification */
 .notifications .toast {
   width: 400px;
   position: relative;
@@ -60,6 +62,7 @@
   }
 }
 
+/* Progress bar */
 .toast::before {
   position: absolute;
   content: "";
@@ -76,6 +79,7 @@
   }
 }
 
+/* Background colors for different types of notifications */
 .toast.success::before {
   background: #0abf30;
 }
@@ -92,6 +96,7 @@
   background: #3498db;
 }
 
+/* Icon for each type of notification */
 .toast .column i {
   font-size: 1.75rem;
 }

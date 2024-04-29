@@ -15,11 +15,13 @@ import { StompService } from '../../services/stomp.service';
 export class ChatComponent implements OnChanges, OnDestroy {
   @Input() public game?: Game;
   @Input() public player?: Player;
+
   public globalChat: CreateChat[] = [];
   public humanChat: CreateChat[] = [];
   public zombieChat: CreateChat[] = [];
-  public firstLoad = true;
+
   public wsChatSubscription?: any;
+  public firstLoad = true;
 
   public globalChatForm: FormGroup = new FormGroup({
     globalChatMessage: new FormControl('', Validators.required),
@@ -57,7 +59,7 @@ export class ChatComponent implements OnChanges, OnDestroy {
     }
   }
 
-  public sendChat(faction: string): void {
+  sendChat(faction: string): void {
     const newChat: CreateChat = {
       message: '',
       faction,
@@ -80,13 +82,8 @@ export class ChatComponent implements OnChanges, OnDestroy {
         break;
     }
 
-    console.log(newChat);
-
     this.chatService.sendChat(newChat).subscribe({
       next: () => {
-        console.log(
-          `Chat sent to ${newChat.faction} faction by ${newChat.userName}`
-        );
         this.resetChatForms();
       },
       error: (e) => {
@@ -116,8 +113,6 @@ export class ChatComponent implements OnChanges, OnDestroy {
           console.error('Error loading human chat:', e);
         },
       });
-    } else {
-      console.error('Player is not human.');
     }
   }
 
@@ -131,8 +126,6 @@ export class ChatComponent implements OnChanges, OnDestroy {
           console.error('Error loading zombie chat:', e);
         },
       });
-    } else {
-      console.error('Player is not a zombie.');
     }
   }
 
@@ -148,18 +141,15 @@ export class ChatComponent implements OnChanges, OnDestroy {
         this.wsChatSubscription = this.stompService.subscribe(
           `/topic/chat/${this.game?.id}`,
           (response: any): void => {
-            console.log('Notification received');
-            console.log(response.body);
-
             switch (response.body) {
               case 'global':
-                this.refreshGlobalChat();
+                this.loadGlobalChat();
                 break;
               case 'human':
-                this.refreshHumanChat();
+                this.loadHumanChat();
                 break;
               case 'zombie':
-                this.refreshZombieChat();
+                this.loadZombieChat();
                 break;
               default:
                 break;
@@ -177,46 +167,7 @@ export class ChatComponent implements OnChanges, OnDestroy {
     this.zombieChatForm.reset();
   }
 
-  private refreshGlobalChat(): void {
-    if (this.game) {
-      this.chatService.getGlobalChatByGame(this.game.id).subscribe({
-        next: (globalChat) => {
-          this.globalChat = globalChat;
-        },
-        error: (e) => {
-          console.error('Error refreshing global chat:', e);
-        },
-      });
-    }
-  }
-
-  private refreshHumanChat(): void {
-    if (this.game) {
-      this.chatService.getHumanChatByGame(this.game.id).subscribe({
-        next: (humanChat) => {
-          this.humanChat = humanChat;
-        },
-        error: (e) => {
-          console.error('Error refreshing human chat:', e);
-        },
-      });
-    }
-  }
-
-  private refreshZombieChat(): void {
-    if (this.game) {
-      this.chatService.getZombieChatByGame(this.game?.id).subscribe({
-        next: (zombieChat) => {
-          this.zombieChat = zombieChat;
-        },
-        error: (e) => {
-          console.error('Error refreshing zombie chat:', e);
-        },
-      });
-    }
-  }
-
-  public ngOnDestroy(): void {
+  ngOnDestroy(): void {
     if (this.wsChatSubscription) {
       this.stompService.unsubscribeFromTopic(this.wsChatSubscription);
     }

@@ -14,8 +14,8 @@ export class AdminChatComponent implements OnChanges, OnDestroy {
   public globalChat: CreateChat[] = [];
   public humanChat: CreateChat[] = [];
   public zombieChat: CreateChat[] = [];
-  public firstLoad = true;
   public wsChatSubscription?: any;
+  public firstLoad = true;
 
   constructor(
     private chatService: ChatService,
@@ -32,7 +32,6 @@ export class AdminChatComponent implements OnChanges, OnDestroy {
   private subscribeToChatUpdates(): void {
     if (this.firstLoad) {
       setTimeout(() => {
-        // Websocket subscription to chat updates
         this.wsChatSubscription = this.stompService.subscribe(
           `/topic/chat/${this.game?.id}`,
           (response: any): void => {

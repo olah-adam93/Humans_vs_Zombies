@@ -1,4 +1,4 @@
-/* Game Description Container */
+/* Game description container */
 .game-description-container {
   position: relative;
   margin: -6.5rem auto 5.3rem auto;
@@ -13,12 +13,12 @@
   }
 }
 
-/* Player Info */
+/* Player info */
 .player-info p {
   margin: 4px 0 0 8px;
 
   &.card-text {
-    width: 260px;
+    width: 16.25rem;
     background-color: #1995ad;
     text-align: center;
     padding: 0.5rem;
@@ -56,7 +56,7 @@
   }
 }
 
-/* Game State */
+/* Game state */
 .game-state {
   border: 1px solid black;
   border-radius: 0.3rem;

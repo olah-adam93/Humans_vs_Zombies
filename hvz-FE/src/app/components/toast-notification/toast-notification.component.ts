@@ -21,7 +21,6 @@ export class ToastNotificationComponent {
   }
 
   displayToast(messageType: string): void {
-    console.log('Game toast message type reached' + messageType);
     const toast: Toast = this.createToast(messageType);
     this.toastQueue.push(toast);
 
@@ -57,7 +56,6 @@ export class ToastNotificationComponent {
       case 'game_join':
         icon = ICON_SUCCESS;
         text = `You successfully joined ${this.game?.name}!`;
-        console.log('Game_join reached');
         break;
       case 'game_leave':
         icon = ICON_INFO;

@@ -87,8 +87,6 @@ export class GameListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private loadPlayerIdsForCurrentUser(): void {
-    console.log('this is the keycloakId' + this.keycloakId);
-
     this.loginUserService.getLoginUser(this.keycloakId).subscribe({
       next: (playersFromServer: Player[]) => {
         playersFromServer.forEach((player) => {
@@ -159,12 +157,10 @@ export class GameListComponent implements OnInit, OnChanges, OnDestroy {
       };
       this.gameService.saveGame(newGame).subscribe({
         next: (response) => {
-          console.log('Game created');
           const locationFromHeaders = response.headers
             .get('Location')
             .split('/');
           const gameId = locationFromHeaders[locationFromHeaders.length - 1];
-          console.log('Game id:' + gameId);
           this.gameForm.reset();
           this.router.navigateByUrl(`/admin/${gameId}`);
         },
