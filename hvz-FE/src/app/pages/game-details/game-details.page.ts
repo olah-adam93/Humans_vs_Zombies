@@ -33,6 +33,7 @@ export class GameDetailsPage implements OnInit, OnDestroy {
   public wsGameSubscription?: Subscription;
   public wsKillSubscription?: Subscription;
 
+  public isMapLoaded: boolean = false;
   public isPlayerLoaded: boolean = false;
   public isGameLoaded: boolean = false;
 
@@ -49,6 +50,7 @@ export class GameDetailsPage implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.username = this.authService.userName;
     this.keycloakId = this.authService.keycloakId;
+    this.isMapLoaded = true;
 
     this.setupRouteSubscription();
     this.handleLoginUser();
@@ -94,23 +96,6 @@ export class GameDetailsPage implements OnInit, OnDestroy {
       }
     });
     return playerId;
-  }
-
-  private setupRouteSubscription(): void {
-    this.routeSubscription = this.activatedRoute.paramMap.subscribe({
-      next: (param) => {
-        this.gameIdReadFromRoute = parseInt(param.get('gameId') || '', 10);
-        if (param.get('playerId')) {
-          this.playerIdReadFromRoute = parseInt(
-            param.get('playerId') || '',
-            10
-          );
-        }
-      },
-      error: (e) => {
-        console.log(e);
-      },
-    });
   }
 
   async loadGameAndPlayers(): Promise<void> {
@@ -170,36 +155,67 @@ export class GameDetailsPage implements OnInit, OnDestroy {
     }
   }
 
-  private setupGameSubscription(): void {
-    this.wsGameSubscription = this.stompService.subscribe(
-      `/topic/game/${this.gameIdReadFromRoute}`,
-      (response: any): void => {
-        this.handleGameUpdate(response.body);
-      }
-    );
+  private setupRouteSubscription(): void {
+    this.routeSubscription = this.activatedRoute.paramMap.subscribe({
+      next: (param) => {
+        this.gameIdReadFromRoute = parseInt(param.get('gameId') || '', 10);
+        if (param.get('playerId')) {
+          this.playerIdReadFromRoute = parseInt(
+            param.get('playerId') || '',
+            10
+          );
+        }
+      },
+      error: (e) => {
+        console.log(e);
+      },
+    });
   }
 
-  private setupKillSubscription(): void {
-    this.wsKillSubscription = this.stompService.subscribe(
-      `/topic/kill/${this.playerIdReadFromRoute}`,
-      (response: any): void => {
-        this.loadPlayers();
-        this.handleKillNotification();
-      }
-    );
+  private async setupGameSubscription(): Promise<void> {
+    try {
+      await new Promise<void>(() => {
+        this.wsGameSubscription = this.stompService.subscribe(
+          `/topic/game/${this.gameIdReadFromRoute}`,
+          (response: any): void => {
+            setTimeout(() => {
+              this.handleGameUpdate(response.body);
+            }, 500);
+          }
+        );
+      });
+    } catch (error) {
+      console.error('Error setting up game subscription:', error);
+      throw error;
+    }
+  }
+
+  private async setupKillSubscription(): Promise<void> {
+    try {
+      await new Promise<void>(() => {
+        this.wsKillSubscription = this.stompService.subscribe(
+          '/topic/kill',
+          (): void => {
+            setTimeout(() => {
+              this.handleKillNotification();
+            }, 500);
+          }
+        );
+      });
+    } catch (error) {
+      console.error('Error setting up kill subscription:', error);
+      throw error;
+    }
   }
 
   private setupWebSocketSubscriptions(): void {
-    setTimeout(() => {
-      this.setupGameSubscription();
-      this.setupKillSubscription();
-    }, 1000);
+    this.setupGameSubscription();
+    this.setupKillSubscription();
   }
 
   private handleGameUpdate(body: any): void {
     if (this.game && this.player?.id) {
-      this.loadGame();
-      this.loadPlayerById();
+      this.loadGameAndPlayers();
 
       switch (body) {
         case 'update_game_start':
@@ -216,7 +232,7 @@ export class GameDetailsPage implements OnInit, OnDestroy {
 
   private handleKillNotification(): void {
     this.setNotification('kill');
-    this.loadGame();
+    this.loadPlayers();
     this.loadPlayerById();
   }
 

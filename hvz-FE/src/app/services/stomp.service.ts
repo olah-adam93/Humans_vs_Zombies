@@ -11,19 +11,13 @@ export class StompService {
   socket = new SockJS(environment.WEBSOCKET_URL);
   stompClient = Stomp.over(this.socket);
 
-  constructor() {}
+  constructor() {
+    Stomp.log = (): void => {};
+  }
 
   /* Connect to the WS server */
   public connectToServer(): void {
-    this.stompClient.connect(
-      {},
-      (): void => {
-        console.log('Connected to WebSocket server.');
-      },
-      (error: any): void => {
-        console.error('Error connecting to WebSocket server:', error);
-      }
-    );
+    this.stompClient.connect();
   }
 
   /* Subscribe to a WS topic */

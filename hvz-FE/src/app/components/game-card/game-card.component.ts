@@ -15,6 +15,7 @@ export class GameCardComponent implements OnInit {
   public isLoggedIn?: boolean;
   public isUserAdmin?: boolean;
   public imgUrl?: string;
+  public isLoading: boolean = true;
 
   constructor(private keycloakService: KeycloakService) {}
 
@@ -62,6 +63,9 @@ export class GameCardComponent implements OnInit {
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
   }
 }

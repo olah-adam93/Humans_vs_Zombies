@@ -5,6 +5,7 @@
   flex-direction: column;
   top: 5rem;
   right: 1.25rem;
+  z-index: 10000;
 }
 
 .notifications :where(.toast, .column) {

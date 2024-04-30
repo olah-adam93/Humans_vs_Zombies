@@ -12,7 +12,7 @@
       </h4>
 
       <!-- Map segment-->
-      <div class="map my-5">
+      <div class="map my-5" *ngIf="isMapLoaded">
         <app-map [game]="game"></app-map>
       </div>
 
@@ -67,7 +67,11 @@
         </div>
 
         <!-- Chat segment -->
-        <app-chat [game]="game" [player]="player"></app-chat>
+        <app-chat
+          *ngIf="game?.state=='In Progress' || game?.state=='Complete'"
+          [game]="game"
+          [player]="player"
+        ></app-chat>
       </div>
 
       <button class="hm-btn back" routerLink="">Back to list</button>

@@ -3,9 +3,9 @@
   class="hm-card-link"
   (click)="handleLogin()"
 >
-  <div class="hm-card col-10">
+  <div class="hm-card col-10" [ngClass]="{ loading: isLoading }">
     <img
-      *ngIf="imgUrl"
+      *ngIf="!isLoading && imgUrl"
       [src]="imgUrl"
       alt="Country Flag"
       class="hm-card-img"

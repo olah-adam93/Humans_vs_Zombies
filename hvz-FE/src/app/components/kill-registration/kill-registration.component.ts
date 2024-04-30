@@ -71,6 +71,6 @@ export class KillRegistrationComponent {
     setTimeout(() => {
       this.messageTyp = undefined;
       this.messageTypeChange.emit(undefined);
-    }, 500);
+    }, 250);
   }
 }

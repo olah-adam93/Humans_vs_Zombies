@@ -34,10 +34,37 @@
   }
 }
 
+.players-info {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: -7rem;
+  transition: flex-wrap 0.3s ease;
+}
+
+/* Zombie image container */
+.img-zombie-container {
+  width: 18.75rem;
+  display: flex;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+@media screen and (max-width: 767px) {
+  .img-zombie-container {
+    display: none;
+  }
+}
+
+.img-zombie {
+  width: 8.5rem;
+  height: 14.5rem;
+}
+
 /* Button */
 .hm-btn {
   display: block;
-  width: 260px;
+  width: 16.25rem;
   background-color: #1995ad;
   text-align: center;
   padding: 0.5rem;

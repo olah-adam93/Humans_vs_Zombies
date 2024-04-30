@@ -68,10 +68,10 @@
 
 /* Zombie image container */
 .img-zombie-container {
-  width: 300px;
+  width: 18.75rem;
   display: flex;
   justify-content: center;
-  margin-top: 8px;
+  margin-top: 0.5rem;
 }
 
 @media screen and (max-width: 767px) {
@@ -81,8 +81,8 @@
 }
 
 .img-zombie {
-  width: 135px;
-  height: 235px;
+  width: 8.5rem;
+  height: 14.5rem;
 }
 
 /* Game state */
