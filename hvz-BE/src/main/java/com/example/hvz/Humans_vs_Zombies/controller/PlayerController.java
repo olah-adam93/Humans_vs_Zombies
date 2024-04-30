@@ -15,6 +15,7 @@ import com.example.hvz.Humans_vs_Zombies.service.squadmember.SquadMemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import java.net.URI;
 import java.util.Collection;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,7 +76,7 @@ public class PlayerController {
 
     createPlayerDTO.setLoginUser(
         loginUserService.findByKeycloakId(createPlayerDTO.getKeycloakId()).getId());
-    createPlayerDTO.setBiteCode(playerService.createRandomBiteCode());
+    createPlayerDTO.setBiteCode(playerService.generateUniqueBiteCode(gameId));
 
     Player player = playerService.add(playerMapper.createPlayerDtoToPlayer(createPlayerDTO));
     game.setHumanCount(game.getHumanCount() + 1);

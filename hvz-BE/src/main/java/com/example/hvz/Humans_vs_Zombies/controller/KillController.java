@@ -90,7 +90,7 @@ public class KillController {
 
     checkGameOver(gameId); // Game over check
 
-    webSocketService.sendMessage("kill/" + victim.getId(), "player_died");
+    webSocketService.sendMessage("kill", "player_died");
     webSocketService.sendMessage("kill/" + gameId, "player_died");
 
     return ResponseEntity.created(location).build();

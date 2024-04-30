@@ -12,15 +12,11 @@ public interface PlayerService extends CrudService<Player, Integer> {
 
   Player findByGameIdAndId(int gameId, int playerId);
 
-  Player findPlayerByGameIdAndLoginUser_Id(int gameId, int loginUserId);
-
-  Collection<Player> findAllByLoginUser_Id(int loginUserId);
-
   Collection<Player> findAllByLoginUser_KeycloakId(String keycloakId);
 
   Player findByGameIdAndBiteCode(int gameId, String biteCode);
 
-  String createRandomBiteCode();
+  Collection<String> findAllBiteCodesByGameId(int gameId);
 
-  Player findByBiteCode(String biteCode);
+  String generateUniqueBiteCode(int gameId);
 }

@@ -130,14 +130,9 @@ public class GameController {
     webSocketService.sendMessage("game", "update");
 
     switch (gameDTO.getState()) {
-      case "In Progress":
-        webSocketService.sendMessage("game/" + gameId, "update_game_start");
-        break;
-      case "Complete":
-        webSocketService.sendMessage("game/" + gameId, "update_game_end");
-        break;
-      default:
-        webSocketService.sendMessage("game/" + gameId, "update");
+      case "In Progress" -> webSocketService.sendMessage("game/" + gameId, "update_game_start");
+      case "Complete" -> webSocketService.sendMessage("game/" + gameId, "update_game_end");
+      default -> webSocketService.sendMessage("game/" + gameId, "update");
     }
     return ResponseEntity.noContent().build();
   }
@@ -145,13 +140,16 @@ public class GameController {
   @Operation(summary = "Delete a specific game by ID")
   @DeleteMapping("/{gameId}")
   public ResponseEntity<Void> delete(@PathVariable("gameId") int gameId) {
+
     squadMemberService.findAllByGameId(gameId).forEach(squadMemberService::delete);
     chatService.findAllByGameId(gameId).forEach(chatService::delete);
     playerService.findAllByGameId(gameId).forEach(playerService::delete);
     squadService.findAllByGameId(gameId).forEach(squadService::delete);
     gameService.deleteById(gameId);
+
     webSocketService.sendMessage("game", "delete");
     webSocketService.sendMessage("game/" + gameId, "delete");
+
     return ResponseEntity.noContent().build();
   }
 }

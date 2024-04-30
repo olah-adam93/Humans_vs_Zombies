@@ -24,9 +24,6 @@ public abstract class KillMapper {
   @Mapping(target = "game", source = "game", qualifiedByName = "gameIdToGame")
   public abstract Kill killDTOToKill(KillDTO killDTO);
 
-  @Mapping(target = "game", source = "game.id")
-  public abstract CreateKillDTO killToCreateKillDto(Kill kill);
-
   @Mapping(target = "game", source = "game", qualifiedByName = "gameIdToGame")
   public abstract Kill createKillDtoToKill(CreateKillDTO createKillDTO);
 

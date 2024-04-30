@@ -2,9 +2,7 @@ package com.example.hvz.Humans_vs_Zombies.controller;
 
 import com.example.hvz.Humans_vs_Zombies.mapper.SquadMemberMapper;
 import com.example.hvz.Humans_vs_Zombies.model.DTO.squadDTO.SquadMemberDTO;
-import com.example.hvz.Humans_vs_Zombies.model.Game;
 import com.example.hvz.Humans_vs_Zombies.model.SquadMember;
-import com.example.hvz.Humans_vs_Zombies.service.game.GameService;
 import com.example.hvz.Humans_vs_Zombies.service.squadmember.SquadMemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import java.net.URI;
@@ -19,15 +17,12 @@ public class SquadMemberController {
 
   private final SquadMemberService squadMemberService;
   private final SquadMemberMapper squadMemberMapper;
-  private final GameService gameService;
 
   public SquadMemberController(
       SquadMemberService squadMemberService,
-      SquadMemberMapper squadMemberMapper,
-      GameService gameService) {
+      SquadMemberMapper squadMemberMapper) {
     this.squadMemberService = squadMemberService;
     this.squadMemberMapper = squadMemberMapper;
-    this.gameService = gameService;
   }
 
   @Operation(summary = "Get all squads members in a game")
@@ -53,7 +48,6 @@ public class SquadMemberController {
   @PostMapping("{gameId}/squadmember")
   public ResponseEntity<Void> add(
       @PathVariable("gameId") Integer gameId, @RequestBody SquadMemberDTO squadMemberDTO) {
-    Game game = gameService.findById(gameId);
     SquadMember squadMember =
         squadMemberService.add(squadMemberMapper.squadMemberDtoToSquadMember(squadMemberDTO));
     URI location = URI.create(gameId + "/player/" + squadMember.getId());
