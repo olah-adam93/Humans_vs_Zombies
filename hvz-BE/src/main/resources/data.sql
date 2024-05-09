@@ -1,28 +1,28 @@
 -- USERS
 INSERT INTO tb_user (first_name,last_name,keycloak_id, user_name)
-VALUES ('Lilly', 'Cross', '1d6b39c0-8047-4c9c-97a4-756214b47c0b', 'rotreaper');
+VALUES ('Lilly', 'Cross', 'd7803bef-ecc3-4f96-ad57-94a620cebcb8', 'rotreaper');
 INSERT INTO tb_user (first_name, last_name, keycloak_id, user_name)
-VALUES ('Jason', 'Steele', '9c56f321-2426-45f4-8d45-b35398b50784', 'undeadslayerx');
+VALUES ('Jason', 'Steele', '4c365757-71e6-4d17-abc9-bf43199b6684', 'undeadslayerx');
 INSERT INTO tb_user (first_name, last_name, keycloak_id, user_name)
-VALUES ('Sarah', 'Blackwood', 'd1537b39-7c42-4497-9ad7-942ee48cb701', 'zombiesniperelite');
+VALUES ('Sarah', 'Blackwood', '68674810-896c-4d5d-b616-1b3a083bfe59', 'zombiesniperelite');
 INSERT INTO tb_user (first_name, last_name, keycloak_id, user_name)
-VALUES('Alex', 'Cruz', '09a4a58f-6324-4065-b256-31b446be742f', 'apexzombiehunter');
+VALUES('Alex', 'Cruz', '08eac9ee-b8cb-48fe-bd35-2ea6dd693010', 'apexzombiehunter');
 INSERT INTO tb_user (first_name, last_name, keycloak_id, user_name)
-VALUES('Tristan', 'Graves', 'f7e9214b-9cc5-477b-a487-72b5cddbcc0c', 'necroknight');
+VALUES('Tristan', 'Graves', 'cd7106c7-74ae-42ff-af5d-e9c16b2459f1', 'necroknight');
 INSERT INTO tb_user (first_name, last_name, keycloak_id, user_name)
-VALUES('Derek', 'Shaw', '2fcc9d34-61aa-475d-ae68-4fc0c7753b84', 'infectedinferno');
+VALUES('Derek', 'Shaw', '8712a459-7c7d-4ed4-9b57-3e59ced7da64', 'infectedinferno');
 INSERT INTO tb_user (first_name, last_name, keycloak_id, user_name)
-VALUES('Emily', 'Darko', '86f22342-f38b-4f5e-8845-6d98176a9c04', 'ghoulgrimreaper');
+VALUES('Emily', 'Darko', 'af47530a-e4f5-4c8a-8dcd-11006db0b4ce', 'ghoulgrimreaper');
 INSERT INTO tb_user (first_name, last_name, keycloak_id, user_name)
-VALUES('Marcus', 'Kane', '0dc29aa8-de4f-4e36-a725-aaed03c53bb1', 'pandemicpatriot');
+VALUES('Marcus', 'Kane', 'a3d383f2-fa72-49d8-aee6-25660821b1d3', 'pandemicpatriot');
 INSERT INTO tb_user (first_name, last_name, keycloak_id, user_name)
-VALUES('Zoe', 'Storm', 'f78a6b95-883c-462d-82fe-6970c2167b71', 'biohazardblitz');
+VALUES('Zoe', 'Storm', '2a33e163-ab28-41b1-bef0-a9d667eb701e', 'biohazardblitz');
 INSERT INTO tb_user (first_name, last_name, keycloak_id, user_name)
-VALUES('Mia', 'Harper', 'b23f786a-9882-43aa-86e0-c9e9d25ed7f2', 'undeadwanderer');
+VALUES('Mia', 'Harper', '80c39190-3923-4142-8d8b-bfb94807055c', 'undeadwanderer');
 INSERT INTO tb_user (first_name, last_name, keycloak_id, user_name)
-VALUES('Jordan', 'Harper', 'e2efa538-83d9-4c7d-b3ae-4b512ca76bc4', 'rottenranger');
+VALUES('Jordan', 'Harper', '5f34d808-3f32-4941-a4d3-be7e02d98002', 'rottenranger');
 INSERT INTO tb_user (first_name, last_name, keycloak_id, user_name)
-VALUES('Cyber', 'Phoenix', '8f2f29f3-25b0-4a79-af3f-2fb321619dc7', 'cyberphoenix');
+VALUES('Cyber', 'Phoenix', '6a23ec3c-26b0-4f75-8400-f86d1b40c348', 'cyberphoenix');
 
 -- GAMES
 INSERT INTO tb_game (name, state, human_count, location)
