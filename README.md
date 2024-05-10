@@ -1,11 +1,26 @@
-# Humans Vs Zombies API
+# Humans Vs Zombies
 
 [![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
-**Web API and database** with **Spring**.
+Web app with **Spring** and **Angular**.
 
-This is a web API that contains Users, Games, Players, Squads, Squadmembers, Kills and Chats as entities for the Humans Vs Zombies game
-. The main entity relations are as follows:
+## Table of Contents
+
+- [Background](#background)
+- [Usage](#usage)
+- [Maintainer](#maintainers)
+
+## Background
+
+Humans vs. Zombies is a web application that was created to demonstrate experience using web technologies.
+During the development, I gained experience in technologies such as Java/Spring and TS/Angular, along with cloud-based storage implemented using AWS RDS(PostgreSQL).
+In addition, I utilized Keycloak for OAuth2 and OIDC integration.
+
+HvZ is a game of tag. All players begin as humans, and one is randomly chosen to be the “Original Zombie.”
+The Original Zombie tags human players and turns them into zombies.
+
+Application contains entities such as Users, Games, Players, Squads, Squad Members, Kills, and Chats for the Humans Vs Zombies game.
+The main entity relations are as follows:
 
 - *one* **user** can belong to *many* **players**
 - *one* **player** can belong to *one* **squad member**
@@ -57,6 +72,13 @@ This is a web API that contains Users, Games, Players, Squads, Squadmembers, Kil
 - **POST** /api/game/:gameId/squadmember - Add a new squad member
 - **PUT** /api/game/:gameId/squadmember/:squadmemberId - Update a squad member
 - **DELETE** /api/game/:gameId/squadmember/:squadmemberId - Delete a squad member
+
+## Usage
+
+1. Reach the app through: https://humans-vs-zombies-ao24.netlify.app/
+
+2. Test it with a test user:
+    - a **user** with username: ```cyberphoenix``` password: ```cyberphoenix01```
 
 ## Maintainer
 - [Adam Olah](https://github.com/olah-adam93)
