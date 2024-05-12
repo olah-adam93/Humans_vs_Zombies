@@ -18,7 +18,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
   public void registerStompEndpoints(StompEndpointRegistry registry) {
     registry
         .addEndpoint("/websocket")
-        .setAllowedOrigins("http://localhost:4200", "http://localhost:4200/")
+        .setAllowedOrigins("https://humans-vs-zombies-ac24.netlify.app", "https://humans-vs-zombies-ac24.netlify.app/")
         .withSockJS();
   }
 }

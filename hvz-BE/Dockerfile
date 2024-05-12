@@ -10,7 +10,7 @@ WORKDIR /app
 ENV PORT=5000 \
     SPRING_PROFILE=production \
     DDL_AUTO=create
-COPY --from=gradle /app/app/build/libs/*.jar /app/app.jar
+COPY --from=gradle /app/build/libs/*.jar /app/app.jar
 ENTRYPOINT ["java", "-jar", "app.jar", \
            "-Dserver.port=$PORT", \
            "-Dspring.profiles.active=$SPRING_PROFILE", \
