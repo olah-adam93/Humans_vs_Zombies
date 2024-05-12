@@ -31,6 +31,7 @@ export class NavbarComponent implements OnInit {
 
   handleLogout(): void {
     this.keycloakService.logout();
+    this.router.navigateByUrl('');
   }
 
   navigateToHome(): void {

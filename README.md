@@ -75,7 +75,7 @@ The main entity relations are as follows:
 
 ## Usage
 
-1. Reach the app through: https://humans-vs-zombies-ao24.netlify.app/
+1. Reach the app through: https://humans-vs-zombies-ac24.netlify.app/
 
 2. Test it with a test user:
     - a **user** with username: ```cyberphoenix``` password: ```cyberphoenix01```

@@ -2,7 +2,15 @@
 <module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
+      <excludeFolder url="file://$MODULE_DIR$/hvz-BE/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/hvz-BE/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/hvz-BE/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/hvz-BE/build" />
+      <excludeFolder url="file://$MODULE_DIR$/hvz-BE/heroku-keycloak" />
+      <excludeFolder url="file://$MODULE_DIR$/hvz-FE/.idea" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
