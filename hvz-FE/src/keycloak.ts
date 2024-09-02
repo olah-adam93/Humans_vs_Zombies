@@ -8,12 +8,20 @@ import { KeycloakService } from 'keycloak-angular';
 export const initializeKeycloak = (
   keycloakService: KeycloakService
 ): (() => Promise<boolean>) => {
-  return () =>
-    keycloakService.init({
-      config: '/assets/keycloak.json',
-      initOptions: {
-        checkLoginIframe: true,
-      },
-      loadUserProfileAtStartUp: true,
-    });
+  return async () => {
+    try {
+      const result = await keycloakService.init({
+        config: '/assets/keycloak.json',
+        initOptions: {
+          checkLoginIframe: true,
+        },
+        loadUserProfileAtStartUp: true,
+      });
+      console.log('Keycloak initialized successfully');
+      return result;
+    } catch (error) {
+      console.error('Keycloak initialization failed', error);
+      return false;
+    }
+  };
 };

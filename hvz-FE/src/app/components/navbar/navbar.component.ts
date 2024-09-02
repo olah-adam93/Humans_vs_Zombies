@@ -20,7 +20,9 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoggedIn = this.keycloakService?.isLoggedIn();
+    console.log('Logged in' + this.isLoggedIn);
     if (this.isLoggedIn) {
+      console.log('username: ' + this.username);
       this.username = this.keycloakService?.getUsername();
     }
   }
@@ -31,7 +33,6 @@ export class NavbarComponent implements OnInit {
 
   handleLogout(): void {
     this.keycloakService.logout();
-    this.router.navigateByUrl('');
   }
 
   navigateToHome(): void {

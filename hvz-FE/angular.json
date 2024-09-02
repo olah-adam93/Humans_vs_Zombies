@@ -17,6 +17,12 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "keycloak-js",
+              "base64-js",
+              "js-sha256",
+              "ngx-google-places-autocomplete"
+            ],
             "outputPath": "dist/hvz-fe",
             "index": "src/index.html",
             "main": "src/main.ts",

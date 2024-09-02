@@ -52,6 +52,10 @@ export class GameDetailsPage implements OnInit, OnDestroy {
     this.keycloakId = this.authService.keycloakId;
     this.isMapLoaded = true;
 
+    console.log(
+      'username and keycloak id: ' + this.username + ',' + this.keycloakId
+    );
+
     this.setupRouteSubscription();
     this.handleLoginUser();
     this.loadGameAndPlayers();
@@ -59,6 +63,7 @@ export class GameDetailsPage implements OnInit, OnDestroy {
   }
 
   handleLoginUser(): void {
+    console.log('KeycloakId: ' + this.keycloakId);
     this.loginUserService.getLoginUser(this.keycloakId).subscribe({
       next: (playersFromServer: Player[]) => {
         if (this.playerIdReadFromRoute) {
