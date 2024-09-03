@@ -5,20 +5,20 @@ COPY . .
 RUN gradle bootJar
 
 # Runtime stage
-FROM openjdk:17 as runtime
+FROM openjdk:17-slim as runtime
 WORKDIR /app
-ENV PORT=5000 \
-    SPRING_PROFILE=production \
-    DDL_AUTO=create
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
 COPY --from=gradle /app/build/libs/*.jar /app/app.jar
-ENTRYPOINT ["java", "-jar", "app.jar", \
-           "-Dserver.port=$PORT", \
-           "-Dspring.profiles.active=$SPRING_PROFILE", \
-           "-Dspring.datasource.url=$POSTGRESQL_URL", \
-           "-Dspring.datasource.username=$POSTGRESQL_USERNAME", \
-           "-Dspring.datasource.password=$POSTGRESQL_PASSWORD", \
-           "-Dspring.jpa.database-platform=$POSTGRESQL_DIALECT", \
-           "-Dspring.jpa.hibernate.ddl-auto=$DDL_AUTO", \
-           "-Dspring.security.oauth2.resourceserver.jwt.issuer-uri=$KEYCLOAK_JWT_ISSUER_URI", \
-           "-Dspring.security.oauth2.resourceserver.jwt.jwk-set-uri=$KEYCLOAK_JWT_JWK_SET_URI"]
+
+ENV DATABASE_URL=""
+ENV KEYCLOAK_JWT_ISSUER_URI=""
+ENV KEYCLOAK_JWT_JWK_SET_URI=""
+
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+
+CMD ["java", "-jar", "/app/app.jar"]
+
+
 
