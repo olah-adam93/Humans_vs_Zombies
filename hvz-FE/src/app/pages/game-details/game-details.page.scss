@@ -124,6 +124,7 @@
   margin-top: -2.8rem;
 }
 
+/*
 .fadeInOut {
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -131,4 +132,17 @@
 
 .fadeInOut.show {
   opacity: 1;
+}
+*/
+
+.fadeInOut {
+  opacity: 0;
+  //  visibility: hidden;
+  transition: opacity 1s ease-in-out, visibility 0s 1s;
+}
+
+.fadeInOut.show {
+  opacity: 1;
+  // visibility: visible;
+  transition: opacity 1s ease-in-out;
 }

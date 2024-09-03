@@ -82,8 +82,8 @@
 
 .fade-in {
   animation-name: fadeIn;
-  animation-duration: 0.3s;
-  animation-fill-mode: forwards;
+  animation-duration: 1.2s;
+  animation-fill-mode: both;
 }
 
 @media screen and (min-width: 768px) {

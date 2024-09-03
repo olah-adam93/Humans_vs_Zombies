@@ -2,6 +2,7 @@
   [routerLink]="decideRoute(game)"
   class="hm-card-link"
   (click)="handleLogin()"
+  [ngClass]="{ 'fade-in': showGame, hidden: !showGame }"
 >
   <div class="hm-card col-10" [ngClass]="{ loading: isLoading }">
     <img
@@ -12,7 +13,7 @@
       width="200"
       height="200"
     />
-    <div class=".hm-card-body">
+    <div class="hm-card-body">
       <p class="hm-card-title d-flex justify-content-between">
         <span class="hm-card-game-name">{{ game.name | uppercase }}</span>
         <span *ngIf="game?.playerIdofCurrentUser">

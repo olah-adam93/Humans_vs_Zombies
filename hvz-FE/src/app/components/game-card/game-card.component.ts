@@ -16,6 +16,7 @@ export class GameCardComponent implements OnInit {
   public isUserAdmin?: boolean;
   public imgUrl?: string;
   public isLoading: boolean = true;
+  public showGame: boolean = false;
 
   constructor(private keycloakService: KeycloakService) {}
 
@@ -66,6 +67,9 @@ export class GameCardComponent implements OnInit {
       })
       .finally(() => {
         this.isLoading = false;
+        setTimeout(() => {
+          this.showGame = true;
+        }, 1000);
       });
   }
 }
