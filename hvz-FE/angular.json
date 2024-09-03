@@ -20,8 +20,7 @@
             "allowedCommonJsDependencies": [
               "keycloak-js",
               "base64-js",
-              "js-sha256",
-              "ngx-google-places-autocomplete"
+              "js-sha256"
             ],
             "outputPath": "dist/hvz-fe",
             "index": "src/index.html",
@@ -72,10 +71,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "hvzFE:build:production"
+              "buildTarget": "hvzFE:build:production"
             },
             "development": {
-              "browserTarget": "hvzFE:build:development"
+              "buildTarget": "hvzFE:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +82,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "hvzFE:build"
+            "buildTarget": "hvzFE:build"
           }
         },
         "test": {

@@ -17,7 +17,6 @@ import { GameService } from '../../services/game.service';
 import { KeycloakService } from 'keycloak-angular';
 import { LoginUserService } from '../../services/login-user.service';
 import { StompService } from '../../services/stomp.service';
-import { Options } from 'ngx-google-places-autocomplete/objects/options/options';
 import { GoogleMapsLoaderService } from 'src/app/services/google-maps-loader.service';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -181,9 +180,6 @@ export class GameListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   formattedAddress = '';
-  options = {
-    types: ['(cities)'],
-  } as Options;
 
   handleAddressChange(address: any) {
     this.formattedAddress = address.vicinity ? address.vicinity : address.name;

@@ -12,7 +12,7 @@ export class ToastNotificationComponent {
   @Input() username?: string;
   @Input() game?: Game;
   public toastQueue: Toast[] = [];
-  private timeoutIds: { [key: string]: NodeJS.Timeout } = {};
+  private timeoutIds: { [key: string]: any } = {};
 
   ngOnChanges(): void {
     if (this.messageType) {

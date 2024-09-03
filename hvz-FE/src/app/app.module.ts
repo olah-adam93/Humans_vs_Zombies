@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 
 /* App routing and keycloak initialization */
@@ -59,7 +58,6 @@ import { AuthService } from './services/auth.service';
     KeycloakAngularModule,
     HttpClientModule,
     ReactiveFormsModule,
-    GooglePlaceModule,
   ],
   providers: [
     StompService,
