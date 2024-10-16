@@ -4,6 +4,11 @@
 
 Web app with **Spring** and **Angular**.
 
+## Table of Contents
+- [Background](#background)
+- [Usage](#usage)
+- [Maintainer](#maintainers)
+
 ## Background
 
 Humans vs. Zombies is a web application that was created to demonstrate experience using web technologies.
@@ -79,6 +84,11 @@ The main entity relations are as follows:
 - **POST** /api/game/:gameId/squadmember - Add a new squad member
 - **PUT** /api/game/:gameId/squadmember/:squadmemberId - Update a squad member
 - **DELETE** /api/game/:gameId/squadmember/:squadmemberId - Delete a squad member
+
+## Usage
+1. Reach the app through: https://humans-vs-zombies-ac24.netlify.app/
+2. Test it with a test user:
+    - a **user** with username: ```cyberphoenix``` password: ```cyberphoenix01```
 
 ## Maintainer
 
